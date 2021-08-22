@@ -5,7 +5,7 @@
         
         <div class="container-fluid">
             
-            {#Presenta la parte en la que se pide Ejercicio, Periodo y Retención ... para que el usuario elija#}
+            {#Presenta la parte en la que se pide Ejercicio y Periodo ... para que el usuario elija#}
             <div class="row">
                 <div class="col">
                     <h1 class="h2">
@@ -54,26 +54,6 @@
                     </div>
                 </div>
 
-                {#Creamos el comboBox Retención y lo cargamos de registros traidos desde Modelo130.php function getRetentionsForComboBoxHtml#}
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        {{ i18n.trans('retention') }}
-                        <select name="codretencion" class="form-control">
-                            <option value="">------</option> {#Obligamos a que la primera vez el comboBox tenga el valor ------#}
-
-                            {#Cargamos el comboBox de retenciones con los registros de tipos de retención traidos desde Modelo130.php getRetentionsForComboBoxHtml()#}
-                            {#Mientras cargamos el comboBox de renciones si una de las opciones coincide con la variable codretencion de Modelo130.php ... la decide poner como elegida al comboBox, todo mientras carga cada uno de los registros de tipos de retenciones#}
-                            {% for ret in fsc.getRetentionsForComboBoxHtml() %}
-                                {% if ret.codretencion == fsc.codretencion %} 
-                                    <option value="{{ ret.codretencion }}" selected="">{{ i18n.trans(ret.descripcion) }}</option>
-                                {% else %}
-                                    <option value="{{ ret.codretencion }}">{{ i18n.trans(ret.descripcion) }}</option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                        
                 {#Creamos el botón de Previsualizar#}
                 <div class="col">
                     <div class="form-group">
@@ -101,7 +81,7 @@
                         <div class="form-group">
                             {{ i18n.trans('tax-base') }}
                             -
-                            {{ i18n.trans('customers') }}
+                            {{ i18n.trans('sales') }}
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">01</span>
@@ -113,68 +93,42 @@
                             
                     <div class="col">
                         <div class="form-group">
-                            {{ i18n.trans('retentions') }}
+                            {{ i18n.trans('tax-base') }}
                             -
-                            {{ i18n.trans('customers') }}
+                            {{ i18n.trans('purchases') }}
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">02</span>
                                 </div>
-                                <input type="number" value="{{ fsc.retentionsFtrasClientes }}" class="form-control text-right" readonly="true" /> {#Retenciones#}
+                                <input type="number" value="{{ fsc.taxbaseFtrasProveedores }}" class="form-control text-right" readonly="true" />
+                            </div>
+                        </div>
+                    </div>
+                            
+                    <div class="col">
+                        <div class="form-group">
+                            {{ i18n.trans('tax-base') }}
+                            (Ventas - Compras)
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">03</span>
+                                </div>
+                                <input type="number" value="{{ fsc.taxbase }}" class="form-control text-right" readonly="true" /> {#Base Imponible#}
                             </div>
                         </div>
                     </div>
                     
                     <div class="col">
                         <div class="form-group">
-                            {{ i18n.trans('number-recipients') }}
+                            20% sobre casilla 03
+                            {#{{ i18n.trans('result') }}#}
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">03</span>
+                                    <span class="input-group-text">04</span>
                                 </div>
-                                <input type="number" value="{{ fsc.numrecipientsFtrasClientes }}" class="form-control text-right" readonly="true" /> {#Nº.perceptores#}
+                                <input type="number" value="{{ fsc.result }}" class="form-control text-right" readonly="true" />
                             </div>
-                        </div>
-                    </div>
-                </div>
-                            
-                {#La fila donde se presentan las casillas de los totales de proveedores#}        
-                <div class="row">
-                    <div class="col">
-                        <div class="form-group">
-                            {{ i18n.trans('tax-base') }}
-                            -
-                            {{ i18n.trans('suppliers') }}
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">01</span>
-                                </div>
-                                <input type="number" value="{{ fsc.taxbaseFtrasProveedores }}" class="form-control text-right" readonly="true" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-group">
-                            {{ i18n.trans('retentions') }}
-                            -
-                            {{ i18n.trans('suppliers') }}
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">02</span>
-                                </div>
-                                <input type="number" value="{{ fsc.retentionsFtrasProveedores }}" class="form-control text-right" readonly="true" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-group">
-                            {{ i18n.trans('number-recipients') }}
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">03</span>
-                                </div>
-                                <input type="number" value="{{ fsc.numrecipientsFtrasProveedores }}" class="form-control text-right" readonly="true" /> {#Nº.perceptores#}
-                            </div>
+                            Si da pérdidas (negativo) = 0
                         </div>
                     </div>
                 </div>
@@ -183,55 +137,7 @@
                             
                 {#La fila donde se presentan las casillas de los resultados de clientes - proveedores#}        
                 <div class="row">
-                    <div class="col">
-                        <div class="form-group">
-                            {{ i18n.trans('tax-base') }}
-                            (Ventas - Compras)
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">01</span>
-                                </div>
-                                <input type="number" value="{{ fsc.taxbase }}" class="form-control text-right" readonly="true" /> {#Base Imponible#}
-                            </div>
-                        </div>
-                    </div>
                             
-                    <div class="col">
-                        <div class="form-group">
-                            {{ i18n.trans('retentions') }}
-                            (Ventas - Compras)
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">02</span>
-                                </div>
-                                <input type="number" value="{{ fsc.retentions }}" class="form-control text-right" readonly="true" /> {#Retenciones#}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col">
-                        <div class="form-group">
-                            %
-                            {{ i18n.trans('to-deduct') }}
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">04</span>
-                                </div>
-                                <input type="number" name="todeduct" value="{{ fsc.todeduct }}" class="form-control text-right" required="true" onchange="this.form.submit();" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-group">
-                            {{ i18n.trans('result') }}
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">05</span>
-                                </div>
-                                <input type="number" value="{{ fsc.result }}" class="form-control text-right" readonly="true" />
-                            </div>
-                        </div>
-                    </div>
                 </div>
                             
                             
@@ -254,7 +160,7 @@
                                         <th class="text-right">{{ i18n.trans('net') }}</th>
                                         <th class="text-right">{{ i18n.trans('taxes') }}</th>
                                         <th class="text-right">{{ i18n.trans('surcharge') }}</th>
-                                        <th class="text-right">%{{ i18n.trans('retention') }}</th>
+                                        {#<th class="text-right">%{{ i18n.trans('retention') }}</th>#}
                                         <th class="text-right">{{ i18n.trans('retention') }}</th>
                                         <th class="text-right">{{ i18n.trans('total') }}</th>
                                         <th class="text-right">{{ i18n.trans('date') }}</th>
@@ -270,7 +176,7 @@
                                             <td class="text-right">{{ fsc.toolBox().coins().format(item.neto) }}</td>
                                             <td class="text-right">{{ fsc.toolBox().coins().format(item.totaliva) }}</td>
                                             <td class="text-right">{{ fsc.toolBox().coins().format(item.totalrecargo) }}</td>
-                                            <td class="text-right">{{ fsc.toolBox().coins().format(item.irpf) }}</td>
+                                            {#<td class="text-right">{{ fsc.toolBox().coins().format(item.irpf) }}</td>#}
                                             <td class="text-right">{{ fsc.toolBox().coins().format(item.totalirpf) }}</td>
                                             <td class="text-right">{{ fsc.toolBox().coins().format(item.total) }}</td>
                                             <td class="text-right">{{ item.fecha }}</td>

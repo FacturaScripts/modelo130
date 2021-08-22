@@ -24,12 +24,12 @@ use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Dinamic\Model\Ejercicio;
 use FacturaScripts\Dinamic\Model\FacturaProveedor;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
-use FacturaScripts\Dinamic\Model\Retencion;
 
 /**
  * Description of Modelo130
  *
- * @author Carlos Garcia Gomez <carlos@facturascripts.com>
+ * @author Carlos Garcia Gomez            <carlos@facturascripts.com>
+ * @author Jerónimo Pedro Sánchez Manzano <socger@gmail.com>
  */
 class Modelo130 extends Controller
 {
@@ -39,12 +39,6 @@ class Modelo130 extends Controller
      * @var string
      */
     public $codejercicio;
-
-    /**
-     *
-     * @var string
-     */
-    public $codretencion;
 
     /**
      *
@@ -78,18 +72,6 @@ class Modelo130 extends Controller
 
     /**
      *
-     * @var int
-     */
-    public $numrecipientsFtrasProveedores = 0;
-
-    /**
-     *
-     * @var int
-     */
-    public $numrecipientsFtrasClientes = 0;
-
-    /**
-     *
      * @var string
      */
     public $period = 'T1';
@@ -99,24 +81,6 @@ class Modelo130 extends Controller
      * @var float
      */
     public $result = 0.0;
-
-    /**
-     *
-     * @var float
-     */
-    public $retentions = 0.0;
-
-    /**
-     *
-     * @var float
-     */
-    public $retentionsFtrasProveedores = 0.0;
-
-    /**
-     *
-     * @var float
-     */
-    public $retentionsFtrasClientes = 0.0;
 
     /**
      *
@@ -136,12 +100,6 @@ class Modelo130 extends Controller
      */
     public $taxbaseFtrasClientes = 0.0;
 
-    /**
-     *
-     * @var float
-     */
-    public $todeduct = 0.0;
-    
     // ************************************************************************* //
     // ************************************************************************* //
     // ************************************************************************* //
@@ -172,16 +130,6 @@ class Modelo130 extends Controller
             'T3' => 'third-trimester',
             'T4' => 'fourth-trimester'
         ];
-    }
-    
-    /**
-     * 
-     * @return array
-     */
-    public function getRetentionsForComboBoxHtml()
-    {
-        $retention = new Retencion();
-        return $retention->all([], ['descripcion' => 'ASC'], 0, 0);
     }
     
     // -- ------------------------------------------------------------------- -- //
@@ -257,7 +205,7 @@ class Modelo130 extends Controller
             new DataBaseWhere('idempresa', $this->idempresa),
             
             // Para buscar ftras (de clientes o de Proveedores) que tengan IRPF
-            new DataBaseWhere('totalirpf', 0.0, '!=')
+            // new DataBaseWhere('totalirpf', 0.0, '!=') ... lo quitamos porque el modelo 130 es el cálculo total de ftras ventas (todas) menos el total de ftras. compras/gastos * 20%
         ];
         
 
@@ -270,18 +218,10 @@ class Modelo130 extends Controller
             new DataBaseWhere('idempresa', $this->idempresa),
             
             // Para buscar ftras (de clientes o de Proveedores) que tengan IRPF
-            new DataBaseWhere('totalirpf', 0.0, '!=')
+            // new DataBaseWhere('totalirpf', 0.0, '!=') ... lo quitamos porque el modelo 130 es el cálculo total de ftras ventas (todas) menos el total de ftras. compras/gastos * 20%
         ];
         
-        
-        // Si me han elegido un tipo de retención, se lo añadimos al where
-        $this->codretencion = $this->request->request->get('codretencion', '');
-        $retention = new Retencion();
-        if (!empty($this->codretencion) && $retention->loadFromCode($this->codretencion)) {
-            $whereFtrasProveedores[] = new DataBaseWhere('irpf', $retention->porcentaje);
-            $whereFtrasClientes[] = new DataBaseWhere('irpf', $retention->porcentaje);
-        }
-
+       
         // Preparamos el orderBy de como vamos a traer las facturas (fecha + numero ftra)
         $order = ['fecha' => 'ASC', 'numero' => 'ASC'];
         
@@ -295,37 +235,18 @@ class Modelo130 extends Controller
 //var_dump($this->supplierInvoices);
 //var_dump($whereFtrasClientes);
     }
-
-    // ************************************************************************* //
-    // ************************************************************************* //
-    // ************************************************************************* //
-    // ************************************************************************* //
     protected function loadResults()
     {
-        $recipientsFtrasProveedores = [];
-        $recipientsFtrasClientes = [];
-        
         foreach ($this->customerInvoices as $invoice) {
-            $recipientsFtrasProveedores[$invoice->codproveedor] = $invoice->codproveedor;
             $this->taxbaseFtrasProveedores += $invoice->neto;
-            $this->retentionsFtrasProveedores += $invoice->totalirpf;
         }
         
         foreach ($this->supplierInvoices as $invoice) {
-            $recipientsFtrasClientes[$invoice->codcliente] = $invoice->codcliente;
             $this->taxbaseFtrasClientes += $invoice->neto;
-            $this->retentionsFtrasClientes += $invoice->totalirpf;
         }
 
         $this->taxbase = $this->taxbaseFtrasClientes - $this->taxbaseFtrasProveedores;
-        $this->retentions = $this->retentionsFtrasClientes - $this->retentionsFtrasProveedores;
 
-        $this->numrecipientsFtrasClientes = \count($recipientsFtrasClientes);
-        $this->numrecipientsFtrasProveedores = \count($recipientsFtrasProveedores);
-        
-        
-        $this->todeduct = (float) $this->request->request->get('todeduct');
-        
      // Primero calculamos ingresos(ftras ventas) - gastos (ftras compras/gastos)
      // El cálculo nos dará un número negativo o positivo que serán las pérdidas o los beneficios respectivamente
      // Si salen pérdidas (resta = números negativos) el cálculo a deducir será 0
@@ -338,7 +259,7 @@ class Modelo130 extends Controller
         if ($this->taxbase < 0) {
             $this->result = 0;
         } else {
-            $this->result = (($this->retentionsFtrasClientes - $this->retentionsFtrasProveedores) * $this->todeduct) / 100;
+            $this->result = round( (($this->taxbaseFtrasClientes - $this->taxbaseFtrasProveedores) * 20) / 100, 2);
         }
     }
     
