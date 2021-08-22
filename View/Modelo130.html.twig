@@ -86,8 +86,6 @@
             
                         
                         
-            {#Presentamos las líneas de facturas de clientes cargadas desde Modelo130.php function loadInvoices()#}            
-            {% if fsc.supplierInvoices is not empty %}
                 {#La fila donde se presenta el título Resumen#}
                 <div class="row">
                     <div class="col">
@@ -97,26 +95,16 @@
                     </div>
                 </div>
                  
-                {#La fila donde se presentan las casillas de los totales#}        
+                {#La fila donde se presentan las casillas de los totales de clientes#}        
                 <div class="row">
                     <div class="col">
                         <div class="form-group">
-                            {{ i18n.trans('number-recipients') }}
+                            {{ i18n.trans('tax-base') }}
+                            -
+                            {{ i18n.trans('customers') }}
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">01</span>
-                                </div>
-                                <input type="number" value="{{ fsc.numrecipientsFtrasClientes }}" class="form-control text-right" readonly="true" /> {#Nº.perceptores#}
-                            </div>
-                        </div>
-                    </div>
-                            
-                    <div class="col">
-                        <div class="form-group">
-                            {{ i18n.trans('tax-base') }}
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">02</span>
                                 </div>
                                 <input type="number" value="{{ fsc.taxbaseFtrasClientes }}" class="form-control text-right" readonly="true" /> {#Base Imponible#}
                             </div>
@@ -126,139 +114,104 @@
                     <div class="col">
                         <div class="form-group">
                             {{ i18n.trans('retentions') }}
+                            -
+                            {{ i18n.trans('customers') }}
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">03</span>
+                                    <span class="input-group-text">02</span>
                                 </div>
                                 <input type="number" value="{{ fsc.retentionsFtrasClientes }}" class="form-control text-right" readonly="true" /> {#Retenciones#}
                             </div>
                         </div>
                     </div>
-                            
-                    <div class="col">
-                        <div class="form-group">
-                            {{ i18n.trans('to-deduct') }}
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">04</span>
-                                </div>
-                                <input type="number" name="todeduct" value="{{ fsc.todeduct }}" class="form-control text-right" required="true" onchange="this.form.submit();" /> {#A deducir#}
-                            </div>
-                        </div>
-                    </div>
-                            
-                    <div class="col">
-                        <div class="form-group">
-                            {{ i18n.trans('result') }}
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">05</span>
-                                </div>
-                                <input type="number" value="{{ fsc.result }}" class="form-control text-right" readonly="true" /> {#Resultado#}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                            
-                            
-                            
-                {#jerofa vas por aqui en las facturas de clientes#} 
-                
-                {#La fila de detalle de cada factura#}            
-                <div class="row">
-                    <div class="col">
-                        <h3 class="h4 mt-3">
-                            <i class="far fa-copy fa-fw"></i> {{ i18n.trans('customer-invoices') }}
-                        </h3>
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>{{ i18n.trans('invoice') }}</th>
-                                        <th>{{ i18n.trans('customer') }}</th>
-                                        <th class="text-right">{{ i18n.trans('net') }}</th>
-                                        <th class="text-right">{{ i18n.trans('taxes') }}</th>
-                                        <th class="text-right">{{ i18n.trans('surcharge') }}</th>
-                                        <th class="text-right">{{ i18n.trans('retention') }}</th>
-                                        <th class="text-right">{{ i18n.trans('total') }}</th>
-                                        <th class="text-right">{{ i18n.trans('date') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for item in fsc.supplierInvoices %}
-                                        <tr>
-                                            <td>
-                                                <a href="{{ item.url() }}">{{ item.codigo }}</a>
-                                            </td>
-                                            <td>{{ item.nombrecliente | raw }}</td>
-                                            <td class="text-right">{{ fsc.toolBox().coins().format(item.neto) }}</td>
-                                            <td class="text-right">{{ fsc.toolBox().coins().format(item.totaliva) }}</td>
-                                            <td class="text-right">{{ fsc.toolBox().coins().format(item.totalrecargo) }}</td>
-                                            <td class="text-right">{{ fsc.toolBox().coins().format(item.totalirpf) }}</td>
-                                            <td class="text-right">{{ fsc.toolBox().coins().format(item.total) }}</td>
-                                            <td class="text-right">{{ item.fecha }}</td>
-                                        </tr>
-                                    {% else %}
-                                        <tr class="table-warning">
-                                            <td colspan="8">{{ i18n.trans('no-data') }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-            
-            
-            
-                        
-                        
-            {#Presentamos las líneas de facturas de proveedores cargadas desde Modelo130.php function loadInvoices()#}            
-            {% if fsc.customerInvoices is not empty %}
-                <div class="row">
-                    <div class="col">
-                        <h2 class="h3 mt-3">
-                            <i class="far fa-clipboard fa-fw"></i> {{ i18n.trans('summary') }} {#Resumen#}
-                        </h2>
-                    </div>
-                </div>
-                <div class="row">
+                    
                     <div class="col">
                         <div class="form-group">
                             {{ i18n.trans('number-recipients') }}
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">01</span>
+                                    <span class="input-group-text">03</span>
                                 </div>
-                                <input type="number" value="{{ fsc.numrecipients }}" class="form-control text-right" readonly="true" /> {#Nº.perceptores#}
+                                <input type="number" value="{{ fsc.numrecipientsFtrasClientes }}" class="form-control text-right" readonly="true" /> {#Nº.perceptores#}
                             </div>
                         </div>
                     </div>
+                </div>
+                            
+                {#La fila donde se presentan las casillas de los totales de proveedores#}        
+                <div class="row">
                     <div class="col">
                         <div class="form-group">
                             {{ i18n.trans('tax-base') }}
+                            -
+                            {{ i18n.trans('suppliers') }}
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">02</span>
+                                    <span class="input-group-text">01</span>
                                 </div>
-                                <input type="number" value="{{ fsc.taxbase }}" class="form-control text-right" readonly="true" />
+                                <input type="number" value="{{ fsc.taxbaseFtrasProveedores }}" class="form-control text-right" readonly="true" />
                             </div>
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-group">
                             {{ i18n.trans('retentions') }}
+                            -
+                            {{ i18n.trans('suppliers') }}
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">03</span>
+                                    <span class="input-group-text">02</span>
                                 </div>
-                                <input type="number" value="{{ fsc.retentions }}" class="form-control text-right" readonly="true" />
+                                <input type="number" value="{{ fsc.retentionsFtrasProveedores }}" class="form-control text-right" readonly="true" />
                             </div>
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-group">
+                            {{ i18n.trans('number-recipients') }}
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">03</span>
+                                </div>
+                                <input type="number" value="{{ fsc.numrecipientsFtrasProveedores }}" class="form-control text-right" readonly="true" /> {#Nº.perceptores#}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                            
+                            
+                            
+                {#La fila donde se presentan las casillas de los resultados de clientes - proveedores#}        
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            {{ i18n.trans('tax-base') }}
+                            (Ventas - Compras)
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">01</span>
+                                </div>
+                                <input type="number" value="{{ fsc.taxbase }}" class="form-control text-right" readonly="true" /> {#Base Imponible#}
+                            </div>
+                        </div>
+                    </div>
+                            
+                    <div class="col">
+                        <div class="form-group">
+                            {{ i18n.trans('retentions') }}
+                            (Ventas - Compras)
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">02</span>
+                                </div>
+                                <input type="number" value="{{ fsc.retentions }}" class="form-control text-right" readonly="true" /> {#Retenciones#}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col">
+                        <div class="form-group">
+                            %
                             {{ i18n.trans('to-deduct') }}
                             <div class="input-group">
                                 <div class="input-group-prepend">
@@ -280,6 +233,68 @@
                         </div>
                     </div>
                 </div>
+                            
+                            
+                {#jerofa vas por aqui en las facturas de clientes#} 
+                
+            {#Presentamos las líneas de facturas de clientes cargadas desde Modelo130.php function loadInvoices()#}            
+            {#{% if fsc.customerInvoices is not empty %}#}
+                {#La fila de detalle de cada factura#}            
+                <div class="row">
+                    <div class="col">
+                        <h3 class="h4 mt-3">
+                            <i class="far fa-copy fa-fw"></i> {{ i18n.trans('customer-invoices') }}
+                        </h3>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>{{ i18n.trans('invoice') }}</th>
+                                        <th>{{ i18n.trans('customer') }}</th>
+                                        <th class="text-right">{{ i18n.trans('net') }}</th>
+                                        <th class="text-right">{{ i18n.trans('taxes') }}</th>
+                                        <th class="text-right">{{ i18n.trans('surcharge') }}</th>
+                                        <th class="text-right">%{{ i18n.trans('retention') }}</th>
+                                        <th class="text-right">{{ i18n.trans('retention') }}</th>
+                                        <th class="text-right">{{ i18n.trans('total') }}</th>
+                                        <th class="text-right">{{ i18n.trans('date') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in fsc.supplierInvoices %}
+                                        <tr>
+                                            <td>
+                                                <a href="{{ item.url() }}">{{ item.codigo }}</a>
+                                            </td>
+                                            <td>{{ item.nombrecliente | raw }}</td>
+                                            <td class="text-right">{{ fsc.toolBox().coins().format(item.neto) }}</td>
+                                            <td class="text-right">{{ fsc.toolBox().coins().format(item.totaliva) }}</td>
+                                            <td class="text-right">{{ fsc.toolBox().coins().format(item.totalrecargo) }}</td>
+                                            <td class="text-right">{{ fsc.toolBox().coins().format(item.irpf) }}</td>
+                                            <td class="text-right">{{ fsc.toolBox().coins().format(item.totalirpf) }}</td>
+                                            <td class="text-right">{{ fsc.toolBox().coins().format(item.total) }}</td>
+                                            <td class="text-right">{{ item.fecha }}</td>
+                                        </tr>
+                                    {% else %}
+                                        <tr class="table-warning">
+                                            <td colspan="8">{{ i18n.trans('no-data') }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {#{% endif %}#}
+            
+            
+            
+                        
+                        
+            {#Presentamos las líneas de facturas de proveedores cargadas desde Modelo130.php function loadInvoices()#}            
+            {#{% if fsc.supplierInvoices is not empty %}#}
+
+
                 <div class="row">
                     <div class="col">
                         <h3 class="h4 mt-3">
@@ -294,6 +309,7 @@
                                         <th class="text-right">{{ i18n.trans('net') }}</th>
                                         <th class="text-right">{{ i18n.trans('taxes') }}</th>
                                         <th class="text-right">{{ i18n.trans('surcharge') }}</th>
+                                        <th class="text-right">%{{ i18n.trans('retention') }}</th>
                                         <th class="text-right">{{ i18n.trans('retention') }}</th>
                                         <th class="text-right">{{ i18n.trans('total') }}</th>
                                         <th class="text-right">{{ i18n.trans('date') }}</th>
@@ -309,6 +325,7 @@
                                             <td class="text-right">{{ fsc.toolBox().coins().format(item.neto) }}</td>
                                             <td class="text-right">{{ fsc.toolBox().coins().format(item.totaliva) }}</td>
                                             <td class="text-right">{{ fsc.toolBox().coins().format(item.totalrecargo) }}</td>
+                                            <td class="text-right">{{ fsc.toolBox().coins().format(item.irpf) }}</td>
                                             <td class="text-right">{{ fsc.toolBox().coins().format(item.totalirpf) }}</td>
                                             <td class="text-right">{{ fsc.toolBox().coins().format(item.total) }}</td>
                                             <td class="text-right">{{ item.fecha }}</td>
@@ -323,7 +340,7 @@
                         </div>
                     </div>
                 </div>
-            {% endif %}
+            {#{% endif %}#}
             
         </div>
     </form>

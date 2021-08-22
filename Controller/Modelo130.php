@@ -104,6 +104,12 @@ class Modelo130 extends Controller
      *
      * @var float
      */
+    public $retentions = 0.0;
+
+    /**
+     *
+     * @var float
+     */
     public $retentionsFtrasProveedores = 0.0;
 
     /**
@@ -111,6 +117,12 @@ class Modelo130 extends Controller
      * @var float
      */
     public $retentionsFtrasClientes = 0.0;
+
+    /**
+     *
+     * @var float
+     */
+    public $taxbase = 0.0;
 
     /**
      *
@@ -183,7 +195,7 @@ class Modelo130 extends Controller
     {
         $data = parent::getPageData();
         $data['menu'] = 'reports';
-        $data['title'] = 'model-130';
+        $data['title'] = 'Model-130';
         $data['icon'] = 'fas fa-book';
         return $data;
     }
@@ -264,11 +276,10 @@ class Modelo130 extends Controller
         
         // Si me han elegido un tipo de retención, se lo añadimos al where
         $this->codretencion = $this->request->request->get('codretencion', '');
-        
         $retention = new Retencion();
         if (!empty($this->codretencion) && $retention->loadFromCode($this->codretencion)) {
             $whereFtrasProveedores[] = new DataBaseWhere('irpf', $retention->porcentaje);
-         // $whereFtrasClientes[] = new DataBaseWhere('irpf', $retention->porcentaje);
+            $whereFtrasClientes[] = new DataBaseWhere('irpf', $retention->porcentaje);
         }
 
         // Preparamos el orderBy de como vamos a traer las facturas (fecha + numero ftra)
@@ -306,14 +317,29 @@ class Modelo130 extends Controller
             $this->retentionsFtrasClientes += $invoice->totalirpf;
         }
 
+        $this->taxbase = $this->taxbaseFtrasClientes - $this->taxbaseFtrasProveedores;
+        $this->retentions = $this->retentionsFtrasClientes - $this->retentionsFtrasProveedores;
 
         $this->numrecipientsFtrasClientes = \count($recipientsFtrasClientes);
         $this->numrecipientsFtrasProveedores = \count($recipientsFtrasProveedores);
         
+        
         $this->todeduct = (float) $this->request->request->get('todeduct');
         
-     // $this->result = $this->retentions - $this->todeduct;
-        $this->result = ($this->retentionsFtrasClientes - $this->retentionsFtrasProveedores) - $this->todeduct;
+     // Primero calculamos ingresos(ftras ventas) - gastos (ftras compras/gastos)
+     // El cálculo nos dará un número negativo o positivo que serán las pérdidas o los beneficios respectivamente
+     // Si salen pérdidas (resta = números negativos) el cálculo a deducir será 0
+     // Si salen beneficios, entonces será cuestión de calcular el %a deducir introducido sobre los beneficios
+     // Estos cálculos son sobre el trimestre, para calcularlo bien habría que ver lo que se ha calculado/declarado 
+     // de trimestres anteriores.
+     // En este link se explica mejor como calcular el modelo 130 
+     // https://tuspapelesautonomos.es/modelo-130-como-se-calcula-descubrelo-facil-con-ejemplos/
+        
+        if ($this->taxbase < 0) {
+            $this->result = 0;
+        } else {
+            $this->result = (($this->retentionsFtrasClientes - $this->retentionsFtrasProveedores) * $this->todeduct) / 100;
+        }
     }
     
 }
