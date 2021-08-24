@@ -100,10 +100,12 @@ class Modelo130 extends Controller
      */
     public $taxbaseFtrasClientes = 0.0;
 
-    // ************************************************************************* //
-    // ************************************************************************* //
-    // ************************************************************************* //
-    // ************************************************************************* //
+    /**
+     *
+     * @var float
+     */
+    public $todeduct = 0.0;
+
 
     // -- ------------------------------------------------------------------- -- //
     // -- FUNCIONES USADAS POR PLANTILLA Modelo130.html.twig                  -- //
@@ -228,13 +230,11 @@ class Modelo130 extends Controller
         // Cargamos primero las facturas de proveedores
         // $this->invoices = $ftrasProveedores->all($where, $order, 0, 0);
         $this->customerInvoices = $ftrasProveedores->all($whereFtrasProveedores, $order, 0, 0);
-//var_dump($this->customerInvoices);
 
         // Cargamos ahora las facturas de clientes
         $this->supplierInvoices = $ftrasClientes->all($whereFtrasClientes, $order, 0, 0);
-//var_dump($this->supplierInvoices);
-//var_dump($whereFtrasClientes);
     }
+    
     protected function loadResults()
     {
         foreach ($this->customerInvoices as $invoice) {
@@ -250,16 +250,18 @@ class Modelo130 extends Controller
      // Primero calculamos ingresos(ftras ventas) - gastos (ftras compras/gastos)
      // El cálculo nos dará un número negativo o positivo que serán las pérdidas o los beneficios respectivamente
      // Si salen pérdidas (resta = números negativos) el cálculo a deducir será 0
-     // Si salen beneficios, entonces será cuestión de calcular el %a deducir introducido sobre los beneficios
+     // Si salen beneficios, entonces será cuestión de calcular el % a deducir introducido sobre los beneficios
      // Estos cálculos son sobre el trimestre, para calcularlo bien habría que ver lo que se ha calculado/declarado 
      // de trimestres anteriores.
      // En este link se explica mejor como calcular el modelo 130 
      // https://tuspapelesautonomos.es/modelo-130-como-se-calcula-descubrelo-facil-con-ejemplos/
         
+        $this->todeduct = (float) $this->request->request->get('todeduct');
+        
         if ($this->taxbase < 0) {
             $this->result = 0;
         } else {
-            $this->result = round( (($this->taxbaseFtrasClientes - $this->taxbaseFtrasProveedores) * 20) / 100, 2);
+            $this->result = round( (($this->taxbaseFtrasClientes - $this->taxbaseFtrasProveedores) * $this->todeduct) / 100, 2);
         }
     }
     
