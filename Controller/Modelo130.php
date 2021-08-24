@@ -143,7 +143,7 @@ class Modelo130 extends Controller
     {
         $data = parent::getPageData();
         $data['menu'] = 'reports';
-        $data['title'] = 'Model-130';
+        $data['title'] = 'model-130';
         $data['icon'] = 'fas fa-book';
         return $data;
     }
