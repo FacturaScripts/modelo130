@@ -107,8 +107,8 @@
 
                 <div class="col">
                     <div class="form-group">
-                        {{ i18n.trans('tax-base') }}
-                        (Ventas - Compras)
+                        {#{{ i18n.trans('tax-base') }}#}
+                        Ventas - Compras
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">03</span>
@@ -120,7 +120,16 @@
 
                 <div class="col">
                     <div class="form-group">
-                        20% sobre casilla 03
+                        {{ i18n.trans('%to-deduct') }}
+                        <div class="input-group">
+                            <input type="number" name="todeduct" value="{{ fsc.todeduct }}" class="form-control text-right" required="true" onchange="this.form.submit();" />
+                        </div>
+                    </div>
+                </div>
+                            
+                <div class="col">
+                    <div class="form-group">
+                        {{ fsc.todeduct }}% sobre casilla 03
                         {#{{ i18n.trans('result') }}#}
                         <div class="input-group">
                             <div class="input-group-prepend">
