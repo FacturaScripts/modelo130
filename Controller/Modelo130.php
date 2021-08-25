@@ -104,7 +104,7 @@ class Modelo130 extends Controller
      *
      * @var float
      */
-    public $todeduct = 0.0;
+    public $todeduct = 20.0;
 
 
     // -- ------------------------------------------------------------------- -- //
@@ -256,7 +256,7 @@ class Modelo130 extends Controller
      // En este link se explica mejor como calcular el modelo 130 
      // https://tuspapelesautonomos.es/modelo-130-como-se-calcula-descubrelo-facil-con-ejemplos/
         
-        $this->todeduct = (float) $this->request->request->get('todeduct');
+        $this->todeduct = (float) $this->request->request->get('todeduct', $this->todeduct);
         
         if ($this->taxbase < 0) {
             $this->result = 0;
