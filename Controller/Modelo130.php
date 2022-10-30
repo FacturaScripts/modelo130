@@ -92,19 +92,43 @@ class Modelo130 extends Controller
      *
      * @var float
      */
-    public $taxbaseFtrasProveedores = 0.0;
+    public $taxbaseGastos = 0.0;
 
     /**
      *
      * @var float
      */
-    public $taxbaseFtrasClientes = 0.0;
+    public $taxbaseIngresos = 0.0;
+	
+	/**
+     *
+     * @var float
+     */
+    public $taxbaseRetenciones = 0.0;
 
     /**
      *
      * @var float
      */
     public $todeduct = 20.0;
+	
+	/**
+     *
+     * @var float
+     */
+    public $afterdeduct = 0.0;
+	
+	/**
+     *
+     * @var float
+     */
+    public $segSocial = 0.0; //TODO: Obtener de los asientos
+	
+	/**
+     *
+     * @var float
+     */
+    public $positivosTrimestres = 0.0; //TODO: Obtener de los asientos
 
 
     // -- ------------------------------------------------------------------- -- //
@@ -177,17 +201,17 @@ class Modelo130 extends Controller
                 break;
 
             case 'T2':
-                $this->dateStart = \date('01-04-Y', \strtotime($exercise->fechainicio));
+                $this->dateStart = \date('01-01-Y', \strtotime($exercise->fechainicio));
                 $this->dateEnd = \date('30-06-Y', \strtotime($exercise->fechainicio));
                 break;
 
             case 'T3':
-                $this->dateStart = \date('01-07-Y', \strtotime($exercise->fechainicio));
+                $this->dateStart = \date('01-01-Y', \strtotime($exercise->fechainicio));
                 $this->dateEnd = \date('30-09-Y', \strtotime($exercise->fechainicio));
                 break;
 
             default:
-                $this->dateStart = \date('01-10-Y', \strtotime($exercise->fechainicio));
+                $this->dateStart = \date('01-01-Y', \strtotime($exercise->fechainicio));
                 $this->dateEnd = \date('31-12-Y', \strtotime($exercise->fechainicio));
                 break;
         }
@@ -238,14 +262,16 @@ class Modelo130 extends Controller
     protected function loadResults()
     {
         foreach ($this->customerInvoices as $invoice) {
-            $this->taxbaseFtrasProveedores += $invoice->neto;
+            $this->taxbaseGastos += $invoice->neto;
         }
+		$this->taxbaseGastos += $this->segSocial;
         
         foreach ($this->supplierInvoices as $invoice) {
-            $this->taxbaseFtrasClientes += $invoice->neto;
+            $this->taxbaseIngresos += $invoice->neto;
+			$this->taxbaseRetenciones += $invoice->totalirpf;
         }
 
-        $this->taxbase = $this->taxbaseFtrasClientes - $this->taxbaseFtrasProveedores;
+        $this->taxbase = $this->taxbaseIngresos - $this->taxbaseGastos;
 
      // Primero calculamos ingresos(ftras ventas) - gastos (ftras compras/gastos)
      // El cálculo nos dará un número negativo o positivo que serán las pérdidas o los beneficios respectivamente
@@ -257,11 +283,13 @@ class Modelo130 extends Controller
      // https://tuspapelesautonomos.es/modelo-130-como-se-calcula-descubrelo-facil-con-ejemplos/
         
         $this->todeduct = (float) $this->request->request->get('todeduct', $this->todeduct);
+		
+		$this->afterdeduct = round( ($this->taxbase * $this->todeduct) / 100, 2);
+		
+		$this->result = $this->afterdeduct - $this->taxbaseRetenciones - $this->positivosTrimestres;
         
-        if ($this->taxbase < 0) {
+        if ($this->result < 0) {
             $this->result = 0;
-        } else {
-            $this->result = round( (($this->taxbaseFtrasClientes - $this->taxbaseFtrasProveedores) * $this->todeduct) / 100, 2);
         }
     }
     

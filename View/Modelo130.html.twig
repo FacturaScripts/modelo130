@@ -72,6 +72,9 @@
                     <h2 class="h3 mt-3">
                         <i class="far fa-clipboard fa-fw"></i> {{ i18n.trans('summary') }} {#Resumen#}
                     </h2>
+					<p>
+                        {{ i18n.trans('model-130-r') }} {#Ponemos la parrafada de que es el modelo 130#}
+                    </p>
                 </div>
             </div>
 
@@ -79,36 +82,31 @@
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        {{ i18n.trans('tax-base') }}
-                        -
-                        {{ i18n.trans('sales') }}
+                        {{ i18n.trans('tax-incomes') }}
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">01</span>
                             </div>
-                            <input type="number" value="{{ fsc.taxbaseFtrasClientes }}" class="form-control text-right" readonly="true" /> {#Base Imponible#}
+                            <input type="number" value="{{ fsc.taxbaseIngresos }}" class="form-control text-right" readonly="true" /> {#Base Imponible#}
                         </div>
                     </div>
                 </div>
 
                 <div class="col">
                     <div class="form-group">
-                        {{ i18n.trans('tax-base') }}
-                        -
-                        {{ i18n.trans('purchases') }}
+                        {{ i18n.trans('tax-expenses') }}
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">02</span>
                             </div>
-                            <input type="number" value="{{ fsc.taxbaseFtrasProveedores }}" class="form-control text-right" readonly="true" />
+                            <input type="number" value="{{ fsc.taxbaseGastos }}" class="form-control text-right" readonly="true" />
                         </div>
                     </div>
                 </div>
 
                 <div class="col">
                     <div class="form-group">
-                        {#{{ i18n.trans('tax-base') }}#}
-                        {{ i18n.trans('sales') }} - {{ i18n.trans('purchases') }}
+                        {{ i18n.trans('net-total') }}
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">03</span>
@@ -126,21 +124,59 @@
                         </div>
                     </div>
                 </div>
-                            
-                <div class="col">
+            </div>
+			
+			{#Segunda fila donde se calculará en rendimiento total#} 
+			<div class="row">
+				<div class="col">
                     <div class="form-group">
-                        {{ fsc.todeduct }}% sobre casilla 03
-                        {#{{ i18n.trans('result') }}#}
+                        {{ fsc.todeduct }}% {{ i18n.trans('after-deduct') }}
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">04</span>
                             </div>
-                            <input type="number" value="{{ fsc.result }}" class="form-control text-right" readonly="true" />
+                            <input type="number" value="{{ fsc.afterdeduct }}" class="form-control text-right" readonly="true" />
                         </div>
-                        Si da pérdidas (negativo) = 0
                     </div>
                 </div>
-            </div>
+				
+				<div class="col">
+                    <div class="form-group">
+                        {{ i18n.trans('retentions') }}
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">05</span>
+                            </div>
+                            <input type="number" value="{{ fsc.taxbaseRetenciones }}" class="form-control text-right" readonly="true" />
+                        </div>
+                    </div>
+                </div>
+				
+				<div class="col">
+                    <div class="form-group">
+                        {{ i18n.trans('previous-model') }}
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">06</span>
+                            </div>
+                            <input type="number" value="{{ fsc.positivosTrimestres }}" class="form-control text-right" readonly="true" />
+                        </div>
+                    </div>
+                </div>
+				
+				<div class="col">
+                    <div class="form-group">
+                        {{ i18n.trans('result') }}
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">07</span>
+                            </div>
+                            <input type="number" value="{{ fsc.result }}" class="form-control text-right" readonly="true" />
+                        </div>
+						{{ i18n.trans('tax-negative-info') }}
+                    </div>
+                </div>
+			</div>
 
             {#Creamos las pestañas de Ftras de clientes y proveedores#}
             <ul class="nav nav-tabs" id="myTab" role="tablist">
