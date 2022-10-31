@@ -281,7 +281,8 @@ class Modelo130 extends Controller
             . ' LEFT JOIN ' . Asiento::tableName() . ' as a ON p.idasiento = a.idasiento'
             . ' WHERE a.codejercicio = ' . $this->dataBase->var2str($this->codejercicio)
             . ' AND a.fecha BETWEEN ' . $this->dataBase->var2str($this->dateStart) . ' AND ' . $this->dataBase->var2str($this->dateEnd)
-            . ' AND p.codsubcuenta IN (' . \implode(',', $codsubs) . ')';
+            . ' AND p.codsubcuenta IN (' . \implode(',', $codsubs) . ')'
+			. ' ORDER BY numero ASC';
         foreach ($this->dataBase->select($sql) as $row) {
             $this->accountingAsientos[] = new Partida($row);
         }
