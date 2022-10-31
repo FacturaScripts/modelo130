@@ -181,20 +181,25 @@
             {#Creamos las pestañas de Ftras de clientes y proveedores#}
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">
+                    <a class="nav-link active" id="sales-tab" data-toggle="tab" href="#sales" role="tab" aria-controls="sales" aria-selected="true">
                         <i class="far fa-copy fa-fw"></i> {{ i18n.trans('sales') }}
                     </a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">
+                    <a class="nav-link" id="purchases-tab" data-toggle="tab" href="#purchases" role="tab" aria-controls="purchases" aria-selected="false">
                         <i class="far fa-copy fa-fw"></i> {{ i18n.trans('purchases') }}
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="accounting-tab" data-toggle="tab" href="#accounting" role="tab" aria-controls="accounting" aria-selected="false">
+                        <i class="far fa-copy fa-fw"></i> {{ i18n.trans('accounting-entries') }}
                     </a>
                 </li>
             </ul>
 
             {#Creamos el contenido de las pestañas antes mencionadas#}
             <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="tab-pane fade show active" id="sales" role="tabpanel" aria-labelledby="sales-tab">
                     {#Presentamos las líneas de facturas de clientes cargadas desde Modelo130.php function loadInvoices()#}            
                     {#{% if fsc.customerInvoices is not empty %}#}
                         {#La fila de detalle de cada factura#}            
@@ -243,7 +248,7 @@
                     {#{% endif %}#}
                 </div>
 
-                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="tab-pane fade" id="purchases" role="tabpanel" aria-labelledby="purchases-tab">
                     {#Presentamos las líneas de facturas de proveedores cargadas desde Modelo130.php function loadInvoices()#}            
                     {#{% if fsc.supplierInvoices is not empty %}#}
                         {#La fila de detalle de cada factura#}            
@@ -276,6 +281,51 @@
                                                     <td class="text-right">{{ fsc.toolBox().coins().format(item.totalirpf) }}</td>
                                                     <td class="text-right">{{ fsc.toolBox().coins().format(item.total) }}</td>
                                                     <td class="text-right">{{ item.fecha }}</td>
+                                                </tr>
+                                            {% else %}
+                                                <tr class="table-warning">
+                                                    <td colspan="8">{{ i18n.trans('no-data') }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    {#{% endif %}#}
+                </div>
+				
+                <div class="tab-pane fade" id="accounting" role="tabpanel" aria-labelledby="accounting-tab">
+                    {#Presentamos los asientos desde Modelo130.php function loadAsientos()#}            
+                    {#{% if fsc.accountingAsientos is not empty %}#}
+                        {#La fila de detalle de cada asiento#}            
+                        <div class="row">
+                            <div class="col">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>{{ i18n.trans('accounting-entry') }}</th>
+												<th>{{ i18n.trans('subaccount') }}</th>
+												<th>{{ i18n.trans('counterpart') }}</th>
+												<th>{{ i18n.trans('concept') }}</th>
+												<th class="text-right">{{ i18n.trans('debit') }}</th>
+												<th class="text-right">{{ i18n.trans('credit') }}</th>
+												<th class="text-right">{{ i18n.trans('date') }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for item in fsc.accountingAsientos %}
+                                                <tr>
+                                            <td>
+                                                <a href="{{ item.url() }}">{{ item.numero }}</a>
+                                            </td>
+                                            <td>{{ item.codsubcuenta }}</td>
+                                            <td>{{ item.codcontrapartida }}</td>
+                                            <td>{{ item.concepto | raw }}</td>
+                                            <td class="text-right">{{ fsc.toolBox().coins().format(item.debe) }}</td>
+                                            <td class="text-right">{{ fsc.toolBox().coins().format(item.haber) }}</td>
+                                            <td class="text-right">{{ item.fecha }}</td>
                                                 </tr>
                                             {% else %}
                                                 <tr class="table-warning">

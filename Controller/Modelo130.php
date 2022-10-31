@@ -69,6 +69,12 @@ class Modelo130 extends Controller
      * @var FacturaCliente[]
      */
     public $supplierInvoices = [];
+	
+    /**
+     *
+     * @var Asientos[]
+     */
+    public $accountingAsientos = [];
 
     /**
      *
@@ -180,6 +186,7 @@ class Modelo130 extends Controller
         
         $this->loadDates(); // Traemos del codejercicio y period elegido idempresa, dateStart y dateEnd
         $this->loadInvoices(); // jerofa vas por aqui
+		$this->loadAsientos();
         $this->loadResults();
     }
 
@@ -257,6 +264,11 @@ class Modelo130 extends Controller
 
         // Cargamos ahora las facturas de clientes
         $this->supplierInvoices = $ftrasClientes->all($whereFtrasClientes, $order, 0, 0);
+    }
+	
+    protected function loadAsientos()
+    {
+		//TODO: Cargar asiento SegSocial (haber 4760000000) y Cargar asiento 130 (debe 4730000000 restando la variable retenciones ya que también aparecen en este asiento)
     }
     
     protected function loadResults()
