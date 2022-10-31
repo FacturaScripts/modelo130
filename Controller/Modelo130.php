@@ -24,6 +24,8 @@ use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Dinamic\Model\Ejercicio;
 use FacturaScripts\Dinamic\Model\FacturaProveedor;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
+use FacturaScripts\Dinamic\Model\Partida;
+use FacturaScripts\Dinamic\Model\Asiento;
 
 /**
  * Description of Modelo130
@@ -72,7 +74,7 @@ class Modelo130 extends Controller
 	
     /**
      *
-     * @var Asientos[]
+     * @var Partida[]
      */
     public $accountingAsientos = [];
 
@@ -128,13 +130,13 @@ class Modelo130 extends Controller
      *
      * @var float
      */
-    public $segSocial = 0.0; //TODO: Obtener de los asientos
+    public $segSocial = 0.0;
 	
 	/**
      *
      * @var float
      */
-    public $positivosTrimestres = 0.0; //TODO: Obtener de los asientos
+    public $positivosTrimestres = 0.0;
 
 
     // -- ------------------------------------------------------------------- -- //
@@ -267,23 +269,50 @@ class Modelo130 extends Controller
     }
 	
     protected function loadAsientos()
-    {
-		//TODO: Cargar asiento SegSocial (haber 4760000000) y Cargar asiento 130 (debe 4730000000 restando la variable retenciones ya que también aparecen en este asiento)
+    {		
+		if (empty($this->codejercicio)) {
+            return;
+        }
+		
+		$codsubs = ['6420000000', '4730000000']; // 6420000000 Seguridad social , 4730000000 IRPF
+		
+		$sql = 'SELECT * FROM ' . Partida::tableName() . ' as p'
+            . ' LEFT JOIN ' . Asiento::tableName() . ' as a ON p.idasiento = a.idasiento'
+            . ' WHERE a.codejercicio = ' . $this->dataBase->var2str($this->codejercicio)
+            . ' AND a.fecha BETWEEN ' . $this->dataBase->var2str($this->dateStart) . ' AND ' . $this->dataBase->var2str($this->dateEnd)
+            . ' AND p.codsubcuenta IN (' . \implode(',', $codsubs) . ')';
+        foreach ($this->dataBase->select($sql) as $row) {
+            $this->accountingAsientos[] = new Partida($row);
+        }
     }
     
     protected function loadResults()
     {
+		
         foreach ($this->customerInvoices as $invoice) {
             $this->taxbaseGastos += $invoice->neto;
         }
-		$this->taxbaseGastos += $this->segSocial;
         
         foreach ($this->supplierInvoices as $invoice) {
             $this->taxbaseIngresos += $invoice->neto;
 			$this->taxbaseRetenciones += $invoice->totalirpf;
         }
+		
+		foreach ($this->accountingAsientos as $asiento) {
+			if ($asiento->codsubcuenta == '6420000000') { 
+				$this->segSocial += $asiento->debe;
+			} else if ($asiento->codsubcuenta == '4730000000') {
+				$this->positivosTrimestres += $asiento->debe;
+			}
+        }
+		
+		// La seguridad social se cuenta como un gasto deducible
+		$this->taxbaseGastos += $this->segSocial;
+		// La subcuenta 473 incluye tanto las retenciones como trimestres anteriores, se restan las retenciones ya que se deben desglosar en otro campo
+		$this->positivosTrimestres = round( $this->positivosTrimestres - $this->taxbaseRetenciones, 2);
 
-        $this->taxbase = $this->taxbaseIngresos - $this->taxbaseGastos;
+
+		$this->taxbase = round( $this->taxbaseIngresos - $this->taxbaseGastos, 2);
 
      // Primero calculamos ingresos(ftras ventas) - gastos (ftras compras/gastos)
      // El cálculo nos dará un número negativo o positivo que serán las pérdidas o los beneficios respectivamente
@@ -298,7 +327,8 @@ class Modelo130 extends Controller
 		
 		$this->afterdeduct = round( ($this->taxbase * $this->todeduct) / 100, 2);
 		
-		$this->result = $this->afterdeduct - $this->taxbaseRetenciones - $this->positivosTrimestres;
+		
+		$this->result = round( $this->afterdeduct - $this->taxbaseRetenciones - $this->positivosTrimestres, 2);
         
         if ($this->result < 0) {
             $this->result = 0;
