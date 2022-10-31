@@ -307,10 +307,8 @@
                                             <tr>
                                                 <th>{{ i18n.trans('accounting-entry') }}</th>
 												<th>{{ i18n.trans('subaccount') }}</th>
-												<th>{{ i18n.trans('counterpart') }}</th>
 												<th>{{ i18n.trans('concept') }}</th>
-												<th class="text-right">{{ i18n.trans('debit') }}</th>
-												<th class="text-right">{{ i18n.trans('credit') }}</th>
+												<th class="text-right">{{ i18n.trans('total') }}</th>
 												<th class="text-right">{{ i18n.trans('date') }}</th>
                                             </tr>
                                         </thead>
@@ -321,10 +319,8 @@
                                                 <a href="{{ item.url() }}">{{ item.numero }}</a>
                                             </td>
                                             <td>{{ item.codsubcuenta }}</td>
-                                            <td>{{ item.codcontrapartida }}</td>
                                             <td>{{ item.concepto | raw }}</td>
                                             <td class="text-right">{{ fsc.toolBox().coins().format(item.debe) }}</td>
-                                            <td class="text-right">{{ fsc.toolBox().coins().format(item.haber) }}</td>
                                             <td class="text-right">{{ item.fecha }}</td>
                                                 </tr>
                                             {% else %}
