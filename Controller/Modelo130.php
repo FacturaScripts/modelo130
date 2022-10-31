@@ -317,13 +317,16 @@ class Modelo130 extends Controller
 
 		$this->taxbase = round( $this->taxbaseIngresos - $this->taxbaseGastos, 2);
 
-     // Primero calculamos ingresos(ftras ventas) - gastos (ftras compras/gastos)
+     // Primero calculamos rendimiento neto: ingresos(ftras ventas) - gastos (ftras compras/gastos + SS) acumulado anual
      // El cálculo nos dará un número negativo o positivo que serán las pérdidas o los beneficios respectivamente
-     // Si salen pérdidas (resta = números negativos) el cálculo a deducir será 0
-     // Si salen beneficios, entonces será cuestión de calcular el % a deducir introducido sobre los beneficios
-     // Estos cálculos son sobre el trimestre, para calcularlo bien habría que ver lo que se ha calculado/declarado 
-     // de trimestres anteriores.
-     // En este link se explica mejor como calcular el modelo 130 
+	 // El importe a deducir debe ser del 20% según modelo 130 o superior si se desea ingresar un IRPF superior
+	 // Después se deben restar las retenciones aplicadas en las facturas ya que eso lo ingresa el cliente en tu nombre
+	 // Y igualmente como es el acumulado del año, se deben restar también los trimestrales ya pagados y registrado el asiento
+     // Si sale número negativo, el importe a ingresar este trimestra será 0
+     // Si sale positivo, dicha cantidad es la corresponde ingresar y rellenar las casillas de Hacienda de acuerdo a los campos mostrados
+     // Habría que ver la posibilidad de añadir un botón para agregar el asiento de pago de cara a siguientes trimestres (el plugin no lo hace)
+	 // Actualmente los asientos de Seguridad Social y de trimestres anteriores se mete a mano (una forma rápida es con el plugin Asientos Predefinidos)
+     // En este link se explica como calcular el modelo 130 
      // https://tuspapelesautonomos.es/modelo-130-como-se-calcula-descubrelo-facil-con-ejemplos/
         
         $this->todeduct = (float) $this->request->request->get('todeduct', $this->todeduct);
