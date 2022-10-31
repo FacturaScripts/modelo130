@@ -109,7 +109,7 @@ class Modelo130 extends Controller
      */
     public $taxbaseIngresos = 0.0;
 	
-	/**
+    /**
      *
      * @var float
      */
@@ -121,19 +121,19 @@ class Modelo130 extends Controller
      */
     public $todeduct = 20.0;
 	
-	/**
+    /**
      *
      * @var float
      */
     public $afterdeduct = 0.0;
 	
-	/**
+    /**
      *
      * @var float
      */
     public $segSocial = 0.0;
 	
-	/**
+    /**
      *
      * @var float
      */
@@ -189,7 +189,7 @@ class Modelo130 extends Controller
         
         $this->loadDates(); // Traemos del codejercicio y period elegido idempresa, dateStart y dateEnd
         $this->loadInvoices(); // jerofa vas por aqui
-		$this->loadAsientos();
+	$this->loadAsientos();
         $this->loadResults();
     }
 
@@ -265,17 +265,17 @@ class Modelo130 extends Controller
     protected function loadAsientos()
     {		
 		
-		$codsubs = ['6420000000', '4730000000']; // 6420000000 Seguridad social , 4730000000 IRPF
+	$codsubs = ['6420000000', '4730000000']; // 6420000000 Seguridad social , 4730000000 IRPF
 		
-		// Buscar asientos entre las fechas de los tipos anteriores, que el tipodocumento sea NULL ya que la partida 473
-		// también asocia facturas con retención aplicada que no deseamos obtener, que ya se obtienen al consultar las facturas
-		$sql = 'SELECT * FROM ' . Partida::tableName() . ' as p'
+	// Buscar asientos entre las fechas de los tipos anteriores, que el tipodocumento sea NULL ya que la partida 473
+	// también asocia facturas con retención aplicada que no deseamos obtener, que ya se obtienen al consultar las facturas
+	$sql = 'SELECT * FROM ' . Partida::tableName() . ' as p'
             . ' LEFT JOIN ' . Asiento::tableName() . ' as a ON p.idasiento = a.idasiento'
             . ' WHERE a.idempresa = ' . $this->dataBase->var2str($this->idempresa)
             . ' AND a.fecha BETWEEN ' . $this->dataBase->var2str($this->dateStart) . ' AND ' . $this->dataBase->var2str($this->dateEnd)
-			. ' AND a.tipodocumento IS NULL'
+	    . ' AND a.tipodocumento IS NULL'
             . ' AND p.codsubcuenta IN (' . \implode(',', $codsubs) . ')'
-			. ' ORDER BY numero ASC';
+	    . ' ORDER BY numero ASC';
         foreach ($this->dataBase->select($sql) as $row) {
             $this->accountingAsientos[] = new Partida($row);
         }
@@ -293,40 +293,39 @@ class Modelo130 extends Controller
 			$this->taxbaseRetenciones += $invoice->totalirpf;
         }
 		
-		foreach ($this->accountingAsientos as $asiento) {
-			if ($asiento->codsubcuenta == '6420000000') { 
-				$this->segSocial += $asiento->debe;
-			} else if ($asiento->codsubcuenta == '4730000000') {
-				$this->positivosTrimestres += $asiento->debe;
-			}
+	foreach ($this->accountingAsientos as $asiento) {
+		if ($asiento->codsubcuenta == '6420000000') { 
+			$this->segSocial += $asiento->debe;
+		} else if ($asiento->codsubcuenta == '4730000000') {
+			$this->positivosTrimestres += $asiento->debe;
+		}
         }
 		
-		// La seguridad social se cuenta como un gasto deducible
-		$this->taxbaseGastos += $this->segSocial;
+	// La seguridad social se cuenta como un gasto deducible
+	$this->taxbaseGastos += $this->segSocial;
 
-		// Primero calculamos rendimiento neto: ingresos(ftras ventas) - gastos (ftras compras/gastos + SS) acumulado anual
-		// El cálculo nos dará un número negativo o positivo que serán las pérdidas o los beneficios respectivamente
-		// El importe a deducir debe ser del 20% según modelo 130 o superior si se desea ingresar un IRPF superior
-		// Después se deben restar las retenciones aplicadas en las facturas de venta ya que eso lo ingresa el cliente en tu nombre
-		// Igualmente como es el acumulado del año, se deben restar también los trimestrales ya pagados y registrado el asiento
-		// Si sale número negativo, el importe a ingresar este trimestra será 0
-		// Si sale positivo, dicha cantidad es la que corresponde ingresar y rellenando las casillas de Hacienda de acuerdo a los campos mostrados
-		// Habría que ver la posibilidad de añadir un botón para agregar el asiento de pago de cara a siguientes trimestres (el plugin no lo hace)
-		// Actualmente los asientos de Seguridad Social (642) y de trimestres anteriores (473) se mete a mano (una forma rápida es con el plugin Asientos Predefinidos)
-		// En este link se explica como calcular el modelo 130 
-		// https://tuspapelesautonomos.es/modelo-130-como-se-calcula-descubrelo-facil-con-ejemplos/
+	// Primero calculamos rendimiento neto: ingresos(ftras ventas) - gastos (ftras compras/gastos + SS) acumulado anual
+	// El cálculo nos dará un número negativo o positivo que serán las pérdidas o los beneficios respectivamente
+	// El importe a deducir debe ser del 20% según modelo 130 o superior si se desea ingresar un IRPF superior
+	// Después se deben restar las retenciones aplicadas en las facturas de venta ya que eso lo ingresa el cliente en tu nombre
+	// Igualmente como es el acumulado del año, se deben restar también los trimestrales ya pagados y registrado el asiento
+	// Si sale número negativo, el importe a ingresar este trimestra será 0
+	// Si sale positivo, dicha cantidad es la que corresponde ingresar y rellenando las casillas de Hacienda de acuerdo a los campos mostrados
+	// Habría que ver la posibilidad de añadir un botón para agregar el asiento de pago de cara a siguientes trimestres (el plugin no lo hace)
+	// Actualmente los asientos de Seguridad Social (642) y de trimestres anteriores (473) se mete a mano (una forma rápida es con el plugin Asientos Predefinidos)
+	// En este link se explica como calcular el modelo 130 
+	// https://tuspapelesautonomos.es/modelo-130-como-se-calcula-descubrelo-facil-con-ejemplos/
 
-		$this->taxbase = round( $this->taxbaseIngresos - $this->taxbaseGastos, 2);
+	$this->taxbase = round( $this->taxbaseIngresos - $this->taxbaseGastos, 2);
         
         $this->todeduct = (float) $this->request->request->get('todeduct', $this->todeduct);
 		
-		$this->afterdeduct = round( ($this->taxbase * $this->todeduct) / 100, 2);
+	$this->afterdeduct = round( ($this->taxbase * $this->todeduct) / 100, 2);
 		
-		$this->result = round( $this->afterdeduct - $this->taxbaseRetenciones - $this->positivosTrimestres, 2);
+	$this->result = round( $this->afterdeduct - $this->taxbaseRetenciones - $this->positivosTrimestres, 2);
         
         if ($this->result < 0) {
             $this->result = 0;
         }
     }
-    
 }
