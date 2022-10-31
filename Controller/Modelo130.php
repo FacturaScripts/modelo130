@@ -32,6 +32,7 @@ use FacturaScripts\Dinamic\Model\Asiento;
  *
  * @author Carlos Garcia Gomez            <carlos@facturascripts.com>
  * @author Jerónimo Pedro Sánchez Manzano <socger@gmail.com>
+ * @author Javier Martín González <javier@javiermarting.es>
  */
 class Modelo130 extends Controller
 {
