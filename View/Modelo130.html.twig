@@ -126,9 +126,9 @@
                 </div>
             </div>
 			
-			{#Segunda fila donde se calculará en rendimiento total#} 
-			<div class="row">
-				<div class="col">
+	   {#Segunda fila donde se calculará en rendimiento total#} 
+	   <div class="row">
+		<div class="col">
                     <div class="form-group">
                         {{ fsc.todeduct }}% {{ i18n.trans('after-deduct') }}
                         <div class="input-group">
@@ -140,7 +140,7 @@
                     </div>
                 </div>
 				
-				<div class="col">
+		<div class="col">
                     <div class="form-group">
                         {{ i18n.trans('retentions') }}
                         <div class="input-group">
@@ -152,7 +152,7 @@
                     </div>
                 </div>
 				
-				<div class="col">
+		<div class="col">
                     <div class="form-group">
                         {{ i18n.trans('previous-model') }}
                         <div class="input-group">
@@ -164,7 +164,7 @@
                     </div>
                 </div>
 				
-				<div class="col">
+		<div class="col">
                     <div class="form-group">
                         {{ i18n.trans('result') }}
                         <div class="input-group">
@@ -173,10 +173,10 @@
                             </div>
                             <input type="number" value="{{ fsc.result }}" class="form-control text-right" readonly="true" />
                         </div>
-						{{ i18n.trans('tax-negative-info') }}
+			{{ i18n.trans('tax-negative-info') }}
                     </div>
                 </div>
-			</div>
+	    </div>
 
             {#Creamos las pestañas de Ftras de clientes y proveedores#}
             <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -306,10 +306,10 @@
                                         <thead>
                                             <tr>
                                                 <th>{{ i18n.trans('accounting-entry') }}</th>
-												<th>{{ i18n.trans('subaccount') }}</th>
-												<th>{{ i18n.trans('concept') }}</th>
-												<th class="text-right">{{ i18n.trans('total') }}</th>
-												<th class="text-right">{{ i18n.trans('date') }}</th>
+						<th>{{ i18n.trans('subaccount') }}</th>
+						<th>{{ i18n.trans('concept') }}</th>
+						<th class="text-right">{{ i18n.trans('total') }}</th>
+						<th class="text-right">{{ i18n.trans('date') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -336,7 +336,6 @@
                     {#{% endif %}#}
                 </div>
             </div>                        
-
         </div>
     </form>
 {% endblock %}
