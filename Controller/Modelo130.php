@@ -277,10 +277,13 @@ class Modelo130 extends Controller
 		
 		$codsubs = ['6420000000', '4730000000']; // 6420000000 Seguridad social , 4730000000 IRPF
 		
+		// Buscar asientos entre las fechas de los tipos anteriores, que el tipodocumento sea NULL ya que la partida 473
+		// también asocia facturas con retención aplicada que no deseamos aplicar, que ya se obtienen al consultar las facturas
 		$sql = 'SELECT * FROM ' . Partida::tableName() . ' as p'
             . ' LEFT JOIN ' . Asiento::tableName() . ' as a ON p.idasiento = a.idasiento'
             . ' WHERE a.codejercicio = ' . $this->dataBase->var2str($this->codejercicio)
             . ' AND a.fecha BETWEEN ' . $this->dataBase->var2str($this->dateStart) . ' AND ' . $this->dataBase->var2str($this->dateEnd)
+			. ' AND a.tipodocumento IS NULL'
             . ' AND p.codsubcuenta IN (' . \implode(',', $codsubs) . ')'
 			. ' ORDER BY numero ASC';
         foreach ($this->dataBase->select($sql) as $row) {
@@ -310,8 +313,6 @@ class Modelo130 extends Controller
 		
 		// La seguridad social se cuenta como un gasto deducible
 		$this->taxbaseGastos += $this->segSocial;
-		// La subcuenta 473 incluye tanto las retenciones como trimestres anteriores, se restan las retenciones ya que se deben desglosar en otro campo
-		$this->positivosTrimestres = round( $this->positivosTrimestres - $this->taxbaseRetenciones, 2);
 
 
 		$this->taxbase = round( $this->taxbaseIngresos - $this->taxbaseGastos, 2);
@@ -328,7 +329,6 @@ class Modelo130 extends Controller
         $this->todeduct = (float) $this->request->request->get('todeduct', $this->todeduct);
 		
 		$this->afterdeduct = round( ($this->taxbase * $this->todeduct) / 100, 2);
-		
 		
 		$this->result = round( $this->afterdeduct - $this->taxbaseRetenciones - $this->positivosTrimestres, 2);
         
