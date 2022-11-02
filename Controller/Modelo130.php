@@ -267,8 +267,8 @@ class Modelo130 extends Controller
 		
 	$codsubs = ['6420000000', '4730000000']; // 6420000000 Seguridad social , 4730000000 IRPF
 		
-	// Buscar asientos entre las fechas de los tipos anteriores, que el tipodocumento sea NULL ya que la partida 473
-	// también asocia facturas con retención aplicada que no deseamos obtener, que ya se obtienen al consultar las facturas
+	// Buscar asientos entre las fechas de los tipos anteriores, la partida 473
+	// también obtiene las facturas con retención aplicada que se mostarán en asientos
 	$sql = 'SELECT * FROM ' . Partida::tableName() . ' as p'
             . ' LEFT JOIN ' . Asiento::tableName() . ' as a ON p.idasiento = a.idasiento'
             . ' WHERE a.idempresa = ' . $this->dataBase->var2str($this->idempresa)
@@ -290,7 +290,7 @@ class Modelo130 extends Controller
         
         foreach ($this->supplierInvoices as $invoice) {
             $this->taxbaseIngresos += $invoice->neto;
-			$this->taxbaseRetenciones += $invoice->totalirpf;
+	    $this->taxbaseRetenciones += $invoice->totalirpf;
         }
 		
 	foreach ($this->accountingAsientos as $asiento) {
@@ -303,6 +303,10 @@ class Modelo130 extends Controller
 		
 	// La seguridad social se cuenta como un gasto deducible
 	$this->taxbaseGastos += $this->segSocial;
+	    
+	// La partida 473 incluye tanto trimestres anteriores como las retenciones de facturas
+	$this->positivosTrimestres = round( $this->positivosTrimestres - $this->taxbaseRetenciones, 2);
+	
 
 	// Primero calculamos rendimiento neto: ingresos(ftras ventas) - gastos (ftras compras/gastos + SS) acumulado anual
 	// El cálculo nos dará un número negativo o positivo que serán las pérdidas o los beneficios respectivamente
