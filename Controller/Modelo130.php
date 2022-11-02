@@ -273,7 +273,6 @@ class Modelo130 extends Controller
             . ' LEFT JOIN ' . Asiento::tableName() . ' as a ON p.idasiento = a.idasiento'
             . ' WHERE a.idempresa = ' . $this->dataBase->var2str($this->idempresa)
             . ' AND a.fecha BETWEEN ' . $this->dataBase->var2str($this->dateStart) . ' AND ' . $this->dataBase->var2str($this->dateEnd)
-	    . ' AND a.tipodocumento IS NULL'
             . ' AND p.codsubcuenta IN (' . \implode(',', $codsubs) . ')'
 	    . ' ORDER BY numero ASC';
         foreach ($this->dataBase->select($sql) as $row) {
