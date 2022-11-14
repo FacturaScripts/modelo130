@@ -1,3 +1,12 @@
 {
-    "model-130": "Modelo 130"
+    "after-deduct": "sobre casilla 04",
+    "model-130": "Model 130",
+    "model-130-p": "Model 130 is a quarterly declaration of personal income tax (PIT) in which the installment payment of this tax is settled, on account of the annual declaration that is made the following year.",
+    "model-130-r": "Datos acumulados del período comprendido entre el primer día del año y el último día del trimestre",
+    "net-total": "Rendimiento neto",
+    "pct-to-deduct": "% a deducir",
+    "previous-model": "Ingresos trimestres anteriores",
+    "tax-expenses": "Gastos deducibles",
+    "tax-incomes": "Ingresos computables",
+    "tax-negative-info": "Si da pérdidas (negativo) = 0"
 }
