@@ -1,7 +1,15 @@
 {
     "model-130": "Modelo 130",
     "model-130-p": "El Modelo 130 es una declaración trimestral del impuesto de la renta de las personas físicas (IRPF) en el que se liquida el pago fraccionado de este impuesto, a cuenta de la declaración anual que se realiza el año siguiente.",
-    "number-recipients": "Nº perceptores",
+    "model-130-r": "Datos acumulados del período comprendido entre el primer día del año y el último día del trimestre",
+    "tax-base": "B.Imp.",
+    "tax-incomes": "Ingresos computables",
+    "tax-expenses": "Gastos deducibles",
+    "net-total": "Rendimiento neto",
+    "retentions": "Retenciones soportadas",
     "%to-deduct": "% a deducir",
-    "tax-base": "B.Imp."
+    "after-deduct": "sobre casilla 04",
+    "previous-model": "Ingresos trimestres anteriores",
+    "result": "Total a ingresar",
+    "tax-negative-info": "Si da pérdidas (negativo) = 0"
 }
