@@ -46,7 +46,7 @@ class Modelo130 extends Controller
     /** @var string */
     public $codejercicio;
 
-    /** @var FacturaProveedor[] */
+    /** @var FacturaCliente[] */
     public $customerInvoices = [];
 
     /** @var string */
@@ -70,7 +70,7 @@ class Modelo130 extends Controller
     /** @var float */
     public $segSocial = 0.0;
 
-    /** @var FacturaCliente[] */
+    /** @var FacturaProveedor[] */
     public $supplierInvoices = [];
 
     /** @var float */
@@ -213,12 +213,12 @@ class Modelo130 extends Controller
     protected function loadResults()
     {
         foreach ($this->customerInvoices as $invoice) {
-            $this->taxbaseGastos += $invoice->neto;
+			$this->taxbaseIngresos += $invoice->neto;
+            $this->taxbaseRetenciones += $invoice->totalirpf;
         }
 
         foreach ($this->supplierInvoices as $invoice) {
-            $this->taxbaseIngresos += $invoice->neto;
-            $this->taxbaseRetenciones += $invoice->totalirpf;
+            $this->taxbaseGastos += $invoice->neto;
         }
 
         foreach ($this->accountingEntries as $asiento) {
