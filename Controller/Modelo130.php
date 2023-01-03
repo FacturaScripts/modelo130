@@ -213,7 +213,7 @@ class Modelo130 extends Controller
     protected function loadResults()
     {
         foreach ($this->customerInvoices as $invoice) {
-			$this->taxbaseIngresos += $invoice->neto;
+	    $this->taxbaseIngresos += $invoice->neto;
             $this->taxbaseRetenciones += $invoice->totalirpf;
         }
 
