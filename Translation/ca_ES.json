@@ -1,4 +1,12 @@
 {
+    "after-deduct": "sobre casella 04",
     "model-130": "Model 130",
-    "model-130-p": "El Model 130 és una declaració trimestral de l'impost de la renda de les persones físiques (IRPF) en el qual es liquida el pagament fraccionat d'aquest impost, a compte de la declaració anual que es realitza l'any següent."
+    "model-130-p": "El Model 130 és una declaració trimestral de l'impost de la renda de les persones físiques (IRPF) en el qual es liquida el pagament fraccionat d'aquest impost, a compte de la declaració anual que es realitza l'any següent.",
+    "model-130-r": "Dades acumulades del període comprès entre el primer dia de l'any i el darrer dia del trimestre",
+    "net-total": "Rendiment net",
+    "pct-to-deduct": "% a deduir",
+    "previous-model": "Ingressos trimestres anteriors",
+    "tax-expenses": "Despeses deduïbles",
+    "tax-incomes": "Ingressos computables",
+    "tax-negative-info": "Si dóna pèrdues (negatiu) = 0"
 }

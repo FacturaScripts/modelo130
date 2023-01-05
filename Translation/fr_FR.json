@@ -1,4 +1,12 @@
 {
+    "after-deduct": "sobre casilla 04",
     "model-130": "Formulaire 130",
-    "model-130-p": "Le formulaire 130 est une déclaration trimestrielle de l'impôt sur le revenu des personnes physiques (IRPP) dans laquelle le paiement de cet impôt est réglé par acomptes, compte tenu de la déclaration annuelle à effectuer l'année suivante."
+    "model-130-p": "Le formulaire 130 est une déclaration trimestrielle de l'impôt sur le revenu des personnes physiques (IRPP) dans laquelle le paiement de cet impôt est réglé par acomptes, compte tenu de la déclaration annuelle à effectuer l'année suivante.",
+    "model-130-r": "Datos acumulados del período comprendido entre el primer día del año y el último día del trimestre",
+    "net-total": "Rendimiento neto",
+    "pct-to-deduct": "% a deducir",
+    "previous-model": "Ingresos trimestres anteriores",
+    "tax-expenses": "Gastos deducibles",
+    "tax-incomes": "Ingresos computables",
+    "tax-negative-info": "Si da pérdidas (negativo) = 0"
 }

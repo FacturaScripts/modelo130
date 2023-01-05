@@ -1,4 +1,12 @@
 {
+    "after-deduct": "sobre casa 04",
     "model-130": "Modelo 130",
-    "model-130-p": "O Modelo 130 é unha declaración trimestral do imposto da renta das personas físicas (IRPF) no que se liquida o pago fraccionado deste imposto, a conta da declaración anual que se realiza no ano seguinte."
+    "model-130-p": "O Modelo 130 é unha declaración trimestral do imposto da renta das personas físicas (IRPF) no que se liquida o pago fraccionado deste imposto, a conta da declaración anual que se realiza no ano seguinte.",
+    "model-130-r": "Datos acumulados do período comprendido entre o primeiro día do ano e o último día do trimestre",
+    "net-total": "Rendemento neto",
+    "pct-to-deduct": "% a deducir",
+    "previous-model": "Ingresos trimestres anteriores",
+    "tax-expenses": "Gastos deducibles",
+    "tax-incomes": "Ingresos computables",
+    "tax-negative-info": "Se dá perdas (negativo) = 0"
 }
