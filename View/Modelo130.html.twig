@@ -2,47 +2,38 @@
 
 {% block body %}
     <form action="{{ fsc.url() }}" method="post">
-
         <div class="container-fluid">
-
-            {#Presenta la parte en la que se pide Ejercicio y Periodo ... para que el usuario elija#}
             <div class="row">
                 <div class="col">
                     <h1 class="h2">
                         <i class="fas fa-book fa-fw"></i>
-                        {{ i18n.trans(fsc.title) }} {#Ponemos el título que tiene en Modelo130.php, en este caso Model-130#}
+                        {{ i18n.trans(fsc.title) }}
                     </h1>
                     <p>
-                        {{ i18n.trans('model-130-p') }} {#Ponemos la parrafada de que es el modelo 130#}
+                        {{ i18n.trans('model-130-p') }}
                     </p>
                 </div>
             </div>
-
-
             <div class="row align-items-end">
-                {#Creamos el comboBox Ejercicio y lo cargamos de registros traidos desde Modelo130.php function getExercisesForComboBoxHtml#}
                 <div class="col-sm-3">
                     <div class="form-group">
                         {{ i18n.trans('exercise') }}
-
-                        <select name="codejercicio" class="form-control" required="true">
-                            {% for exercise in fsc.getExercisesForComboBoxHtml() %} {#getExercises es una function de Modelo130.php, así que cargamos en comboBox todos los ejercicios#}
+                        <select name="codejercicio" class="form-control" required>
+                            {% for exercise in fsc.getExercisesForComboBoxHtml() %} {# getExercises es una function de Modelo130.php, así que cargamos en comboBox todos los ejercicios #}
                                 {% if exercise.codejercicio == fsc.codejercicio %}
-                                    <option value="{{ exercise.codejercicio }}" selected="">{{ exercise.nombre }}</option>
+                                    <option value="{{ exercise.codejercicio }}"
+                                            selected="">{{ exercise.nombre }}</option>
                                 {% else %}
                                     <option value="{{ exercise.codejercicio }}">{{ exercise.nombre }}</option>
                                 {% endif %}
                             {% endfor %}
                         </select>
-
                     </div>
                 </div>
-
-                {#Creamos el comboBox Periodo y lo cargamos de registros traidos desde Modelo130.php function getPeriodsForComboBoxHtml#}
                 <div class="col-sm-3">
                     <div class="form-group">
                         {{ i18n.trans('period') }}
-                        <select name="period" class="form-control" required="true">
+                        <select name="period" class="form-control" required>
                             {% for period, label in fsc.getPeriodsForComboBoxHtml() %}
                                 {% if period == fsc.period %}
                                     <option value="{{ period }}" selected="">{{ i18n.trans(label) }}</option>
@@ -53,8 +44,6 @@
                         </select>
                     </div>
                 </div>
-
-                {#Creamos el botón de Previsualizar#}
                 <div class="col">
                     <div class="form-group">
                         <button type="submit" name="action" value="show" class="btn btn-primary">
@@ -63,198 +52,345 @@
                     </div>
                 </div>
             </div>
-
-
-
-            {#La fila donde se presenta el título Resumen#}
             <div class="row">
                 <div class="col">
                     <h2 class="h3 mt-3">
-                        <i class="far fa-clipboard fa-fw"></i> {{ i18n.trans('summary') }} {#Resumen#}
+                        <i class="far fa-clipboard fa-fw"></i> {{ i18n.trans('summary') }}
                     </h2>
+                    <p>
+                        {{ i18n.trans('model-130-r') }}
+                    </p>
                 </div>
             </div>
-
-            {#La fila donde se presentan las casillas de los totales de clientes#}        
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        {{ i18n.trans('tax-base') }}
-                        -
-                        {{ i18n.trans('sales') }}
+                        {{ i18n.trans('tax-incomes') }}
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">01</span>
                             </div>
-                            <input type="number" value="{{ fsc.taxbaseFtrasClientes }}" class="form-control text-right" readonly="true" /> {#Base Imponible#}
+                            <input type="number" value="{{ fsc.taxbaseIngresos }}" class="form-control text-right"
+                                   readonly/>
                         </div>
                     </div>
                 </div>
-
                 <div class="col">
                     <div class="form-group">
-                        {{ i18n.trans('tax-base') }}
-                        -
-                        {{ i18n.trans('purchases') }}
+                        {{ i18n.trans('tax-expenses') }}
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">02</span>
                             </div>
-                            <input type="number" value="{{ fsc.taxbaseFtrasProveedores }}" class="form-control text-right" readonly="true" />
+                            <input type="number" value="{{ fsc.taxbaseGastos }}" class="form-control text-right"
+                                   readonly/>
                         </div>
                     </div>
                 </div>
-
                 <div class="col">
                     <div class="form-group">
-                        {#{{ i18n.trans('tax-base') }}#}
-                        {{ i18n.trans('sales') }} - {{ i18n.trans('purchases') }}
+                        {{ i18n.trans('net-total') }}
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">03</span>
                             </div>
-                            <input type="number" value="{{ fsc.taxbase }}" class="form-control text-right" readonly="true" /> {#Base Imponible#}
+                            <input type="number" value="{{ fsc.taxbase }}" class="form-control text-right" readonly/>
                         </div>
                     </div>
                 </div>
-
                 <div class="col">
                     <div class="form-group">
-                        {{ i18n.trans('%to-deduct') }}
+                        {{ i18n.trans('pct-to-deduct') }}
                         <div class="input-group">
-                            <input type="number" name="todeduct" value="{{ fsc.todeduct }}" class="form-control text-right" required="true" onchange="this.form.submit();" />
+                            <input type="number" name="todeduct" value="{{ fsc.todeduct }}"
+                                   class="form-control text-right" required onchange="this.form.submit();"/>
                         </div>
                     </div>
                 </div>
-                            
+            </div>
+            <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        {{ fsc.todeduct }}% sobre casilla 03
-                        {#{{ i18n.trans('result') }}#}
+                        {{ fsc.todeduct }}% {{ i18n.trans('after-deduct') }}
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">04</span>
                             </div>
-                            <input type="number" value="{{ fsc.result }}" class="form-control text-right" readonly="true" />
+                            <input type="number" value="{{ fsc.afterdeduct }}" class="form-control text-right"
+                                   readonly/>
                         </div>
-                        Si da pérdidas (negativo) = 0
+                    </div>
+                </div>
+		<div class="col">
+                    <div class="form-group">
+                        {{ i18n.trans('previous-model') }}
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">05</span>
+                            </div>
+                            <input type="number" value="{{ fsc.positivosTrimestres }}" class="form-control text-right"
+                                   readonly/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        {{ i18n.trans('retentions') }}
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">06</span>
+                            </div>
+                            <input type="number" value="{{ fsc.taxbaseRetenciones }}" class="form-control text-right"
+                                   readonly/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        {{ i18n.trans('result') }}
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">07</span>
+                            </div>
+                            <input type="number" value="{{ fsc.result }}" class="form-control text-right"
+                                   readonly/>
+                        </div>
+                        {{ i18n.trans('tax-negative-info') }}
                     </div>
                 </div>
             </div>
-
-            {#Creamos las pestañas de Ftras de clientes y proveedores#}
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">
-                        <i class="far fa-copy fa-fw"></i> {{ i18n.trans('sales') }}
-                    </a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">
-                        <i class="far fa-copy fa-fw"></i> {{ i18n.trans('purchases') }}
-                    </a>
-                </li>
-            </ul>
-
-            {#Creamos el contenido de las pestañas antes mencionadas#}
-            <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                    {#Presentamos las líneas de facturas de clientes cargadas desde Modelo130.php function loadInvoices()#}            
-                    {#{% if fsc.customerInvoices is not empty %}#}
-                        {#La fila de detalle de cada factura#}            
-                        <div class="row">
-                            <div class="col">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>{{ i18n.trans('invoice') }}</th>
-                                                <th>{{ i18n.trans('customer') }}</th>
-                                                <th class="text-right">{{ i18n.trans('net') }}</th>
-                                                <th class="text-right">{{ i18n.trans('taxes') }}</th>
-                                                <th class="text-right">{{ i18n.trans('surcharge') }}</th>
-                                                    {#<th class="text-right">%{{ i18n.trans('retention') }}</th>#}
-                                                <th class="text-right">{{ i18n.trans('retention') }}</th>
-                                                <th class="text-right">{{ i18n.trans('total') }}</th>
-                                                <th class="text-right">{{ i18n.trans('date') }}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for item in fsc.supplierInvoices %}
-                                                <tr>
-                                                    <td>
-                                                        <a href="{{ item.url() }}">{{ item.codigo }}</a>
-                                                    </td>
-                                                    <td>{{ item.nombrecliente | raw }}</td>
-                                                    <td class="text-right">{{ fsc.toolBox().coins().format(item.neto) }}</td>
-                                                    <td class="text-right">{{ fsc.toolBox().coins().format(item.totaliva) }}</td>
-                                                    <td class="text-right">{{ fsc.toolBox().coins().format(item.totalrecargo) }}</td>
-                                                    {#<td class="text-right">{{ fsc.toolBox().coins().format(item.irpf) }}</td>#}
-                                                    <td class="text-right">{{ fsc.toolBox().coins().format(item.totalirpf) }}</td>
-                                                    <td class="text-right">{{ fsc.toolBox().coins().format(item.total) }}</td>
-                                                    <td class="text-right">{{ item.fecha }}</td>
-                                                </tr>
-                                            {% else %}
-                                                <tr class="table-warning">
-                                                    <td colspan="8">{{ i18n.trans('no-data') }}</td>
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    {#{% endif %}#}
-                </div>
-
-                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                    {#Presentamos las líneas de facturas de proveedores cargadas desde Modelo130.php function loadInvoices()#}            
-                    {#{% if fsc.supplierInvoices is not empty %}#}
-                        {#La fila de detalle de cada factura#}            
-                        <div class="row">
-                            <div class="col">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>{{ i18n.trans('invoice') }}</th>
-                                                <th>{{ i18n.trans('supplier') }}</th>
-                                                <th class="text-right">{{ i18n.trans('net') }}</th>
-                                                <th class="text-right">{{ i18n.trans('taxes') }}</th>
-                                                <th class="text-right">{{ i18n.trans('surcharge') }}</th>
-                                                <th class="text-right">{{ i18n.trans('retention') }}</th>
-                                                <th class="text-right">{{ i18n.trans('total') }}</th>
-                                                <th class="text-right">{{ i18n.trans('date') }}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for item in fsc.customerInvoices %}
-                                                <tr>
-                                                    <td>
-                                                        <a href="{{ item.url() }}">{{ item.codigo }}</a>
-                                                    </td>
-                                                    <td>{{ item.nombre | raw }}</td>
-                                                    <td class="text-right">{{ fsc.toolBox().coins().format(item.neto) }}</td>
-                                                    <td class="text-right">{{ fsc.toolBox().coins().format(item.totaliva) }}</td>
-                                                    <td class="text-right">{{ fsc.toolBox().coins().format(item.totalrecargo) }}</td>
-                                                    <td class="text-right">{{ fsc.toolBox().coins().format(item.totalirpf) }}</td>
-                                                    <td class="text-right">{{ fsc.toolBox().coins().format(item.total) }}</td>
-                                                    <td class="text-right">{{ item.fecha }}</td>
-                                                </tr>
-                                            {% else %}
-                                                <tr class="table-warning">
-                                                    <td colspan="8">{{ i18n.trans('no-data') }}</td>
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    {#{% endif %}#}
-                </div>
-            </div>                        
-
         </div>
     </form>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="sales-tab" data-toggle="tab" href="#sales" role="tab"
+               aria-controls="sales" aria-selected="true" title="{{ i18n.trans('sales') }}">
+                <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i>
+                <span class="d-none d-sm-inline-block">{{ i18n.trans('sales') }}</span>
+                <span class="badge badge-secondary">{{ fsc.customerInvoices|length }}</span>
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="purchases-tab" data-toggle="tab" href="#purchases" role="tab"
+               aria-controls="purchases" aria-selected="false" title="{{ i18n.trans('purchases') }}">
+                <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i>
+                <span class="d-none d-sm-inline-block">{{ i18n.trans('purchases') }}</span>
+                <span class="badge badge-secondary">{{ fsc.supplierInvoices|length }}</span>
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="accounting-tab" data-toggle="tab" href="#accounting" role="tab"
+               aria-controls="accounting" aria-selected="false" title="{{ i18n.trans('accounting-entries') }}">
+                <i class="fas fa-balance-scale" aria-hidden="true"></i>
+                <span class="d-none d-sm-inline-block">{{ i18n.trans('accounting-entries') }}</span>
+                <span class="badge badge-secondary">{{ fsc.accountingEntries|length }}</span>
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="sales" role="tabpanel" aria-labelledby="sales-tab">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>{{ i18n.trans('invoice') }}</th>
+                            <th>{{ i18n.trans('customer') }}</th>
+                            <th class="text-right">{{ i18n.trans('net') }}</th>
+                            <th class="text-right">{{ i18n.trans('taxes') }}</th>
+                            <th class="text-right">{{ i18n.trans('surcharge') }}</th>
+                            <th class="text-right">{{ i18n.trans('retention') }}</th>
+                            <th class="text-right">{{ i18n.trans('total') }}</th>
+                            <th class="text-right">{{ i18n.trans('date') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% set salesTotalNeto = 0 %}
+                    {% set salesTotalTax = 0 %}
+                    {% set salesTotalSurcharge = 0 %}
+                    {% set salesTotalRetention = 0 %}
+                    {% set salesTotal = 0 %}
+                    {% for item in fsc.customerInvoices %}
+                        {% set salesTotalNeto = salesTotalNeto + item.neto %}
+                        {% set salesTotalTax = salesTotalTax + item.totaliva %}
+                        {% set salesTotalSurcharge = salesTotalSurcharge + item.totalrecargo %}
+                        {% set salesTotalRetention = salesTotalRetention + item.totalirpf %}
+                        {% set salesTotal = salesTotal + item.total %}
+                        <tr>
+                            <td>
+                                <a href="{{ item.url() }}">{{ item.codigo }}</a>
+                            </td>
+                            <td>{{ item.nombrecliente | raw }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(item.neto) }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(item.totaliva) }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(item.totalrecargo) }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(item.totalirpf) }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(item.total) }}</td>
+                            <td class="text-right">{{ item.fecha }}</td>
+                        </tr>
+                    {% else %}
+                        <tr class="table-warning">
+                            <td colspan="8">{{ i18n.trans('no-data') }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="text-right text-capitalize">{{ i18n.trans('totals') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-right font-weight-bold">{{ i18n.trans('net') }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(salesTotalNeto) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right font-weight-bold">{{ i18n.trans('taxes') }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(salesTotalTax) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right font-weight-bold">{{ i18n.trans('surcharge') }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(salesTotalSurcharge) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right font-weight-bold">{{ i18n.trans('retention') }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(salesTotalRetention) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right font-weight-bold">{{ i18n.trans('total-amount') }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(salesTotal) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="purchases" role="tabpanel" aria-labelledby="purchases-tab">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>{{ i18n.trans('invoice') }}</th>
+                            <th>{{ i18n.trans('supplier') }}</th>
+                            <th class="text-right">{{ i18n.trans('net') }}</th>
+                            <th class="text-right">{{ i18n.trans('taxes') }}</th>
+                            <th class="text-right">{{ i18n.trans('surcharge') }}</th>
+                            <th class="text-right">{{ i18n.trans('retention') }}</th>
+                            <th class="text-right">{{ i18n.trans('total') }}</th>
+                            <th class="text-right">{{ i18n.trans('date') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% set purchasesTotalNeto = 0 %}
+                    {% set purchasesTotalTax = 0 %}
+                    {% set purchasesTotalSurcharge = 0 %}
+                    {% set purchasesTotalRetention = 0 %}
+                    {% set purchasesTotal = 0 %}
+                    {% for item in fsc.supplierInvoices %}
+                        {% set purchasesTotalNeto = purchasesTotalNeto + item.neto %}
+                        {% set purchasesTotalTax = purchasesTotalTax + item.totaliva %}
+                        {% set purchasesTotalSurcharge = purchasesTotalSurcharge + item.totalrecargo %}
+                        {% set purchasesTotalRetention = purchasesTotalRetention + item.totalirpf %}
+                        {% set purchasesTotal = purchasesTotal + item.total %}
+                        <tr>
+                            <td>
+                                <a href="{{ item.url() }}">{{ item.codigo }}</a>
+                            </td>
+                            <td>{{ item.nombre | raw }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(item.neto) }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(item.totaliva) }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(item.totalrecargo) }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(item.totalirpf) }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(item.total) }}</td>
+                            <td class="text-right">{{ item.fecha }}</td>
+                        </tr>
+                    {% else %}
+                        <tr class="table-warning">
+                            <td colspan="8">{{ i18n.trans('no-data') }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="text-right text-capitalize">{{ i18n.trans('totals') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-right font-weight-bold">{{ i18n.trans('net') }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(purchasesTotalNeto) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right font-weight-bold">{{ i18n.trans('taxes') }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(purchasesTotalTax) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right font-weight-bold">{{ i18n.trans('surcharge') }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(purchasesTotalSurcharge) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right font-weight-bold">{{ i18n.trans('retention') }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(purchasesTotalRetention) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right font-weight-bold">{{ i18n.trans('total-amount') }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(purchasesTotal) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="accounting" role="tabpanel" aria-labelledby="accounting-tab">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>{{ i18n.trans('accounting-entry') }}</th>
+                        <th>{{ i18n.trans('subaccount') }}</th>
+                        <th>{{ i18n.trans('concept') }}</th>
+                        <th class="text-right">{{ i18n.trans('total') }}</th>
+                        <th class="text-right">{{ i18n.trans('date') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% set accountingTotalNeto = 0 %}
+                    {% for item in fsc.accountingEntries %}
+                        {% set accountingTotalNeto = accountingTotalNeto + item.debe %}
+                        <tr>
+                            <td>
+                                <a href="{{ item.url() }}">{{ item.numero }}</a>
+                            </td>
+                            <td>{{ item.codsubcuenta }}</td>
+                            <td>{{ item.concepto | raw }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(item.debe) }}</td>
+                            <td class="text-right">{{ item.fecha }}</td>
+                        </tr>
+                    {% else %}
+                        <tr class="table-warning">
+                            <td colspan="8">{{ i18n.trans('no-data') }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="text-right text-capitalize">{{ i18n.trans('totals') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-right font-weight-bold">{{ i18n.trans('total-amount') }}</td>
+                            <td class="text-right">{{ fsc.toolBox().coins().format(accountingTotalNeto) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}
