@@ -1,8 +1,8 @@
 <?php
 /**
  * This file is part of Modelo130 plugin for FacturaScripts
- * Copyright (C) 2021 Carlos Garcia Gomez            <carlos@facturascripts.com>
- *                    Jeronimo Pedro Sánchez Manzano <socger@gmail.com>
+ * Copyright (C) 2021-2023 Carlos Garcia Gomez            <carlos@facturascripts.com>
+ *                         Jeronimo Pedro Sánchez Manzano <socger@gmail.com>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,6 +21,7 @@ namespace FacturaScripts\Plugins\Modelo130\Controller;
 
 use FacturaScripts\Core\Base\Controller;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\DataSrc\Ejercicios;
 use FacturaScripts\Dinamic\Model\Asiento;
 use FacturaScripts\Dinamic\Model\Ejercicio;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
@@ -32,11 +33,10 @@ use FacturaScripts\Dinamic\Model\Partida;
  *
  * @author Carlos Garcia Gomez            <carlos@facturascripts.com>
  * @author Jerónimo Pedro Sánchez Manzano <socger@gmail.com>
- * @author Javier Martín González <javier@javiermarting.es>
+ * @author Javier Martín González         <javier@javiermarting.es>
  */
 class Modelo130 extends Controller
 {
-
     /** @var Partida[] */
     public $accountingEntries = [];
 
@@ -88,10 +88,23 @@ class Modelo130 extends Controller
     /** @var float */
     public $todeduct = 20.0;
 
-    public function getExercisesForComboBoxHtml(): array
+    /**
+     * @param int|null $idempresa
+     * @return Ejercicio[]
+     */
+    public function getAllExercises(?int $idempresa): array
     {
-        $exercise = new Ejercicio();
-        return $exercise->all([], ['nombre' => 'DESC'], 0, 0);
+        if (empty($idempresa)) {
+            return Ejercicios::all();
+        }
+
+        $list = [];
+        foreach (Ejercicios::all() as $exercise) {
+            if ($exercise->idempresa === $idempresa) {
+                $list[] = $exercise;
+            }
+        }
+        return $list;
     }
 
     public function getPageData(): array
@@ -124,7 +137,7 @@ class Modelo130 extends Controller
     }
 
     // Traemos del codejercicio y period elegido idempresa, dateStart y dateEnd
-    protected function loadDates()
+    protected function loadDates(): void
     {
         // Preparamos fecha de Inicio y Fin, según Ejercicio/Periodo introducido en la vista
         $this->codejercicio = $this->request->request->get('codejercicio', '');
@@ -158,7 +171,7 @@ class Modelo130 extends Controller
         }
     }
 
-    protected function loadInvoices()
+    protected function loadInvoices(): void
     {
         $ftrasProveedores = new FacturaProveedor();
         $ftrasClientes = new FacturaCliente();
@@ -191,7 +204,7 @@ class Modelo130 extends Controller
         $this->customerInvoices = $ftrasClientes->all($whereFtrasClientes, $order, 0, 0);
     }
 
-    protected function loadAsientos()
+    protected function loadAsientos(): void
     {
         // 6420000000 Seguridad social, 4730000000 IRPF
         $codsubs = ['6420000000', '4730000000'];
@@ -201,7 +214,8 @@ class Modelo130 extends Controller
         $sql = 'SELECT * FROM ' . Partida::tableName() . ' as p'
             . ' LEFT JOIN ' . Asiento::tableName() . ' as a ON p.idasiento = a.idasiento'
             . ' WHERE a.idempresa = ' . $this->dataBase->var2str($this->idempresa)
-            . ' AND a.fecha BETWEEN ' . $this->dataBase->var2str(date('Y-m-d', strtotime($this->dateStart))) . ' AND ' . $this->dataBase->var2str(date('Y-m-d', strtotime($this->dateEnd)))
+            . ' AND a.fecha BETWEEN ' . $this->dataBase->var2str(date('Y-m-d', strtotime($this->dateStart)))
+            . ' AND ' . $this->dataBase->var2str(date('Y-m-d', strtotime($this->dateEnd)))
             . ' AND p.codsubcuenta IN (' . implode(',', $codsubs) . ')'
             . ' ORDER BY numero ASC';
 
@@ -210,10 +224,10 @@ class Modelo130 extends Controller
         }
     }
 
-    protected function loadResults()
+    protected function loadResults(): void
     {
         foreach ($this->customerInvoices as $invoice) {
-	    $this->taxbaseIngresos += $invoice->neto;
+            $this->taxbaseIngresos += $invoice->neto;
             $this->taxbaseRetenciones += $invoice->totalirpf;
         }
 

@@ -6,39 +6,39 @@
             <div class="row">
                 <div class="col">
                     <h1 class="h2">
-                        <i class="fas fa-book fa-fw"></i>
-                        {{ i18n.trans(fsc.title) }}
+                        <i class="fas fa-book fa-fw"></i> {{ trans(fsc.title) }}
                     </h1>
-                    <p>
-                        {{ i18n.trans('model-130-p') }}
-                    </p>
+                    <p>{{ trans('model-130-p') }}</p>
                 </div>
             </div>
             <div class="row align-items-end">
                 <div class="col-sm-3">
                     <div class="form-group">
-                        {{ i18n.trans('exercise') }}
+                        {{ trans('exercise') }}
                         <select name="codejercicio" class="form-control" required>
-                            {% for exercise in fsc.getExercisesForComboBoxHtml() %} {# getExercises es una function de Modelo130.php, así que cargamos en comboBox todos los ejercicios #}
-                                {% if exercise.codejercicio == fsc.codejercicio %}
-                                    <option value="{{ exercise.codejercicio }}"
-                                            selected="">{{ exercise.nombre }}</option>
-                                {% else %}
-                                    <option value="{{ exercise.codejercicio }}">{{ exercise.nombre }}</option>
-                                {% endif %}
+                            {% for company in fsc.empresa.all() %}
+                                <optgroup label="{{ company.nombre }}">
+                                    {% for exercise in fsc.getAllExercises(company.idempresa) %}
+                                        {% if exercise.codejercicio == fsc.codejercicio %}
+                                            <option value="{{ exercise.codejercicio }}" selected>{{ exercise.nombre }}</option>
+                                        {% else %}
+                                            <option value="{{ exercise.codejercicio }}">{{ exercise.nombre }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </optgroup>
                             {% endfor %}
                         </select>
                     </div>
                 </div>
                 <div class="col-sm-3">
                     <div class="form-group">
-                        {{ i18n.trans('period') }}
+                        {{ trans('period') }}
                         <select name="period" class="form-control" required>
                             {% for period, label in fsc.getPeriodsForComboBoxHtml() %}
                                 {% if period == fsc.period %}
-                                    <option value="{{ period }}" selected="">{{ i18n.trans(label) }}</option>
+                                    <option value="{{ period }}" selected="">{{ trans(label) }}</option>
                                 {% else %}
-                                    <option value="{{ period }}">{{ i18n.trans(label) }}</option>
+                                    <option value="{{ period }}">{{ trans(label) }}</option>
                                 {% endif %}
                             {% endfor %}
                         </select>
@@ -47,7 +47,7 @@
                 <div class="col">
                     <div class="form-group">
                         <button type="submit" name="action" value="show" class="btn btn-primary">
-                            <i class="fas fa-eye fa-fw"></i> {{ i18n.trans('preview') }}
+                            <i class="fas fa-eye fa-fw"></i> {{ trans('preview') }}
                         </button>
                     </div>
                 </div>
@@ -55,17 +55,17 @@
             <div class="row">
                 <div class="col">
                     <h2 class="h3 mt-3">
-                        <i class="far fa-clipboard fa-fw"></i> {{ i18n.trans('summary') }}
+                        <i class="far fa-clipboard fa-fw"></i> {{ trans('summary') }}
                     </h2>
                     <p>
-                        {{ i18n.trans('model-130-r') }}
+                        {{ trans('model-130-r') }}
                     </p>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        {{ i18n.trans('tax-incomes') }}
+                        {{ trans('tax-incomes') }}
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">01</span>
@@ -77,7 +77,7 @@
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        {{ i18n.trans('tax-expenses') }}
+                        {{ trans('tax-expenses') }}
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">02</span>
@@ -89,7 +89,7 @@
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        {{ i18n.trans('net-total') }}
+                        {{ trans('net-total') }}
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">03</span>
@@ -100,7 +100,7 @@
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        {{ i18n.trans('pct-to-deduct') }}
+                        {{ trans('pct-to-deduct') }}
                         <div class="input-group">
                             <input type="number" name="todeduct" value="{{ fsc.todeduct }}"
                                    class="form-control text-right" required onchange="this.form.submit();"/>
@@ -111,7 +111,7 @@
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        {{ fsc.todeduct }}% {{ i18n.trans('after-deduct') }}
+                        {{ fsc.todeduct }}% {{ trans('after-deduct') }}
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">04</span>
@@ -121,9 +121,9 @@
                         </div>
                     </div>
                 </div>
-		<div class="col">
+                <div class="col">
                     <div class="form-group">
-                        {{ i18n.trans('previous-model') }}
+                        {{ trans('previous-model') }}
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">05</span>
@@ -135,7 +135,7 @@
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        {{ i18n.trans('retentions') }}
+                        {{ trans('retentions') }}
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">06</span>
@@ -147,7 +147,7 @@
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        {{ i18n.trans('result') }}
+                        {{ trans('result') }}
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">07</span>
@@ -155,7 +155,7 @@
                             <input type="number" value="{{ fsc.result }}" class="form-control text-right"
                                    readonly/>
                         </div>
-                        {{ i18n.trans('tax-negative-info') }}
+                        {{ trans('tax-negative-info') }}
                     </div>
                 </div>
             </div>
@@ -164,25 +164,25 @@
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="sales-tab" data-toggle="tab" href="#sales" role="tab"
-               aria-controls="sales" aria-selected="true" title="{{ i18n.trans('sales') }}">
+               aria-controls="sales" aria-selected="true" title="{{ trans('sales') }}">
                 <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i>
-                <span class="d-none d-sm-inline-block">{{ i18n.trans('sales') }}</span>
+                <span class="d-none d-sm-inline-block">{{ trans('sales') }}</span>
                 <span class="badge badge-secondary">{{ fsc.customerInvoices|length }}</span>
             </a>
         </li>
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="purchases-tab" data-toggle="tab" href="#purchases" role="tab"
-               aria-controls="purchases" aria-selected="false" title="{{ i18n.trans('purchases') }}">
+               aria-controls="purchases" aria-selected="false" title="{{ trans('purchases') }}">
                 <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i>
-                <span class="d-none d-sm-inline-block">{{ i18n.trans('purchases') }}</span>
+                <span class="d-none d-sm-inline-block">{{ trans('purchases') }}</span>
                 <span class="badge badge-secondary">{{ fsc.supplierInvoices|length }}</span>
             </a>
         </li>
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="accounting-tab" data-toggle="tab" href="#accounting" role="tab"
-               aria-controls="accounting" aria-selected="false" title="{{ i18n.trans('accounting-entries') }}">
+               aria-controls="accounting" aria-selected="false" title="{{ trans('accounting-entries') }}">
                 <i class="fas fa-balance-scale" aria-hidden="true"></i>
-                <span class="d-none d-sm-inline-block">{{ i18n.trans('accounting-entries') }}</span>
+                <span class="d-none d-sm-inline-block">{{ trans('accounting-entries') }}</span>
                 <span class="badge badge-secondary">{{ fsc.accountingEntries|length }}</span>
             </a>
         </li>
@@ -192,16 +192,16 @@
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
-                        <tr>
-                            <th>{{ i18n.trans('invoice') }}</th>
-                            <th>{{ i18n.trans('customer') }}</th>
-                            <th class="text-right">{{ i18n.trans('net') }}</th>
-                            <th class="text-right">{{ i18n.trans('taxes') }}</th>
-                            <th class="text-right">{{ i18n.trans('surcharge') }}</th>
-                            <th class="text-right">{{ i18n.trans('retention') }}</th>
-                            <th class="text-right">{{ i18n.trans('total') }}</th>
-                            <th class="text-right">{{ i18n.trans('date') }}</th>
-                        </tr>
+                    <tr>
+                        <th>{{ trans('invoice') }}</th>
+                        <th>{{ trans('customer') }}</th>
+                        <th class="text-right">{{ trans('net') }}</th>
+                        <th class="text-right">{{ trans('taxes') }}</th>
+                        <th class="text-right">{{ trans('surcharge') }}</th>
+                        <th class="text-right">{{ trans('retention') }}</th>
+                        <th class="text-right">{{ trans('total') }}</th>
+                        <th class="text-right">{{ trans('date') }}</th>
+                    </tr>
                     </thead>
                     <tbody>
                     {% set salesTotalNeto = 0 %}
@@ -220,48 +220,48 @@
                                 <a href="{{ item.url() }}">{{ item.codigo }}</a>
                             </td>
                             <td>{{ item.nombrecliente | raw }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(item.neto) }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(item.totaliva) }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(item.totalrecargo) }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(item.totalirpf) }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(item.total) }}</td>
+                            <td class="text-right">{{ money(item.neto) }}</td>
+                            <td class="text-right">{{ money(item.totaliva) }}</td>
+                            <td class="text-right">{{ money(item.totalrecargo) }}</td>
+                            <td class="text-right">{{ money(item.totalirpf) }}</td>
+                            <td class="text-right">{{ money(item.total) }}</td>
                             <td class="text-right">{{ item.fecha }}</td>
                         </tr>
                     {% else %}
                         <tr class="table-warning">
-                            <td colspan="8">{{ i18n.trans('no-data') }}</td>
+                            <td colspan="8">{{ trans('no-data') }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
                 <table class="table table-sm table-hover">
                     <thead>
-                        <tr>
-                            <th></th>
-                            <th class="text-right text-capitalize">{{ i18n.trans('totals') }}</th>
-                        </tr>
+                    <tr>
+                        <th></th>
+                        <th class="text-right text-capitalize">{{ trans('totals') }}</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="text-right font-weight-bold">{{ i18n.trans('net') }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(salesTotalNeto) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="text-right font-weight-bold">{{ i18n.trans('taxes') }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(salesTotalTax) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="text-right font-weight-bold">{{ i18n.trans('surcharge') }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(salesTotalSurcharge) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="text-right font-weight-bold">{{ i18n.trans('retention') }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(salesTotalRetention) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="text-right font-weight-bold">{{ i18n.trans('total-amount') }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(salesTotal) }}</td>
-                        </tr>
+                    <tr>
+                        <td class="text-right font-weight-bold">{{ trans('net') }}</td>
+                        <td class="text-right">{{ money(salesTotalNeto) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right font-weight-bold">{{ trans('taxes') }}</td>
+                        <td class="text-right">{{ money(salesTotalTax) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right font-weight-bold">{{ trans('surcharge') }}</td>
+                        <td class="text-right">{{ money(salesTotalSurcharge) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right font-weight-bold">{{ trans('retention') }}</td>
+                        <td class="text-right">{{ money(salesTotalRetention) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right font-weight-bold">{{ trans('total-amount') }}</td>
+                        <td class="text-right">{{ money(salesTotal) }}</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -270,16 +270,16 @@
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
-                        <tr>
-                            <th>{{ i18n.trans('invoice') }}</th>
-                            <th>{{ i18n.trans('supplier') }}</th>
-                            <th class="text-right">{{ i18n.trans('net') }}</th>
-                            <th class="text-right">{{ i18n.trans('taxes') }}</th>
-                            <th class="text-right">{{ i18n.trans('surcharge') }}</th>
-                            <th class="text-right">{{ i18n.trans('retention') }}</th>
-                            <th class="text-right">{{ i18n.trans('total') }}</th>
-                            <th class="text-right">{{ i18n.trans('date') }}</th>
-                        </tr>
+                    <tr>
+                        <th>{{ trans('invoice') }}</th>
+                        <th>{{ trans('supplier') }}</th>
+                        <th class="text-right">{{ trans('net') }}</th>
+                        <th class="text-right">{{ trans('taxes') }}</th>
+                        <th class="text-right">{{ trans('surcharge') }}</th>
+                        <th class="text-right">{{ trans('retention') }}</th>
+                        <th class="text-right">{{ trans('total') }}</th>
+                        <th class="text-right">{{ trans('date') }}</th>
+                    </tr>
                     </thead>
                     <tbody>
                     {% set purchasesTotalNeto = 0 %}
@@ -298,48 +298,48 @@
                                 <a href="{{ item.url() }}">{{ item.codigo }}</a>
                             </td>
                             <td>{{ item.nombre | raw }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(item.neto) }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(item.totaliva) }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(item.totalrecargo) }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(item.totalirpf) }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(item.total) }}</td>
+                            <td class="text-right">{{ money(item.neto) }}</td>
+                            <td class="text-right">{{ money(item.totaliva) }}</td>
+                            <td class="text-right">{{ money(item.totalrecargo) }}</td>
+                            <td class="text-right">{{ money(item.totalirpf) }}</td>
+                            <td class="text-right">{{ money(item.total) }}</td>
                             <td class="text-right">{{ item.fecha }}</td>
                         </tr>
                     {% else %}
                         <tr class="table-warning">
-                            <td colspan="8">{{ i18n.trans('no-data') }}</td>
+                            <td colspan="8">{{ trans('no-data') }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
                 <table class="table table-sm table-hover">
                     <thead>
-                        <tr>
-                            <th></th>
-                            <th class="text-right text-capitalize">{{ i18n.trans('totals') }}</th>
-                        </tr>
+                    <tr>
+                        <th></th>
+                        <th class="text-right text-capitalize">{{ trans('totals') }}</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="text-right font-weight-bold">{{ i18n.trans('net') }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(purchasesTotalNeto) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="text-right font-weight-bold">{{ i18n.trans('taxes') }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(purchasesTotalTax) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="text-right font-weight-bold">{{ i18n.trans('surcharge') }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(purchasesTotalSurcharge) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="text-right font-weight-bold">{{ i18n.trans('retention') }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(purchasesTotalRetention) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="text-right font-weight-bold">{{ i18n.trans('total-amount') }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(purchasesTotal) }}</td>
-                        </tr>
+                    <tr>
+                        <td class="text-right font-weight-bold">{{ trans('net') }}</td>
+                        <td class="text-right">{{ money(purchasesTotalNeto) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right font-weight-bold">{{ trans('taxes') }}</td>
+                        <td class="text-right">{{ money(purchasesTotalTax) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right font-weight-bold">{{ trans('surcharge') }}</td>
+                        <td class="text-right">{{ money(purchasesTotalSurcharge) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right font-weight-bold">{{ trans('retention') }}</td>
+                        <td class="text-right">{{ money(purchasesTotalRetention) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right font-weight-bold">{{ trans('total-amount') }}</td>
+                        <td class="text-right">{{ money(purchasesTotal) }}</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -349,11 +349,11 @@
                 <table class="table table-hover">
                     <thead>
                     <tr>
-                        <th>{{ i18n.trans('accounting-entry') }}</th>
-                        <th>{{ i18n.trans('subaccount') }}</th>
-                        <th>{{ i18n.trans('concept') }}</th>
-                        <th class="text-right">{{ i18n.trans('total') }}</th>
-                        <th class="text-right">{{ i18n.trans('date') }}</th>
+                        <th>{{ trans('accounting-entry') }}</th>
+                        <th>{{ trans('subaccount') }}</th>
+                        <th>{{ trans('concept') }}</th>
+                        <th class="text-right">{{ trans('total') }}</th>
+                        <th class="text-right">{{ trans('date') }}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -366,28 +366,28 @@
                             </td>
                             <td>{{ item.codsubcuenta }}</td>
                             <td>{{ item.concepto | raw }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(item.debe) }}</td>
+                            <td class="text-right">{{ money(item.debe) }}</td>
                             <td class="text-right">{{ item.fecha }}</td>
                         </tr>
                     {% else %}
                         <tr class="table-warning">
-                            <td colspan="8">{{ i18n.trans('no-data') }}</td>
+                            <td colspan="8">{{ trans('no-data') }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
                 <table class="table table-sm table-hover">
                     <thead>
-                        <tr>
-                            <th></th>
-                            <th class="text-right text-capitalize">{{ i18n.trans('totals') }}</th>
-                        </tr>
+                    <tr>
+                        <th></th>
+                        <th class="text-right text-capitalize">{{ trans('totals') }}</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="text-right font-weight-bold">{{ i18n.trans('total-amount') }}</td>
-                            <td class="text-right">{{ fsc.toolBox().coins().format(accountingTotalNeto) }}</td>
-                        </tr>
+                    <tr>
+                        <td class="text-right font-weight-bold">{{ trans('total-amount') }}</td>
+                        <td class="text-right">{{ money(accountingTotalNeto) }}</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
