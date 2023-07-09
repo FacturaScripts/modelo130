@@ -36,7 +36,7 @@
                         <select name="period" class="form-control" required>
                             {% for period, label in fsc.getPeriodsForComboBoxHtml() %}
                                 {% if period == fsc.period %}
-                                    <option value="{{ period }}" selected="">{{ trans(label) }}</option>
+                                    <option value="{{ period }}" selected>{{ trans(label) }}</option>
                                 {% else %}
                                     <option value="{{ period }}">{{ trans(label) }}</option>
                                 {% endif %}
@@ -57,9 +57,7 @@
                     <h2 class="h3 mt-3">
                         <i class="far fa-clipboard fa-fw"></i> {{ trans('summary') }}
                     </h2>
-                    <p>
-                        {{ trans('model-130-r') }}
-                    </p>
+                    <p>{{ trans('model-130-r') }}</p>
                 </div>
             </div>
             <div class="row">
@@ -103,7 +101,7 @@
                         {{ trans('pct-to-deduct') }}
                         <div class="input-group">
                             <input type="number" name="todeduct" value="{{ fsc.todeduct }}"
-                                   class="form-control text-right" required onchange="this.form.submit();"/>
+                                   class="form-control text-right" onchange="this.form.submit();" required/>
                         </div>
                     </div>
                 </div>
