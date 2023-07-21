@@ -155,17 +155,17 @@ class Modelo130 extends Controller
                 break;
 
             case 'T2':
-                $this->dateStart = date('01-04-Y', strtotime($exercise->fechainicio));
+                $this->dateStart = date('01-01-Y', strtotime($exercise->fechainicio));
                 $this->dateEnd = date('30-06-Y', strtotime($exercise->fechainicio));
                 break;
 
             case 'T3':
-                $this->dateStart = date('01-07-Y', strtotime($exercise->fechainicio));
+                $this->dateStart = date('01-01-Y', strtotime($exercise->fechainicio));
                 $this->dateEnd = date('30-09-Y', strtotime($exercise->fechainicio));
                 break;
 
             default:
-                $this->dateStart = date('01-10-Y', strtotime($exercise->fechainicio));
+                $this->dateStart = date('01-01-Y', strtotime($exercise->fechainicio));
                 $this->dateEnd = date('31-12-Y', strtotime($exercise->fechainicio));
                 break;
         }
