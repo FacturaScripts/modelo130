@@ -1,8 +1,9 @@
 {
     "after-deduct": "sobre casa 04",
     "model-130": "Modelo 130",
+    "model-130-desc": "Se calcula sumando y acumulando cada trimestre, por ejemplo, si visualizamos el 3º trimestre veremos la suma de los trimestres 1, 2 y 3.",
     "model-130-p": "O Modelo 130 é unha declaración trimestral do imposto da renta das personas físicas (IRPF) no que se liquida o pago fraccionado deste imposto, a conta da declaración anual que se realiza no ano seguinte.",
-    "model-130-r": "Datos acumulados do período comprendido entre o primeiro día do ano e o último día do trimestre",
+    "model-130-r": "Datos acumulados do período comprendido entre o primeiro día do ano e o último día do trimestre seleccionado.",
     "net-total": "Rendemento neto",
     "pct-to-deduct": "% a deducir",
     "previous-model": "Ingresos trimestres anteriores",
