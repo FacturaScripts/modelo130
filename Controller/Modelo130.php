@@ -50,15 +50,6 @@ class Modelo130 extends Controller
     public $customerInvoices = [];
 
     /** @var string */
-    public $dateEnd;
-
-    /** @var string */
-    public $dateStart;
-
-    /** @var int */
-    protected $idempresa;
-
-    /** @var string */
     public $period = 'T1';
 
     /** @var float */
@@ -66,9 +57,6 @@ class Modelo130 extends Controller
 
     /** @var float */
     public $result = 0.0;
-
-    /** @var float */
-    public $segSocial = 0.0;
 
     /** @var FacturaProveedor[] */
     public $supplierInvoices = [];
@@ -87,6 +75,18 @@ class Modelo130 extends Controller
 
     /** @var float */
     public $todeduct = 20.0;
+
+    /** @var string */
+    protected $dateEnd;
+
+    /** @var string */
+    protected $dateStart;
+
+    /** @var int */
+    protected $idempresa;
+
+    /** @var float */
+    protected $segSocial = 0.0;
 
     /**
      * @param int|null $idempresa
@@ -155,17 +155,17 @@ class Modelo130 extends Controller
                 break;
 
             case 'T2':
-                $this->dateStart = date('01-04-Y', strtotime($exercise->fechainicio));
+                $this->dateStart = date('01-01-Y', strtotime($exercise->fechainicio));
                 $this->dateEnd = date('30-06-Y', strtotime($exercise->fechainicio));
                 break;
 
             case 'T3':
-                $this->dateStart = date('01-07-Y', strtotime($exercise->fechainicio));
+                $this->dateStart = date('01-01-Y', strtotime($exercise->fechainicio));
                 $this->dateEnd = date('30-09-Y', strtotime($exercise->fechainicio));
                 break;
 
             default:
-                $this->dateStart = date('01-10-Y', strtotime($exercise->fechainicio));
+                $this->dateStart = date('01-01-Y', strtotime($exercise->fechainicio));
                 $this->dateEnd = date('31-12-Y', strtotime($exercise->fechainicio));
                 break;
         }
