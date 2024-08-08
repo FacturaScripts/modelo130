@@ -1,11 +1,29 @@
 <?php
+/**
+ * This file is part of Modelo130 plugin for FacturaScripts
+ * Copyright (C) 2024 Carlos Garcia Gomez <carlos@facturascripts.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 namespace FacturaScripts\Plugins\Modelo130\Model;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base\ModelClass;
 use FacturaScripts\Core\Model\Base\ModelTrait;
-use FacturaScripts\Core\Tools;
 use FacturaScripts\Core\Session;
+use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\Subcuenta;
 
 class Subcuenta130 extends ModelClass
@@ -67,6 +85,7 @@ class Subcuenta130 extends ModelClass
 
         $this->codsubcuenta = Tools::noHtml($this->codsubcuenta);
         $this->name = Tools::noHtml($this->name);
+
         return parent::test();
     }
 }

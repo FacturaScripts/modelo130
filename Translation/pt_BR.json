@@ -1,5 +1,6 @@
 {
     "after-deduct": "sobre caixa 04",
+    "deductible-subaccounts": "Cuentas deducibles",
     "model-130": "Modelo 130",
     "model-130-desc": "É calculado somando e acumulando cada trimestre, por exemplo, se visualizarmos o 3º trimestre veremos a soma dos trimestres 1, 2 e 3.",
     "model-130-p": "O Modelo 130 é uma declaração trimestral do imposto sobre a renda das pessoas físicas (IRPF) na qual se liquida o pagamento fracionado deste imposto, a título da declaração anual que é realizada no ano seguinte.",

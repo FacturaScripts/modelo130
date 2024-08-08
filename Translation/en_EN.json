@@ -1,5 +1,6 @@
 {
     "after-deduct": "about box 04",
+    "deductible-subaccounts": "Cuentas deducibles",
     "model-130": "Model 130",
     "model-130-desc": "It is calculated by adding and accumulating each quarter, for example, if we visualize the 3rd quarter we will see the sum of quarters 1, 2 and 3.",
     "model-130-p": "Model 130 is a quarterly declaration of personal income tax (PIT) in which the installment payment of this tax is settled, on account of the annual declaration that is made the following year.",

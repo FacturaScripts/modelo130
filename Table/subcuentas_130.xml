@@ -8,7 +8,6 @@
     <column>
         <name>creation_date</name>
         <type>timestamp</type>
-        <null>NO</null>
     </column>
     <column>
         <name>id</name>

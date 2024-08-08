@@ -8,9 +8,8 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('node_modules/jquery-ui-dist/jquery-ui.min.js') }}"></script>
-
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
             $("#findSubaccount").autocomplete({
                 source: function (request, response) {
                     $.ajax({
@@ -54,7 +53,7 @@
             <div class="row">
                 <div class="col">
                     <h1 class="h2">
-                        <i class="fas fa-book fa-fw"></i> {{ trans(fsc.title) }}
+                        <i class="fas fa-book fa-fw"></i> {{ fsc.title }}
                     </h1>
                     <p>{{ trans('model-130-p') }}</p>
                 </div>
@@ -68,8 +67,9 @@
                                 <optgroup label="{{ company.nombre }}">
                                     {% for exercise in fsc.getAllExercises(company.idempresa) %}
                                         {% if exercise.codejercicio == fsc.codejercicio %}
-                                            <option value="{{ exercise.codejercicio }}"
-                                                    selected>{{ exercise.nombre }}</option>
+                                            <option value="{{ exercise.codejercicio }}" selected>
+                                                {{ exercise.nombre }}
+                                            </option>
                                         {% else %}
                                             <option value="{{ exercise.codejercicio }}">{{ exercise.nombre }}</option>
                                         {% endif %}
@@ -205,7 +205,7 @@
                             <input type="number" value="{{ fsc.result }}" class="form-control text-right"
                                    readonly/>
                         </div>
-                        {{ trans('tax-negative-info') }}
+                        <p class="form-text text-muted">{{ trans('tax-negative-info') }}</p>
                     </div>
                 </div>
             </div>
@@ -213,8 +213,10 @@
     </form>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <a class="nav-link {{ fsc.activeTab is empty ? 'active' : '' }}" id="sales-tab" data-toggle="tab" href="#sales" role="tab"
-               aria-controls="sales" aria-selected="{{ fsc.tabDeductibleSubaccount ? 'false' : 'true' }}" title="{{ trans('sales') }}">
+            <a class="nav-link {{ fsc.activeTab is empty ? 'active' : '' }}" id="sales-tab" data-toggle="tab"
+               href="#sales" role="tab"
+               aria-controls="sales" aria-selected="{{ fsc.tabDeductibleSubaccount ? 'false' : 'true' }}"
+               title="{{ trans('sales') }}">
                 <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i>
                 <span class="d-none d-sm-inline-block">{{ trans('sales') }}</span>
                 <span class="badge badge-secondary">{{ fsc.customerInvoices|length }}</span>
@@ -237,9 +239,11 @@
             </a>
         </li>
         <li class="nav-item" role="presentation">
-            <a class="nav-link {{ fsc.activeTab == 'deductible-subaccount' ? 'active' : '' }}" id="deductible-subaccounts-tab" data-toggle="tab" href="#deductible-subaccounts"
+            <a class="nav-link {{ fsc.activeTab == 'deductible-subaccount' ? 'active' : '' }}"
+               id="deductible-subaccounts-tab" data-toggle="tab" href="#deductible-subaccounts"
                role="tab"
-               aria-controls="deductible-subaccounts" aria-selected="{{ fsc.tabDeductibleSubaccount ? 'true' : 'false' }}"
+               aria-controls="deductible-subaccounts"
+               aria-selected="{{ fsc.tabDeductibleSubaccount ? 'true' : 'false' }}"
                title="{{ trans('deductible-subaccounts') }}">
                 <i class="fas fa-book" aria-hidden="true"></i>
                 <span class="d-none d-sm-inline-block">{{ trans('deductible-subaccounts') }}</span>
@@ -248,7 +252,8 @@
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade {{ fsc.activeTab is empty ? 'show active' : '' }}" id="sales" role="tabpanel" aria-labelledby="sales-tab">
+        <div class="tab-pane fade {{ fsc.activeTab is empty ? 'show active' : '' }}" id="sales" role="tabpanel"
+             aria-labelledby="sales-tab">
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
@@ -452,28 +457,8 @@
                 </table>
             </div>
         </div>
-        <div class="tab-pane fade {{ fsc.activeTab == 'deductible-subaccount' ? 'show active' : '' }}" id="deductible-subaccounts" role="tabpanel"
-             aria-labelledby="deductible-subaccounts-tab">
-            <div class="container">
-                <div class="card my-4">
-                    <div class="card-body">
-                        <form name="add-subaccount" method="post" onsubmit="animateSpinner('add')">
-                            {{ formToken() }}
-                            <input type="hidden" name="action" value="add-deductible-subaccount">
-                            <input type="hidden" name="codsubcuenta" value="">
-                            <div class="input-group my-3">
-                                <input type="text" id="findSubaccount" class="form-control" placeholder="{{ trans('search-subaccount') }}">
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-outline-success">
-                                        <i class="fas fa-plus fa-fw"></i>
-                                        {{ trans('add') }}
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+        <div class="tab-pane fade {{ fsc.activeTab == 'deductible-subaccount' ? 'show active' : '' }}"
+             id="deductible-subaccounts" role="tabpanel" aria-labelledby="deductible-subaccounts-tab">
             <div class="table-responsive">
                 <table class="table table-sm table-hover">
                     <thead>
@@ -488,14 +473,13 @@
                         <tr>
                             <td>{{ subaccount.codsubcuenta }}</td>
                             <td>{{ subaccount.getSubcuenta().descripcion }}</td>
-                            <td>
+                            <td class="text-right">
                                 <form method="post" onsubmit="animateSpinner('add')">
                                     {{ formToken() }}
                                     <input type="hidden" name="id" value="{{ subaccount.id }}">
                                     <input type="hidden" name="action" value="delete-deductible-subaccount">
-                                    <button type="submit" class="btn btn-danger btn-sm btn-spin-action">
-                                        <i class="fas fa-trash fa-fw"></i>
-                                        {{ trans('delete') }}
+                                    <button type="submit" class="btn btn-sm btn-danger btn-spin-action">
+                                        <i class="fas fa-trash-alt mr-1"></i> {{ trans('delete') }}
                                     </button>
                                 </form>
                             </td>
@@ -504,6 +488,23 @@
                     </tbody>
                 </table>
             </div>
+            <form name="add-subaccount" method="post" onsubmit="animateSpinner('add')">
+                {{ formToken() }}
+                <input type="hidden" name="action" value="add-deductible-subaccount">
+                <input type="hidden" name="codsubcuenta">
+                <div class="card shadow m-3">
+                    <div class="card-body">
+                        <div class="input-group">
+                            <input type="text" id="findSubaccount" class="form-control" placeholder="{{ trans('search') }}">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-outline-success">
+                                    <i class="fas fa-plus mr-1"></i> {{ trans('add') }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 {% endblock %}
