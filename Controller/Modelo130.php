@@ -22,16 +22,19 @@ namespace FacturaScripts\Plugins\Modelo130\Controller;
 use FacturaScripts\Core\Base\Controller;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\DataSrc\Ejercicios;
+use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\Asiento;
 use FacturaScripts\Dinamic\Model\Ejercicio;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
 use FacturaScripts\Dinamic\Model\FacturaProveedor;
 use FacturaScripts\Dinamic\Model\Partida;
+use FacturaScripts\Dinamic\Model\Subcuenta130;
 
 /**
  * Description of Modelo130
  *
  * @author Carlos Garcia Gomez            <carlos@facturascripts.com>
+ * @author Daniel Fernández Giménez       <hola@danielfg.es>
  * @author Jerónimo Pedro Sánchez Manzano <socger@gmail.com>
  * @author Javier Martín González         <javier@javiermarting.es>
  */
@@ -44,10 +47,16 @@ class Modelo130 extends Controller
     public $afterdeduct = 0.0;
 
     /** @var string */
+    public $activeTab = '';
+
+    /** @var string */
     public $codejercicio;
 
     /** @var FacturaCliente[] */
     public $customerInvoices = [];
+
+    /** @var Subcuenta130 */
+    public $deductibleSubaccount;
 
     /** @var string */
     public $period = 'T1';
@@ -129,11 +138,90 @@ class Modelo130 extends Controller
     public function privateCore(&$response, $user, $permissions)
     {
         parent::privateCore($response, $user, $permissions);
+        $this->deductibleSubaccount = new Subcuenta130();
+
+        $action = $this->request->request->get('action', $this->request->get('action'));
+        switch ($action) {
+            case 'autocomplete-subaccount':
+                $this->autocompleteSubaccount();
+                return;
+
+            case 'add-deductible-subaccount':
+                return $this->addDeductibleSubaccount();
+
+            case 'delete-deductible-subaccount':
+                return $this->deleteDeductibleSubaccount();
+        }
 
         $this->loadDates();
         $this->loadInvoices();
         $this->loadAsientos();
         $this->loadResults();
+    }
+
+    protected function addDeductibleSubaccount(): bool
+    {
+        $this->activeTab = 'deductible-subaccount';
+
+        if (false === $this->validateFormToken()) {
+            return false;
+        }
+
+        $subaccount130 = new Subcuenta130();
+        $subaccount130->codsubcuenta = $this->request->request->get('codsubcuenta');
+        if (false === $subaccount130->save()) {
+            Tools::log()->error('record-save-error');
+            return false;
+        }
+
+        Tools::log()->notice('record-updated-correctly');
+        return true;
+    }
+
+    protected function autocompleteSubaccount()
+    {
+        $this->setTemplate(false);
+
+        $list = [];
+        $term = $this->request->get('term');
+        $sql = 'SELECT DISTINCT codsubcuenta, descripcion FROM subcuentas WHERE codsubcuenta LIKE "' . $term . '%";';
+
+        // recorremos todas las subcuentas agrupadas por código
+        foreach ($this->dataBase->select($sql) as $value) {
+            $list[] = [
+                'key' => Tools::fixHtml($value['codsubcuenta']),
+                'value' => Tools::fixHtml($value['descripcion'])
+            ];
+        }
+
+        if (empty($list)) {
+            $list[] = ['key' => null, 'value' => Tools::lang()->trans('no-data')];
+        }
+
+        $this->response->setContent(json_encode($list));
+    }
+
+    protected function deleteDeductibleSubaccount(): bool
+    {
+        $this->activeTab = 'deductible-subaccount';
+
+        if (false === $this->validateFormToken()) {
+            return false;
+        }
+
+        $subaccount130 = new Subcuenta130();
+        if (false === $subaccount130->loadFromCode($this->request->request->get('id'))) {
+            Tools::log()->error('record-not-found');
+            return false;
+        }
+
+        if (false === $subaccount130->delete()) {
+            Tools::log()->error('record-deleted-error');
+            return false;
+        }
+
+        Tools::log()->notice('record-deleted-correctly');
+        return false;
     }
 
     // Traemos del codejercicio y period elegido idempresa, dateStart y dateEnd
@@ -206,11 +294,18 @@ class Modelo130 extends Controller
 
     protected function loadAsientos(): void
     {
-        // 6420000000 Seguridad social, 4730000000 IRPF
-        $codsubs = ['6420000000', '4730000000'];
+        $codsubs = [];
+        $subaccount130 = new Subcuenta130();
+        foreach ($subaccount130->all([], [], 0, 0) as $subaccount) {
+            $codsubs[] = $subaccount->codsubcuenta;
+        }
 
-        // Buscar asientos entre las fechas de los tipos anteriores, la partida 473
-        // también obtiene las facturas con retención aplicada que se mostarán en asientos
+        if (empty($codsubs)) {
+            return;
+        }
+
+        // Buscar asientos entre las fechas de los tipos anteriores
+        // también obtiene las facturas con retención aplicada que se mostrarán en asientos
         $sql = 'SELECT * FROM ' . Partida::tableName() . ' as p'
             . ' LEFT JOIN ' . Asiento::tableName() . ' as a ON p.idasiento = a.idasiento'
             . ' WHERE a.idempresa = ' . $this->dataBase->var2str($this->idempresa)
