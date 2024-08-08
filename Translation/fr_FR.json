@@ -1,13 +1,13 @@
 {
-    "after-deduct": "sobre casilla 04",
+    "after-deduct": "sur case 04",
     "model-130": "Formulaire 130",
-    "model-130-desc": "Se calcula sumando y acumulando cada trimestre, por ejemplo, si visualizamos el 3º trimestre veremos la suma de los trimestres 1, 2 y 3.",
+    "model-130-desc": "Il est calculé en ajoutant et cumulant chaque trimestre, par exemple, si nous visualisons le 3ème trimestre, nous verrons la somme des trimestres 1, 2 et 3.",
     "model-130-p": "Le formulaire 130 est une déclaration trimestrielle de l'impôt sur le revenu des personnes physiques (IRPP) dans laquelle le paiement de cet impôt est réglé par acomptes, compte tenu de la déclaration annuelle à effectuer l'année suivante.",
     "model-130-r": "Données cumulées pour la période comprise entre le premier jour de l'année et le dernier jour du trimestre sélectionné.",
-    "net-total": "Rendimiento neto",
-    "pct-to-deduct": "% a deducir",
-    "previous-model": "Ingresos trimestres anteriores",
-    "tax-expenses": "Gastos deducibles",
-    "tax-incomes": "Ingresos computables",
-    "tax-negative-info": "Si da pérdidas (negativo) = 0"
+    "net-total": "Rendement net",
+    "pct-to-deduct": "% déduire",
+    "previous-model": "Revenu du trimestre précédent",
+    "tax-expenses": "Dépenses déductibles",
+    "tax-incomes": "Revenu éligible",
+    "tax-negative-info": "Si déficitaire (négatif) = 0"
 }

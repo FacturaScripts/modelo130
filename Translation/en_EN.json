@@ -1,7 +1,7 @@
 {
     "after-deduct": "about box 04",
     "model-130": "Model 130",
-    "model-130-desc": "Se calcula sumando y acumulando cada trimestre, por ejemplo, si visualizamos el 3º trimestre veremos la suma de los trimestres 1, 2 y 3.",
+    "model-130-desc": "It is calculated by adding and accumulating each quarter, for example, if we visualize the 3rd quarter we will see the sum of quarters 1, 2 and 3.",
     "model-130-p": "Model 130 is a quarterly declaration of personal income tax (PIT) in which the installment payment of this tax is settled, on account of the annual declaration that is made the following year.",
     "model-130-r": "Accumulated data for the period between the first day of the year and the last day of the selected quarter.",
     "net-total": "Net return",

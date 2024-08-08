@@ -1,13 +1,13 @@
 {
-    "after-deduct": "sobre casilla 04",
+    "after-deduct": "sulla casella 04",
     "model-130": "Modelo 130",
     "model-130-desc": "Se calcula sumando y acumulando cada trimestre, por ejemplo, si visualizamos el 3º trimestre veremos la suma de los trimestres 1, 2 y 3.",
-    "model-130-p": "El Modelo 130 es una declaración trimestral del impuesto de la renta de las personas físicas (IRPF) en el que se liquida el pago fraccionado de este impuesto, a cuenta de la declaración anual que se realiza el año siguiente.",
+    "model-130-p": "Il Modello 130 è una dichiarazione trimestrale dell'imposta sul reddito delle persone fisiche (IRPF) in cui si liquida il pagamento rateale di questa imposta, a titolo di acconto della dichiarazione annuale che verrà effettuata l'anno successivo",
     "model-130-r": "Dati accumulati per il periodo compreso tra il primo giorno dell'anno e l'ultimo giorno del trimestre selezionato.",
-    "net-total": "Rendimiento neto",
-    "pct-to-deduct": "% a deducir",
-    "previous-model": "Ingresos trimestres anteriores",
-    "tax-expenses": "Gastos deducibles",
-    "tax-incomes": "Ingresos computables",
-    "tax-negative-info": "Si da pérdidas (negativo) = 0"
+    "net-total": "Totale netto",
+    "pct-to-deduct": "% da dedurre",
+    "previous-model": "Modelli precedenti",
+    "tax-expenses": "Spese fiscali deducibili",
+    "tax-incomes": "Ricavi fiscali",
+    "tax-negative-info": "Se genera perdite (negative) = 0"
 }
