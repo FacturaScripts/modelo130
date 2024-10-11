@@ -206,6 +206,11 @@
                                    readonly/>
                         </div>
                         <p class="form-text text-muted">{{ trans('tax-negative-info') }}</p>
+                        {% if fsc.result > 0 %}
+                            <button type="button" class="btn btn-success mt-2 float-left float-sm-right" data-toggle="modal" data-target="#createEntryModal">
+                                <i class="fas fa-scale-balanced"></i> {{ trans('create-accounting-entry') }}
+                            </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -505,6 +510,49 @@
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="createEntryModal" tabindex="-1" role="dialog" aria-labelledby="createEntryModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createEntryModalLabel">{{ trans('create-accounting-entry') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form name="create-accounting" method="post" onsubmit="animateSpinner('add')">
+                    {{ formToken() }}
+                    <input type="hidden" name="action" value="gen-accounting">
+                    <input type="hidden" name="idempresa" value="{{ fsc.idempresa }}">
+                    <input type="hidden" name="codejercicio" value="{{ fsc.codejercicio }}">
+                    <input type="hidden" name="period" value="{{ fsc.period }}">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="entryDate">{{ trans('date') }}</label>
+                            <input type="date" class="form-control" id="date" name="date" value="{{ "now"|date("Y-m-d") }}" required readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="entryAmount">{{ trans('amount') }}</label>
+                            <input type="number" step="any" class="form-control" id="amount" name="amount" value="{{ fsc.result }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentMethod">{{ trans('payment-method') }}</label>
+                            <select class="form-control" id="paymentMethod" name="paymentMethod" required>
+                                {% for method in fsc.paymentMethods %}
+                                    <option value="{{ method.codpago }}">{{ method.descripcion }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ trans('close') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ trans('create') }}</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 {% endblock %}

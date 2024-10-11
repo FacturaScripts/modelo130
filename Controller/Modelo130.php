@@ -29,6 +29,7 @@ use FacturaScripts\Dinamic\Model\FacturaCliente;
 use FacturaScripts\Dinamic\Model\FacturaProveedor;
 use FacturaScripts\Dinamic\Model\Partida;
 use FacturaScripts\Dinamic\Model\Subcuenta130;
+use FacturaScripts\Dinamic\Model\FormaPago;
 
 /**
  * Description of Modelo130
@@ -97,6 +98,9 @@ class Modelo130 extends Controller
     /** @var float */
     protected $segSocial = 0.0;
 
+    /** @var FormaPago[] */
+    public $paymentMethods = [];
+
     /**
      * @param int|null $idempresa
      * @return Ejercicio[]
@@ -140,6 +144,8 @@ class Modelo130 extends Controller
         parent::privateCore($response, $user, $permissions);
         $this->deductibleSubaccount = new Subcuenta130();
 
+        $this->paymentMethods = FormaPago::all();
+
         $action = $this->request->request->get('action', $this->request->get('action'));
         switch ($action) {
             case 'autocomplete-subaccount':
@@ -151,6 +157,9 @@ class Modelo130 extends Controller
 
             case 'delete-deductible-subaccount':
                 return $this->deleteDeductibleSubaccount();
+
+            case 'gen-accounting':
+                return $this->createAccountingEntry();
         }
 
         $this->loadDates();
@@ -366,6 +375,53 @@ class Modelo130 extends Controller
 
         if ($this->result < 0) {
             $this->result = 0;
+        }
+    }
+
+    protected function createAccountingEntry()
+    {
+        if (false === $this->validateFormToken()) {
+            return false;
+        }
+
+        $idempresa = $this->request->request->get('idempresa');
+        $codejercicio = $this->request->request->get('codejercicio');
+        $period = $this->request->request->get('period');
+        $amount = (float) $this->request->request->get('amount');
+        $date = $this->request->request->get('date');
+        $paymentMethodId = $this->request->request->get('paymentMethod');
+
+        // Buscamos si la forma de pago tiene una subcuenta de cara a asignarla o dejar el valor por defecto en la partida
+        $paymentMethod = new FormaPago();
+        if ($paymentMethod->loadFromCode($paymentMethodId)) {
+            $bankAccount = $paymentMethod->getBankAccount();
+        }
+
+        $asiento = new Asiento();
+        if (!empty($idempresa)) $asiento->idempresa = $idempresa; 
+        $asiento->codejercicio = $codejercicio;
+        $asiento->concepto = 'Regularización de IRPF ' . $period;
+        $asiento->fecha = $date;
+        $asiento->importe = $amount;
+
+        if ($asiento->save()) {
+            $partida1 = new Partida();
+            $partida1->idasiento = $asiento->idasiento;
+            $partida1->concepto = 'Regularización de IRPF ' . $period;
+            $partida1->debe = $amount;
+            $partida1->codsubcuenta = '4730000000'; // Código de subcuenta de IRPF
+            $partida1->save();
+
+            $partida2 = new Partida();
+            $partida2->idasiento = $asiento->idasiento;
+            $partida2->concepto = 'Regularización de IRPF ' . $period;
+            $partida2->haber = $amount;
+            $partida2->codsubcuenta = !empty($bankAccount->codsubcuenta) ? $bankAccount->codsubcuenta : '5720000000';
+            $partida2->save();
+
+            return true;
+        } else {
+            return false;
         }
     }
 }
