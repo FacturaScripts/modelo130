@@ -260,10 +260,10 @@
                     <tr>
                         <th>{{ trans('invoice') }}</th>
                         <th>{{ trans('customer') }}</th>
-                        <th class="text-right">{{ trans('net') }}</th>
-                        <th class="text-right">{{ trans('taxes') }}</th>
+                        <th class="text-right">{{ trans('tax-base') }}</th>
+                        <th class="text-right">{{ trans('vat') }}</th>
                         <th class="text-right">{{ trans('surcharge') }}</th>
-                        <th class="text-right">{{ trans('retention') }}</th>
+                        <th class="text-right">{{ trans('irpf') }}</th>
                         <th class="text-right">{{ trans('total') }}</th>
                         <th class="text-right">{{ trans('date') }}</th>
                     </tr>
@@ -308,11 +308,11 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('net') }}</td>
+                        <td class="text-right font-weight-bold">{{ trans('tax-base') }}</td>
                         <td class="text-right">{{ money(salesTotalNeto) }}</td>
                     </tr>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('taxes') }}</td>
+                        <td class="text-right font-weight-bold">{{ trans('vat') }}</td>
                         <td class="text-right">{{ money(salesTotalTax) }}</td>
                     </tr>
                     <tr>
@@ -320,7 +320,7 @@
                         <td class="text-right">{{ money(salesTotalSurcharge) }}</td>
                     </tr>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('retention') }}</td>
+                        <td class="text-right font-weight-bold">{{ trans('irpf') }}</td>
                         <td class="text-right">{{ money(salesTotalRetention) }}</td>
                     </tr>
                     <tr>
@@ -338,10 +338,10 @@
                     <tr>
                         <th>{{ trans('invoice') }}</th>
                         <th>{{ trans('supplier') }}</th>
-                        <th class="text-right">{{ trans('net') }}</th>
-                        <th class="text-right">{{ trans('taxes') }}</th>
+                        <th class="text-right">{{ trans('tax-base') }}</th>
+                        <th class="text-right">{{ trans('vat') }}</th>
                         <th class="text-right">{{ trans('surcharge') }}</th>
-                        <th class="text-right">{{ trans('retention') }}</th>
+                        <th class="text-right">{{ trans('irpf') }}</th>
                         <th class="text-right">{{ trans('total') }}</th>
                         <th class="text-right">{{ trans('date') }}</th>
                     </tr>
@@ -386,11 +386,11 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('net') }}</td>
+                        <td class="text-right font-weight-bold">{{ trans('tax-base') }}</td>
                         <td class="text-right">{{ money(purchasesTotalNeto) }}</td>
                     </tr>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('taxes') }}</td>
+                        <td class="text-right font-weight-bold">{{ trans('vat') }}</td>
                         <td class="text-right">{{ money(purchasesTotalTax) }}</td>
                     </tr>
                     <tr>
@@ -398,7 +398,7 @@
                         <td class="text-right">{{ money(purchasesTotalSurcharge) }}</td>
                     </tr>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('retention') }}</td>
+                        <td class="text-right font-weight-bold">{{ trans('irpf') }}</td>
                         <td class="text-right">{{ money(purchasesTotalRetention) }}</td>
                     </tr>
                     <tr>
