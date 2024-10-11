@@ -152,8 +152,10 @@
                     <div class="form-group">
                         {{ trans('pct-to-deduct') }}
                         <div class="input-group">
-                            <input type="number" name="todeduct" value="{{ fsc.todeduct }}"
-                                   class="form-control text-right" onchange="this.form.submit();" required/>
+                            <input type="number" name="todeduct" min="0" max="100" value="{{ fsc.todeduct }}"
+                                   class="form-control text-right" 
+                                   onchange="if (this.value < 0) this.value = 0; if (this.value > 100) this.value = 100; this.form.submit();" 
+                                   required/>
                         </div>
                     </div>
                 </div>
