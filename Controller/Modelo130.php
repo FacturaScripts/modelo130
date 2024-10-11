@@ -98,6 +98,9 @@ class Modelo130 extends Controller
     /** @var float */
     protected $segSocial = 0.0;
 
+    /** @var float */
+    protected $otrasDeducciones = 0.0;
+
     /** @var FormaPago[] */
     public $paymentMethods = [];
 
@@ -344,11 +347,13 @@ class Modelo130 extends Controller
                 $this->segSocial += $asiento->debe;
             } else if ($asiento->codsubcuenta == '4730000000') {
                 $this->positivosTrimestres += $asiento->debe;
+            } else {
+                $this->otrasDeducciones += $asiento->debe;
             }
         }
 
-        // La seguridad social se cuenta como un gasto deducible
-        $this->taxbaseGastos += $this->segSocial;
+        // La seguridad social y el resto de deducciones agregadas se cuenta como un gasto deducible
+        $this->taxbaseGastos += ($this->segSocial + $this->otrasDeducciones);
 
         // La partida 473 incluye tanto trimestres anteriores como las retenciones de facturas
         $this->positivosTrimestres = round($this->positivosTrimestres - $this->taxbaseRetenciones, 2);
