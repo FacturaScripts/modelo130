@@ -532,7 +532,18 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="entryDate">{{ trans('date') }}</label>
-                            <input type="date" class="form-control" id="date" name="date" value="{{ "now"|date("Y-m-d") }}" required readonly>
+                            {% set year = fsc.codejercicio %}
+                            {% set date = "now"|date("Y-m-d") %}
+                            {% if fsc.period == 'T1' %}
+                                {% set date = year ~ '-03-31' %}
+                            {% elseif fsc.period == 'T2' %}
+                                {% set date = year ~ '-06-30' %}
+                            {% elseif fsc.period == 'T3' %}
+                                {% set date = year ~ '-09-30' %}
+                            {% elseif fsc.period == 'T4' %}
+                                {% set date = year ~ '-12-31' %}
+                            {% endif %}
+                            <input type="date" class="form-control" id="date" name="date" value="{{ date }}" required readonly>
                         </div>
                         <div class="form-group">
                             <label for="entryAmount">{{ trans('amount') }}</label>
