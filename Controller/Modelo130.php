@@ -335,6 +335,7 @@ class Modelo130 extends Controller
             . ' AND a.fecha BETWEEN ' . $this->dataBase->var2str(date('Y-m-d', strtotime($this->dateStart)))
             . ' AND ' . $this->dataBase->var2str(date('Y-m-d', strtotime($this->dateEnd)))
             . ' AND p.codsubcuenta IN (' . implode(',', $codsubs) . ')'
+            . ' AND a.operacion IS ' . $this->dataBase->var2str(Asiento::OPERATION_GENERAL)
             . ' ORDER BY numero ASC';
 
         foreach ($this->dataBase->select($sql) as $row) {
