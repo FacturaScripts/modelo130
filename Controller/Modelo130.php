@@ -123,6 +123,18 @@ class Modelo130 extends Controller
         return $list;
     }
 
+        /**
+     * @param int|null $codejercicio
+     * @return Ejercicio
+     */
+    public function getExercise(?int $codejercicio): Ejercicio
+    {
+        $exercise = new Ejercicio();
+        $exercise->loadFromCode($this->codejercicio);
+
+        return $exercise;
+    }
+
     public function getPageData(): array
     {
         $data = parent::getPageData();
@@ -243,8 +255,7 @@ class Modelo130 extends Controller
         $this->codejercicio = $this->request->request->get('codejercicio', '');
         $this->period = $this->request->request->get('period', $this->period);
 
-        $exercise = new Ejercicio();
-        $exercise->loadFromCode($this->codejercicio);
+        $exercise = $this->getExercise($this->codejercicio);
         $this->idempresa = $exercise->idempresa;
 
         // Cargamos las variables dateStart y dateEnd con los valores de inicio y fin del ejercicio elegido
@@ -392,11 +403,12 @@ class Modelo130 extends Controller
             return false;
         }
 
+        // Preparamos los valores introducidos en la vista
         $idempresa = $this->request->request->get('idempresa');
         $codejercicio = $this->request->request->get('codejercicio');
         $period = $this->request->request->get('period');
-        $amount = (float) $this->request->request->get('amount');
         $date = $this->request->request->get('date');
+        $amount = (float) $this->request->request->get('amount');
         $paymentMethodId = $this->request->request->get('paymentMethod');
 
         // Buscamos si la forma de pago tiene una subcuenta de cara a asignarla o dejar el valor por defecto en la partida
@@ -406,7 +418,7 @@ class Modelo130 extends Controller
         }
 
         $asiento = new Asiento();
-        if (!empty($idempresa)) $asiento->idempresa = $idempresa; 
+        $asiento->idempresa = $idempresa; 
         $asiento->codejercicio = $codejercicio;
         $asiento->concepto = 'Regularización de IRPF ' . $period;
         $asiento->fecha = $date;

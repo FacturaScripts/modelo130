@@ -527,14 +527,15 @@
                 </div>
                 <form name="create-accounting" method="post" onsubmit="animateSpinner('add')">
                     {{ formToken() }}
+                    {% set exercise = fsc.getExercise(fsc.codejercicio) %}
                     <input type="hidden" name="action" value="gen-accounting">
-                    <input type="hidden" name="idempresa" value="{{ fsc.idempresa }}">
+                    <input type="hidden" name="idempresa" value="{{ exercise.idempresa }}">
                     <input type="hidden" name="codejercicio" value="{{ fsc.codejercicio }}">
                     <input type="hidden" name="period" value="{{ fsc.period }}">
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="entryDate">{{ trans('accounting-entry-date') }}</label>
-                            {% set year = fsc.codejercicio %}
+                            {% set year = exercise.fechainicio|date("Y") %}
                             {% set date = "now"|date("Y-m-d") %}
                             {% if fsc.period == 'T1' %}
                                 {% set date = year ~ '-03-31' %}
@@ -555,7 +556,9 @@
                             <label for="paymentMethod">{{ trans('payment-method') }}</label>
                             <select class="form-control" id="paymentMethod" name="paymentMethod" required>
                                 {% for method in fsc.paymentMethods %}
-                                    <option value="{{ method.codpago }}">{{ method.descripcion }}</option>
+                                    {% if method.idempresa == exercise.idempresa %}
+                                        <option value="{{ method.codpago }}">{{ method.descripcion }}</option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                         </div>
