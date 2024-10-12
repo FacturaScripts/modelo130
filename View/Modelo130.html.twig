@@ -209,7 +209,7 @@
                         </div>
                         <p class="form-text text-muted">{{ trans('tax-negative-info') }}</p>
                         {% if fsc.result > 0 %}
-                            <button type="button" class="btn btn-success mt-2 float-left float-sm-right" data-toggle="modal" data-target="#createEntryModal">
+                            <button type="button" class="btn btn-success mt-2 float-left float-sm-right" data-toggle="modal" data-target="#createAccountingModal">
                                 <i class="fas fa-scale-balanced"></i> {{ trans('create-accounting-entry') }}
                             </button>
                         {% endif %}
@@ -515,12 +515,12 @@
         </div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="createEntryModal" tabindex="-1" role="dialog" aria-labelledby="createEntryModalLabel" aria-hidden="true">
+    <!-- Create Accounting Modal -->
+    <div class="modal fade" id="createAccountingModal" tabindex="-1" role="dialog" aria-labelledby="createAccountingModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="createEntryModalLabel">{{ trans('create-accounting-entry') }}</h5>
+                    <h5 class="modal-title" id="createAccountingModalLabel">{{ trans('create-accounting-entry') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -533,7 +533,7 @@
                     <input type="hidden" name="period" value="{{ fsc.period }}">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="entryDate">{{ trans('date') }}</label>
+                            <label for="entryDate">{{ trans('accounting-entry-date') }}</label>
                             {% set year = fsc.codejercicio %}
                             {% set date = "now"|date("Y-m-d") %}
                             {% if fsc.period == 'T1' %}
@@ -561,8 +561,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ trans('close') }}</button>
-                        <button type="submit" class="btn btn-primary">{{ trans('create') }}</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            <i class="fas fa-xmark"></i> {{ trans('cancel') }}
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check"></i> {{ trans('create') }}
+                        </button>
                     </div>
                 </form>
             </div>

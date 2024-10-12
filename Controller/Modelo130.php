@@ -343,30 +343,33 @@ class Modelo130 extends Controller
         }
 
         foreach ($this->accountingEntries as $asiento) {
-            if ($asiento->codsubcuenta == '6420000000') {
-                $this->segSocial += $asiento->debe;
-            } else if ($asiento->codsubcuenta == '4730000000') {
-                $this->positivosTrimestres += $asiento->debe;
-            } else {
-                $this->otrasDeducciones += $asiento->debe;
+            switch ($asiento->codsubcuenta) {
+                case '6420000000':
+                    $this->segSocial += $asiento->debe;
+                    break;
+                case '4730000000':
+                    $this->positivosTrimestres += $asiento->debe;
+                    break;
+                default:
+                    $this->otrasDeducciones += $asiento->debe;
+                    break;
             }
         }
 
         // La seguridad social y el resto de deducciones agregadas se cuenta como un gasto deducible
         $this->taxbaseGastos += ($this->segSocial + $this->otrasDeducciones);
 
-        // La partida 473 incluye tanto trimestres anteriores como las retenciones de facturas
+        // La cuenta 473 incluye tanto trimestres anteriores como las retenciones de facturas
         $this->positivosTrimestres = round($this->positivosTrimestres - $this->taxbaseRetenciones, 2);
 
-        // Primero calculamos rendimiento neto: ingresos(ftras ventas) - gastos (ftras compras/gastos + SS) acumulado anual
+        // Primero calculamos rendimiento neto: ingresos(ftras ventas) - gastos (ftras compras/gastos + SS + deducibles) acumulado anual
         // El cálculo nos dará un número negativo o positivo que serán las pérdidas o los beneficios respectivamente
         // El importe a deducir debe ser del 20% según modelo 130 o superior si se desea ingresar un IRPF superior
         // Después se deben restar las retenciones aplicadas en las facturas de venta ya que eso lo ingresa el cliente en tu nombre
         // Igualmente como es el acumulado del año, se deben restar también los trimestrales ya pagados y registrado el asiento
         // Si sale número negativo, el importe a ingresar este trimestra será 0
         // Si sale positivo, dicha cantidad es la que corresponde ingresar y rellenando las casillas de Hacienda de acuerdo a los campos mostrados
-        // Habría que ver la posibilidad de añadir un botón para agregar el asiento de pago de cara a siguientes trimestres (el plugin no lo hace)
-        // Actualmente los asientos de Seguridad Social (642) y de trimestres anteriores (473) se mete a mano (una forma rápida es con el plugin Asientos Predefinidos)
+        // El pago de la cuota de Seguridad Social (cuenta 642) se mete a mano (una forma rápida es con el plugin Asientos Predefinidos)
         // En este link se explica como calcular el modelo 130
         // https://tuspapelesautonomos.es/modelo-130-como-se-calcula-descubrelo-facil-con-ejemplos/
 
@@ -424,6 +427,7 @@ class Modelo130 extends Controller
             $partida2->codsubcuenta = !empty($bankAccount->codsubcuenta) ? $bankAccount->codsubcuenta : '5720000000';
             $partida2->save();
 
+            Tools::log()->notice('record-updated-correctly');
             return true;
         } else {
             return false;
