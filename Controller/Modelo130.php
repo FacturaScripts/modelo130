@@ -127,7 +127,7 @@ class Modelo130 extends Controller
      * @param string|null $codejercicio
      * @return Ejercicio
      */
-    public function getExercise(string $codejercicio): Ejercicio
+    public function getExercise(?string $codejercicio): Ejercicio
     {
         $exercise = new Ejercicio();
         $exercise->loadFromCode($this->codejercicio);
