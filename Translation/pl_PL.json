@@ -1,14 +1,14 @@
 {
-    "after-deduct": "sobre casilla 04",
-    "deductible-subaccounts": "Cuentas deducibles",
+    "after-deduct": "na rubrykę 04",
+    "deductible-subaccounts": "Podkonty do odliczeń",
     "model-130": "Model 130",
     "model-130-desc": "Se calcula sumando y acumulando cada trimestre, por ejemplo, si visualizamos el 3º trimestre veremos la suma de los trimestres 1, 2 y 3.",
-    "model-130-p": "El Modelo 130 es una declaración trimestral del impuesto de la renta de las personas físicas (IRPF) en el que se liquida el pago fraccionado de este impuesto, a cuenta de la declaración anual que se realiza el año siguiente.",
+    "model-130-p": "Model 130 to kwartalne zgłoszenie podatku dochodowego od osób fizycznych (IRPF), w którym rozlicza się zaliczkę na ten podatek, na podstawie rocznego zeznania dokonywanego w roku następnym.",
     "model-130-r": "Skumulowane dane za okres od pierwszego dnia roku do ostatniego dnia wybranego kwartału.",
-    "net-total": "Rendimiento neto",
+    "net-total": "Wynik netto",
     "pct-to-deduct": "% do odliczenia",
-    "previous-model": "Ingresos trimestres anteriores",
-    "tax-expenses": "Gastos deducibles",
-    "tax-incomes": "Ingresos computables",
-    "tax-negative-info": "Si da pérdidas (negativo) = 0"
+    "previous-model": "Poprzednie kwartały dochodów",
+    "tax-expenses": "Wydatki podatkowe",
+    "tax-incomes": "Dochody opodatkowane",
+    "tax-negative-info": "Jeśli wykazuje straty (ujemny) = 0"
 }

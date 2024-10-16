@@ -1,14 +1,14 @@
 {
     "after-deduct": "nach Feld 04",
-    "deductible-subaccounts": "Cuentas deducibles",
+    "deductible-subaccounts": "Abziehbare Unterkonten",
     "model-130": "Modell 130",
-    "model-130-desc": "Se calcula sumando y acumulando cada trimestre, por ejemplo, si visualizamos el 3º trimestre veremos la suma de los trimestres 1, 2 y 3.",
+    "model-130-desc": "Es wird berechnet, indem jeder Quartal summiert und akkumuliert wird. Zum Beispiel, wenn wir das 3. Quartal betrachten, sehen wir die Summe der Quartale 1, 2 und 3.",
     "model-130-p": "Model 130 is a quarterly declaration of personal income tax (PIT) in which the installment payment of this tax is settled, on account of the annual declaration that is made the following year.",
     "model-130-r": "Kumulierte Daten für den Zeitraum zwischen dem ersten Tag des Jahres und dem letzten Tag des ausgewählten Quartals.",
-    "net-total": "Rendimiento neto",
-    "pct-to-deduct": "% a deducir",
+    "net-total": "Nettoertrag",
+    "pct-to-deduct": "% abzuziehen",
     "previous-model": "Einkünfte aus vorherigen Quartalen",
-    "tax-expenses": "Gastos deducibles",
+    "tax-expenses": "Absetzbare Ausgaben",
     "tax-incomes": "Steuerbare Einkommen",
     "tax-negative-info": "Wenn Verluste (negativ) = 0 sind"
 }

@@ -1,8 +1,8 @@
 {
     "after-deduct": "sulla casella 04",
-    "deductible-subaccounts": "Cuentas deducibles",
-    "model-130": "Modelo 130",
-    "model-130-desc": "Se calcula sumando y acumulando cada trimestre, por ejemplo, si visualizamos el 3º trimestre veremos la suma de los trimestres 1, 2 y 3.",
+    "deductible-subaccounts": "Conti deducibili",
+    "model-130": "Modello 130",
+    "model-130-desc": "Si calcola sommando e accumulando ogni trimestre, ad esempio, se visualizziamo il 3° trimestre vedremo la somma dei trimestri 1, 2 e 3.",
     "model-130-p": "Il Modello 130 è una dichiarazione trimestrale dell'imposta sul reddito delle persone fisiche (IRPF) in cui si liquida il pagamento rateale di questa imposta, a titolo di acconto della dichiarazione annuale che verrà effettuata l'anno successivo",
     "model-130-r": "Dati accumulati per il periodo compreso tra il primo giorno dell'anno e l'ultimo giorno del trimestre selezionato.",
     "net-total": "Totale netto",
