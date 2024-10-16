@@ -102,7 +102,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col">
+                <div class="col-12">
                     <h2 class="h3 mt-3">
                         <i class="far fa-clipboard fa-fw"></i> {{ trans('summary') }}
                     </h2>
@@ -113,7 +113,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col">
+                <div class="col-sm-3 col-12">
                     <div class="form-group">
                         {{ trans('tax-incomes') }}
                         <div class="input-group">
@@ -125,7 +125,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-sm-3 col-12">
                     <div class="form-group">
                         {{ trans('tax-expenses') }}
                         <div class="input-group">
@@ -137,7 +137,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-sm-3 col-12">
                     <div class="form-group">
                         {{ trans('net-total') }}
                         <div class="input-group">
@@ -148,18 +148,20 @@
                         </div>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-sm-3 col-12">
                     <div class="form-group">
                         {{ trans('pct-to-deduct') }}
                         <div class="input-group">
-                            <input type="number" name="todeduct" value="{{ fsc.todeduct }}"
-                                   class="form-control text-right" onchange="this.form.submit();" required/>
+                            <input type="number" name="todeduct" min="0" max="100" value="{{ fsc.todeduct }}"
+                                   class="form-control text-right" 
+                                   onchange="if (this.value < 0) this.value = 0; if (this.value > 100) this.value = 100; this.form.submit();" 
+                                   required/>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col">
+                <div class="col-sm-3 col-12">
                     <div class="form-group">
                         {{ fsc.todeduct }}% {{ trans('after-deduct') }}
                         <div class="input-group">
@@ -171,7 +173,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-sm-3 col-12">
                     <div class="form-group">
                         {{ trans('previous-model') }}
                         <div class="input-group">
@@ -183,7 +185,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-sm-3 col-12">
                     <div class="form-group">
                         {{ trans('retentions') }}
                         <div class="input-group">
@@ -195,7 +197,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-sm-3 col-12">
                     <div class="form-group">
                         {{ trans('result') }}
                         <div class="input-group">
@@ -206,6 +208,11 @@
                                    readonly/>
                         </div>
                         <p class="form-text text-muted">{{ trans('tax-negative-info') }}</p>
+                        {% if fsc.result > 0 %}
+                            <button type="button" class="btn btn-success mt-2 float-left float-sm-right" data-toggle="modal" data-target="#createAccountingModal">
+                                <i class="fas fa-scale-balanced"></i> {{ trans('create-accounting-entry') }}
+                            </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -260,10 +267,10 @@
                     <tr>
                         <th>{{ trans('invoice') }}</th>
                         <th>{{ trans('customer') }}</th>
-                        <th class="text-right">{{ trans('net') }}</th>
-                        <th class="text-right">{{ trans('taxes') }}</th>
+                        <th class="text-right">{{ trans('tax-base') }}</th>
+                        <th class="text-right">{{ trans('vat') }}</th>
                         <th class="text-right">{{ trans('surcharge') }}</th>
-                        <th class="text-right">{{ trans('retention') }}</th>
+                        <th class="text-right">{{ trans('irpf') }}</th>
                         <th class="text-right">{{ trans('total') }}</th>
                         <th class="text-right">{{ trans('date') }}</th>
                     </tr>
@@ -308,11 +315,11 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('net') }}</td>
+                        <td class="text-right font-weight-bold">{{ trans('tax-base') }}</td>
                         <td class="text-right">{{ money(salesTotalNeto) }}</td>
                     </tr>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('taxes') }}</td>
+                        <td class="text-right font-weight-bold">{{ trans('vat') }}</td>
                         <td class="text-right">{{ money(salesTotalTax) }}</td>
                     </tr>
                     <tr>
@@ -320,7 +327,7 @@
                         <td class="text-right">{{ money(salesTotalSurcharge) }}</td>
                     </tr>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('retention') }}</td>
+                        <td class="text-right font-weight-bold">{{ trans('irpf') }}</td>
                         <td class="text-right">{{ money(salesTotalRetention) }}</td>
                     </tr>
                     <tr>
@@ -338,10 +345,10 @@
                     <tr>
                         <th>{{ trans('invoice') }}</th>
                         <th>{{ trans('supplier') }}</th>
-                        <th class="text-right">{{ trans('net') }}</th>
-                        <th class="text-right">{{ trans('taxes') }}</th>
+                        <th class="text-right">{{ trans('tax-base') }}</th>
+                        <th class="text-right">{{ trans('vat') }}</th>
                         <th class="text-right">{{ trans('surcharge') }}</th>
-                        <th class="text-right">{{ trans('retention') }}</th>
+                        <th class="text-right">{{ trans('irpf') }}</th>
                         <th class="text-right">{{ trans('total') }}</th>
                         <th class="text-right">{{ trans('date') }}</th>
                     </tr>
@@ -386,11 +393,11 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('net') }}</td>
+                        <td class="text-right font-weight-bold">{{ trans('tax-base') }}</td>
                         <td class="text-right">{{ money(purchasesTotalNeto) }}</td>
                     </tr>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('taxes') }}</td>
+                        <td class="text-right font-weight-bold">{{ trans('vat') }}</td>
                         <td class="text-right">{{ money(purchasesTotalTax) }}</td>
                     </tr>
                     <tr>
@@ -398,7 +405,7 @@
                         <td class="text-right">{{ money(purchasesTotalSurcharge) }}</td>
                     </tr>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('retention') }}</td>
+                        <td class="text-right font-weight-bold">{{ trans('irpf') }}</td>
                         <td class="text-right">{{ money(purchasesTotalRetention) }}</td>
                     </tr>
                     <tr>
@@ -505,6 +512,67 @@
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Create Accounting Modal -->
+    <div class="modal fade" id="createAccountingModal" tabindex="-1" role="dialog" aria-labelledby="createAccountingModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createAccountingModalLabel">{{ trans('create-accounting-entry') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form name="create-accounting" method="post" onsubmit="animateSpinner('add')">
+                    {{ formToken() }}
+                    {% set exercise = fsc.getExercise(fsc.codejercicio) %}
+                    <input type="hidden" name="action" value="gen-accounting">
+                    <input type="hidden" name="idempresa" value="{{ exercise.idempresa }}">
+                    <input type="hidden" name="codejercicio" value="{{ fsc.codejercicio }}">
+                    <input type="hidden" name="period" value="{{ fsc.period }}">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="entryDate">{{ trans('accounting-entry-date') }}</label>
+                            {% set year = exercise.fechainicio|date("Y") %}
+                            {% set date = "now"|date("Y-m-d") %}
+                            {% if fsc.period == 'T1' %}
+                                {% set date = year ~ '-03-31' %}
+                            {% elseif fsc.period == 'T2' %}
+                                {% set date = year ~ '-06-30' %}
+                            {% elseif fsc.period == 'T3' %}
+                                {% set date = year ~ '-09-30' %}
+                            {% elseif fsc.period == 'T4' %}
+                                {% set date = year ~ '-12-31' %}
+                            {% endif %}
+                            <input type="date" class="form-control" id="date" name="date" value="{{ date }}" required readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="entryAmount">{{ trans('amount') }}</label>
+                            <input type="number" step="any" class="form-control" id="amount" name="amount" value="{{ fsc.result }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentMethod">{{ trans('payment-method') }}</label>
+                            <select class="form-control" id="paymentMethod" name="paymentMethod" required>
+                                {% for method in fsc.paymentMethods %}
+                                    {% if method.idempresa == exercise.idempresa %}
+                                        <option value="{{ method.codpago }}">{{ method.descripcion }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            <i class="fas fa-xmark"></i> {{ trans('cancel') }}
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check"></i> {{ trans('create') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 {% endblock %}

@@ -29,6 +29,7 @@ use FacturaScripts\Dinamic\Model\FacturaCliente;
 use FacturaScripts\Dinamic\Model\FacturaProveedor;
 use FacturaScripts\Dinamic\Model\Partida;
 use FacturaScripts\Dinamic\Model\Subcuenta130;
+use FacturaScripts\Dinamic\Model\FormaPago;
 
 /**
  * Description of Modelo130
@@ -97,6 +98,12 @@ class Modelo130 extends Controller
     /** @var float */
     protected $segSocial = 0.0;
 
+    /** @var float */
+    protected $otrasDeducciones = 0.0;
+
+    /** @var FormaPago[] */
+    public $paymentMethods = [];
+
     /**
      * @param int|null $idempresa
      * @return Ejercicio[]
@@ -114,6 +121,18 @@ class Modelo130 extends Controller
             }
         }
         return $list;
+    }
+
+        /**
+     * @param string|null $codejercicio
+     * @return Ejercicio
+     */
+    public function getExercise(?string $codejercicio): Ejercicio
+    {
+        $exercise = new Ejercicio();
+        $exercise->loadFromCode($this->codejercicio);
+
+        return $exercise;
     }
 
     public function getPageData(): array
@@ -140,6 +159,8 @@ class Modelo130 extends Controller
         parent::privateCore($response, $user, $permissions);
         $this->deductibleSubaccount = new Subcuenta130();
 
+        $this->paymentMethods = FormaPago::all();
+
         $action = $this->request->request->get('action', $this->request->get('action'));
         switch ($action) {
             case 'autocomplete-subaccount':
@@ -151,6 +172,9 @@ class Modelo130 extends Controller
 
             case 'delete-deductible-subaccount':
                 return $this->deleteDeductibleSubaccount();
+
+            case 'gen-accounting':
+                return $this->createAccountingEntry();
         }
 
         $this->loadDates();
@@ -231,8 +255,7 @@ class Modelo130 extends Controller
         $this->codejercicio = $this->request->request->get('codejercicio', '');
         $this->period = $this->request->request->get('period', $this->period);
 
-        $exercise = new Ejercicio();
-        $exercise->loadFromCode($this->codejercicio);
+        $exercise = $this->getExercise($this->codejercicio);
         $this->idempresa = $exercise->idempresa;
 
         // Cargamos las variables dateStart y dateEnd con los valores de inicio y fin del ejercicio elegido
@@ -312,6 +335,7 @@ class Modelo130 extends Controller
             . ' AND a.fecha BETWEEN ' . $this->dataBase->var2str(date('Y-m-d', strtotime($this->dateStart)))
             . ' AND ' . $this->dataBase->var2str(date('Y-m-d', strtotime($this->dateEnd)))
             . ' AND p.codsubcuenta IN (' . implode(',', $codsubs) . ')'
+            . ' AND a.operacion IS ' . $this->dataBase->var2str(Asiento::OPERATION_GENERAL)
             . ' ORDER BY numero ASC';
 
         foreach ($this->dataBase->select($sql) as $row) {
@@ -331,28 +355,33 @@ class Modelo130 extends Controller
         }
 
         foreach ($this->accountingEntries as $asiento) {
-            if ($asiento->codsubcuenta == '6420000000') {
-                $this->segSocial += $asiento->debe;
-            } else if ($asiento->codsubcuenta == '4730000000') {
-                $this->positivosTrimestres += $asiento->debe;
+            switch ($asiento->codsubcuenta) {
+                case '6420000000':
+                    $this->segSocial += $asiento->debe;
+                    break;
+                case '4730000000':
+                    $this->positivosTrimestres += $asiento->debe;
+                    break;
+                default:
+                    $this->otrasDeducciones += $asiento->debe;
+                    break;
             }
         }
 
-        // La seguridad social se cuenta como un gasto deducible
-        $this->taxbaseGastos += $this->segSocial;
+        // La seguridad social y el resto de deducciones agregadas se cuenta como un gasto deducible
+        $this->taxbaseGastos += ($this->segSocial + $this->otrasDeducciones);
 
-        // La partida 473 incluye tanto trimestres anteriores como las retenciones de facturas
+        // La cuenta 473 incluye tanto trimestres anteriores como las retenciones de facturas
         $this->positivosTrimestres = round($this->positivosTrimestres - $this->taxbaseRetenciones, 2);
 
-        // Primero calculamos rendimiento neto: ingresos(ftras ventas) - gastos (ftras compras/gastos + SS) acumulado anual
+        // Primero calculamos rendimiento neto: ingresos(ftras ventas) - gastos (ftras compras/gastos + SS + deducibles) acumulado anual
         // El cálculo nos dará un número negativo o positivo que serán las pérdidas o los beneficios respectivamente
         // El importe a deducir debe ser del 20% según modelo 130 o superior si se desea ingresar un IRPF superior
         // Después se deben restar las retenciones aplicadas en las facturas de venta ya que eso lo ingresa el cliente en tu nombre
         // Igualmente como es el acumulado del año, se deben restar también los trimestrales ya pagados y registrado el asiento
         // Si sale número negativo, el importe a ingresar este trimestra será 0
         // Si sale positivo, dicha cantidad es la que corresponde ingresar y rellenando las casillas de Hacienda de acuerdo a los campos mostrados
-        // Habría que ver la posibilidad de añadir un botón para agregar el asiento de pago de cara a siguientes trimestres (el plugin no lo hace)
-        // Actualmente los asientos de Seguridad Social (642) y de trimestres anteriores (473) se mete a mano (una forma rápida es con el plugin Asientos Predefinidos)
+        // El pago de la cuota de Seguridad Social (cuenta 642) se mete a mano (una forma rápida es con el plugin Asientos Predefinidos)
         // En este link se explica como calcular el modelo 130
         // https://tuspapelesautonomos.es/modelo-130-como-se-calcula-descubrelo-facil-con-ejemplos/
 
@@ -366,6 +395,55 @@ class Modelo130 extends Controller
 
         if ($this->result < 0) {
             $this->result = 0;
+        }
+    }
+
+    protected function createAccountingEntry()
+    {
+        if (false === $this->validateFormToken()) {
+            return false;
+        }
+
+        // Preparamos los valores introducidos en la vista
+        $idempresa = $this->request->request->get('idempresa');
+        $codejercicio = $this->request->request->get('codejercicio');
+        $period = $this->request->request->get('period');
+        $date = $this->request->request->get('date');
+        $amount = (float) $this->request->request->get('amount');
+        $paymentMethodId = $this->request->request->get('paymentMethod');
+
+        // Buscamos si la forma de pago tiene una subcuenta de cara a asignarla o dejar el valor por defecto en la partida
+        $paymentMethod = new FormaPago();
+        if ($paymentMethod->loadFromCode($paymentMethodId)) {
+            $bankAccount = $paymentMethod->getBankAccount();
+        }
+
+        $asiento = new Asiento();
+        $asiento->idempresa = $idempresa; 
+        $asiento->codejercicio = $codejercicio;
+        $asiento->concepto = 'Regularización de IRPF ' . $period;
+        $asiento->fecha = $date;
+        $asiento->importe = $amount;
+
+        if ($asiento->save()) {
+            $partida1 = new Partida();
+            $partida1->idasiento = $asiento->idasiento;
+            $partida1->concepto = 'Regularización de IRPF ' . $period;
+            $partida1->debe = $amount;
+            $partida1->codsubcuenta = '4730000000'; // Código de subcuenta de IRPF
+            $partida1->save();
+
+            $partida2 = new Partida();
+            $partida2->idasiento = $asiento->idasiento;
+            $partida2->concepto = 'Regularización de IRPF ' . $period;
+            $partida2->haber = $amount;
+            $partida2->codsubcuenta = !empty($bankAccount->codsubcuenta) ? $bankAccount->codsubcuenta : '5720000000';
+            $partida2->save();
+
+            Tools::log()->notice('record-updated-correctly');
+            return true;
+        } else {
+            return false;
         }
     }
 }
