@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Modelo130 plugin for FacturaScripts
- * Copyright (C) 2021-2024 Carlos Garcia Gomez            <carlos@facturascripts.com>
+ * Copyright (C) 2021-2025 Carlos Garcia Gomez            <carlos@facturascripts.com>
  *                         Jeronimo Pedro Sánchez Manzano <socger@gmail.com>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -27,9 +27,9 @@ use FacturaScripts\Dinamic\Model\Asiento;
 use FacturaScripts\Dinamic\Model\Ejercicio;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
 use FacturaScripts\Dinamic\Model\FacturaProveedor;
+use FacturaScripts\Dinamic\Model\FormaPago;
 use FacturaScripts\Dinamic\Model\Partida;
 use FacturaScripts\Dinamic\Model\Subcuenta130;
-use FacturaScripts\Dinamic\Model\FormaPago;
 
 /**
  * Description of Modelo130
@@ -123,7 +123,7 @@ class Modelo130 extends Controller
         return $list;
     }
 
-        /**
+    /**
      * @param string|null $codejercicio
      * @return Ejercicio
      */
@@ -140,7 +140,7 @@ class Modelo130 extends Controller
         $data = parent::getPageData();
         $data['menu'] = 'reports';
         $data['title'] = 'model-130';
-        $data['icon'] = 'fas fa-book';
+        $data['icon'] = 'fa-solid fa-book';
         return $data;
     }
 
@@ -409,7 +409,7 @@ class Modelo130 extends Controller
         $codejercicio = $this->request->request->get('codejercicio');
         $period = $this->request->request->get('period');
         $date = $this->request->request->get('date');
-        $amount = (float) $this->request->request->get('amount');
+        $amount = (float)$this->request->request->get('amount');
         $paymentMethodId = $this->request->request->get('paymentMethod');
 
         // Buscamos si la forma de pago tiene una subcuenta de cara a asignarla o dejar el valor por defecto en la partida
@@ -419,7 +419,7 @@ class Modelo130 extends Controller
         }
 
         $asiento = new Asiento();
-        $asiento->idempresa = $idempresa; 
+        $asiento->idempresa = $idempresa;
         $asiento->codejercicio = $codejercicio;
         $asiento->concepto = 'Regularización de IRPF ' . $period;
         $asiento->fecha = $date;

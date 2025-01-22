@@ -53,7 +53,7 @@
             <div class="row">
                 <div class="col">
                     <h1 class="h2">
-                        <i class="fas fa-book fa-fw"></i> {{ fsc.title }}
+                        <i class="fa-solid fa-book fa-fw"></i> {{ fsc.title }}
                     </h1>
                     <p>{{ trans('model-130-p') }}</p>
                 </div>
@@ -96,7 +96,7 @@
                 <div class="col">
                     <div class="form-group">
                         <button type="submit" name="action" value="show" class="btn btn-primary">
-                            <i class="fas fa-eye fa-fw"></i> {{ trans('preview') }}
+                            <i class="fa-solid fa-eye fa-fw"></i> {{ trans('preview') }}
                         </button>
                     </div>
                 </div>
@@ -104,7 +104,7 @@
             <div class="row">
                 <div class="col-12">
                     <h2 class="h3 mt-3">
-                        <i class="far fa-clipboard fa-fw"></i> {{ trans('summary') }}
+                        <i class="fa-regular fa-clipboard fa-fw"></i> {{ trans('summary') }}
                     </h2>
                     <div class="alert alert-info">
                         <p class="mb-0">{{ trans('model-130-r') }}</p>
@@ -210,7 +210,7 @@
                         <p class="form-text text-muted">{{ trans('tax-negative-info') }}</p>
                         {% if fsc.result > 0 %}
                             <button type="button" class="btn btn-success mt-2 float-left float-sm-right" data-toggle="modal" data-target="#createAccountingModal">
-                                <i class="fas fa-scale-balanced"></i> {{ trans('create-accounting-entry') }}
+                                <i class="fa-solid fa-scale-balanced"></i> {{ trans('create-accounting-entry') }}
                             </button>
                         {% endif %}
                     </div>
@@ -224,7 +224,7 @@
                href="#sales" role="tab"
                aria-controls="sales" aria-selected="{{ fsc.tabDeductibleSubaccount ? 'false' : 'true' }}"
                title="{{ trans('sales') }}">
-                <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i>
+                <i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i>
                 <span class="d-none d-sm-inline-block">{{ trans('sales') }}</span>
                 <span class="badge badge-secondary">{{ fsc.customerInvoices|length }}</span>
             </a>
@@ -232,7 +232,7 @@
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="purchases-tab" data-toggle="tab" href="#purchases" role="tab"
                aria-controls="purchases" aria-selected="false" title="{{ trans('purchases') }}">
-                <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i>
+                <i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i>
                 <span class="d-none d-sm-inline-block">{{ trans('purchases') }}</span>
                 <span class="badge badge-secondary">{{ fsc.supplierInvoices|length }}</span>
             </a>
@@ -240,7 +240,7 @@
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="accounting-tab" data-toggle="tab" href="#accounting" role="tab"
                aria-controls="accounting" aria-selected="false" title="{{ trans('accounting-entries') }}">
-                <i class="fas fa-balance-scale" aria-hidden="true"></i>
+                <i class="fa-solid fa-balance-scale" aria-hidden="true"></i>
                 <span class="d-none d-sm-inline-block">{{ trans('accounting-entries') }}</span>
                 <span class="badge badge-secondary">{{ fsc.accountingEntries|length }}</span>
             </a>
@@ -252,7 +252,7 @@
                aria-controls="deductible-subaccounts"
                aria-selected="{{ fsc.tabDeductibleSubaccount ? 'true' : 'false' }}"
                title="{{ trans('deductible-subaccounts') }}">
-                <i class="fas fa-book" aria-hidden="true"></i>
+                <i class="fa-solid fa-book" aria-hidden="true"></i>
                 <span class="d-none d-sm-inline-block">{{ trans('deductible-subaccounts') }}</span>
                 <span class="badge badge-secondary">{{ fsc.deductibleSubaccount.count() }}</span>
             </a>
@@ -486,7 +486,7 @@
                                     <input type="hidden" name="id" value="{{ subaccount.id }}">
                                     <input type="hidden" name="action" value="delete-deductible-subaccount">
                                     <button type="submit" class="btn btn-sm btn-danger btn-spin-action">
-                                        <i class="fas fa-trash-alt mr-1"></i> {{ trans('delete') }}
+                                        <i class="fa-solid fa-trash-alt mr-1"></i> {{ trans('delete') }}
                                     </button>
                                 </form>
                             </td>
@@ -505,7 +505,7 @@
                             <input type="text" id="findSubaccount" class="form-control" placeholder="{{ trans('search') }}">
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-outline-success">
-                                    <i class="fas fa-plus mr-1"></i> {{ trans('add') }}
+                                    <i class="fa-solid fa-plus mr-1"></i> {{ trans('add') }}
                                 </button>
                             </div>
                         </div>
@@ -565,10 +565,10 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                            <i class="fas fa-xmark"></i> {{ trans('cancel') }}
+                            <i class="fa-solid fa-xmark"></i> {{ trans('cancel') }}
                         </button>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-check"></i> {{ trans('create') }}
+                            <i class="fa-solid fa-check"></i> {{ trans('create') }}
                         </button>
                     </div>
                 </form>
