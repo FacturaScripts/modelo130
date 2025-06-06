@@ -25,6 +25,7 @@ use FacturaScripts\Core\Model\Base\ModelTrait;
 use FacturaScripts\Core\Session;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\Subcuenta;
+use FacturaScripts\Dinamic\Model\User;
 
 class Subcuenta130 extends ModelClass
 {
@@ -57,6 +58,14 @@ class Subcuenta130 extends ModelClass
         $where = [new DataBaseWhere('codsubcuenta', $this->codsubcuenta)];
         $subcuenta->loadFromCode('', $where);
         return $subcuenta;
+    }
+
+    public function install(): string
+    {
+        new User();
+        new Subcuenta();
+
+        return parent::install();
     }
 
     public static function primaryColumn(): string
