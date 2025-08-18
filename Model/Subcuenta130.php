@@ -20,8 +20,8 @@
 namespace FacturaScripts\Plugins\Modelo130\Model;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
-use FacturaScripts\Core\Model\Base\ModelClass;
-use FacturaScripts\Core\Model\Base\ModelTrait;
+use FacturaScripts\Core\Template\ModelClass;
+use FacturaScripts\Core\Template\ModelTrait;
 use FacturaScripts\Core\Session;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\Subcuenta;
@@ -55,7 +55,7 @@ class Subcuenta130 extends ModelClass
     {
         $subcuenta = new Subcuenta();
         $where = [new DataBaseWhere('codsubcuenta', $this->codsubcuenta)];
-        $subcuenta->loadFromCode('', $where);
+        $subcuenta->loadWhere($where);
         return $subcuenta;
     }
 
@@ -71,7 +71,7 @@ class Subcuenta130 extends ModelClass
 
     public function test(): bool
     {
-        if (empty($this->primaryColumnValue())) {
+        if (empty($this->id())) {
             $this->creation_date = Tools::dateTime();
             $this->last_nick = null;
             $this->last_update = null;
