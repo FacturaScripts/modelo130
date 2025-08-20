@@ -2,7 +2,7 @@
 <table>
     <column>
         <name>codsubcuenta</name>
-        <type>character varying(10)</type>
+        <type>character varying(15)</type>
         <null>NO</null>
     </column>
     <column>
@@ -41,10 +41,6 @@
     <constraint>
         <name>ca_subcuentas_130_users_nick</name>
         <type>FOREIGN KEY (nick) REFERENCES users (nick) ON DELETE SET NULL ON UPDATE CASCADE</type>
-    </constraint>
-    <constraint>
-        <name>ca_subcuentas_130_subcuentas</name>
-        <type>FOREIGN KEY (codsubcuenta) REFERENCES subcuentas (codsubcuenta) ON DELETE CASCADE ON UPDATE CASCADE</type>
     </constraint>
     <constraint>
         <name>uniq_subcuentas_130</name>

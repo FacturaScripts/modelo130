@@ -202,7 +202,7 @@ class Modelo130 extends Controller
         return true;
     }
 
-    protected function autocompleteSubaccount()
+    protected function autocompleteSubaccount(): void
     {
         $this->setTemplate(false);
 
@@ -398,7 +398,7 @@ class Modelo130 extends Controller
         }
     }
 
-    protected function createAccountingEntry()
+    protected function createAccountingEntry(): bool
     {
         if (false === $this->validateFormToken()) {
             return false;
@@ -425,25 +425,26 @@ class Modelo130 extends Controller
         $asiento->fecha = $date;
         $asiento->importe = $amount;
 
-        if ($asiento->save()) {
-            $partida1 = new Partida();
-            $partida1->idasiento = $asiento->idasiento;
-            $partida1->concepto = 'Regularización de IRPF ' . $period;
-            $partida1->debe = $amount;
-            $partida1->codsubcuenta = '4730000000'; // Código de subcuenta de IRPF
-            $partida1->save();
-
-            $partida2 = new Partida();
-            $partida2->idasiento = $asiento->idasiento;
-            $partida2->concepto = 'Regularización de IRPF ' . $period;
-            $partida2->haber = $amount;
-            $partida2->codsubcuenta = !empty($bankAccount->codsubcuenta) ? $bankAccount->codsubcuenta : '5720000000';
-            $partida2->save();
-
-            Tools::log()->notice('record-updated-correctly');
-            return true;
-        } else {
+        if (false === $asiento->save()) {
             return false;
         }
+
+        $partida1 = new Partida();
+        $partida1->idasiento = $asiento->idasiento;
+        $partida1->concepto = 'Regularización de IRPF ' . $period;
+        $partida1->debe = $amount;
+        $partida1->codsubcuenta = '4730000000'; // Código de subcuenta de IRPF
+        $partida1->save();
+
+        $partida2 = new Partida();
+        $partida2->idasiento = $asiento->idasiento;
+        $partida2->concepto = 'Regularización de IRPF ' . $period;
+        $partida2->haber = $amount;
+        $partida2->codsubcuenta = !empty($bankAccount->codsubcuenta) ? $bankAccount->codsubcuenta : '5720000000';
+        $partida2->save();
+
+        Tools::log()->notice('record-updated-correctly');
+
+        return true;
     }
 }

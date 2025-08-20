@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Modelo130 plugin for FacturaScripts
- * Copyright (C) 2024 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2024-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -20,9 +20,9 @@
 namespace FacturaScripts\Plugins\Modelo130\Model;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\Session;
 use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Template\ModelTrait;
-use FacturaScripts\Core\Session;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\Subcuenta;
 use FacturaScripts\Dinamic\Model\User;
@@ -66,11 +66,6 @@ class Subcuenta130 extends ModelClass
         new Subcuenta();
 
         return parent::install();
-    }
-
-    public static function primaryColumn(): string
-    {
-        return "id";
     }
 
     public static function tableName(): string

@@ -23,6 +23,7 @@ use FacturaScripts\Dinamic\Model\Cuenta;
 use FacturaScripts\Dinamic\Model\Ejercicio;
 use FacturaScripts\Dinamic\Model\Subcuenta;
 use FacturaScripts\Dinamic\Model\Subcuenta130;
+use FacturaScripts\Test\Traits\DefaultSettingsTrait;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -31,9 +32,16 @@ use PHPUnit\Framework\TestCase;
  */
 final class ModTest extends TestCase
 {
+    use DefaultSettingsTrait;
     use LogErrorsTrait;
 
-    public function testCreateSubcuenta130()
+    public static function setUpBeforeClass(): void
+    {
+        self::setDefaultSettings();
+        self::installAccountingPlan();
+    }
+
+    public function testCreateSubcuenta130(): void
     {
         // crear un ejercicio
         $exercise = $this->getRandomExercise();
