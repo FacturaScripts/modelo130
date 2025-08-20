@@ -130,7 +130,7 @@ class Modelo130 extends Controller
     public function getExercise(?string $codejercicio): Ejercicio
     {
         $exercise = new Ejercicio();
-        $exercise->loadFromCode($this->codejercicio);
+        $exercise->load($this->codejercicio);
 
         return $exercise;
     }
@@ -234,7 +234,7 @@ class Modelo130 extends Controller
         }
 
         $subaccount130 = new Subcuenta130();
-        if (false === $subaccount130->loadFromCode($this->request->request->get('id'))) {
+        if (false === $subaccount130->load($this->request->request->get('id'))) {
             Tools::log()->error('record-not-found');
             return false;
         }
@@ -414,7 +414,7 @@ class Modelo130 extends Controller
 
         // Buscamos si la forma de pago tiene una subcuenta de cara a asignarla o dejar el valor por defecto en la partida
         $paymentMethod = new FormaPago();
-        if ($paymentMethod->loadFromCode($paymentMethodId)) {
+        if ($paymentMethod->load($paymentMethodId)) {
             $bankAccount = $paymentMethod->getBankAccount();
         }
 

@@ -60,9 +60,9 @@
             </div>
             <div class="row align-items-end">
                 <div class="col-sm-3">
-                    <div class="form-group">
+                    <div class="mb-3">
                         {{ trans('exercise') }}
-                        <select name="codejercicio" class="form-control" required>
+                        <select name="codejercicio" class="form-select" required>
                             {% for company in fsc.empresa.all() %}
                                 <optgroup label="{{ company.nombre }}">
                                     {% for exercise in fsc.getAllExercises(company.idempresa) %}
@@ -80,9 +80,9 @@
                     </div>
                 </div>
                 <div class="col-sm-3">
-                    <div class="form-group">
+                    <div class="mb-3">
                         {{ trans('period') }}
-                        <select name="period" class="form-control" required>
+                        <select name="period" class="form-select" required>
                             {% for period, label in fsc.getPeriodsForComboBoxHtml() %}
                                 {% if period == fsc.period %}
                                     <option value="{{ period }}" selected>{{ trans(label) }}</option>
@@ -94,7 +94,7 @@
                     </div>
                 </div>
                 <div class="col">
-                    <div class="form-group">
+                    <div class="mb-3">
                         <button type="submit" name="action" value="show" class="btn btn-primary">
                             <i class="fa-solid fa-eye fa-fw"></i> {{ trans('preview') }}
                         </button>
@@ -106,7 +106,7 @@
                     <h2 class="h3 mt-3">
                         <i class="fa-regular fa-clipboard fa-fw"></i> {{ trans('summary') }}
                     </h2>
-                    <div class="alert alert-info">
+                    <div class="alert alert-dismissible alert-info">
                         <p class="mb-0">{{ trans('model-130-r') }}</p>
                         <p class="mb-0">{{ trans('model-130-desc') }}</p>
                     </div>
@@ -114,46 +114,40 @@
             </div>
             <div class="row">
                 <div class="col-sm-3 col-12">
-                    <div class="form-group">
+                    <div class="mb-3">
                         {{ trans('tax-incomes') }}
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">01</span>
-                            </div>
-                            <input type="number" value="{{ fsc.taxbaseIngresos }}" class="form-control text-right"
+                            <span class="input-group-text">01</span>
+                            <input type="number" value="{{ fsc.taxbaseIngresos }}" class="form-control text-end"
                                    readonly/>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-3 col-12">
-                    <div class="form-group">
+                    <div class="mb-3">
                         {{ trans('tax-expenses') }}
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">02</span>
-                            </div>
-                            <input type="number" value="{{ fsc.taxbaseGastos }}" class="form-control text-right"
+                            <span class="input-group-text">02</span>
+                            <input type="number" value="{{ fsc.taxbaseGastos }}" class="form-control text-end"
                                    readonly/>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-3 col-12">
-                    <div class="form-group">
+                    <div class="mb-3">
                         {{ trans('net-total') }}
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">03</span>
-                            </div>
-                            <input type="number" value="{{ fsc.taxbase }}" class="form-control text-right" readonly/>
+                            <span class="input-group-text">03</span>
+                            <input type="number" value="{{ fsc.taxbase }}" class="form-control text-end" readonly/>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-3 col-12">
-                    <div class="form-group">
+                    <div class="mb-3">
                         {{ trans('pct-to-deduct') }}
                         <div class="input-group">
                             <input type="number" name="todeduct" min="0" max="100" value="{{ fsc.todeduct }}"
-                                   class="form-control text-right" 
+                                   class="form-control text-end" 
                                    onchange="if (this.value < 0) this.value = 0; if (this.value > 100) this.value = 100; this.form.submit();" 
                                    required/>
                         </div>
@@ -162,54 +156,46 @@
             </div>
             <div class="row">
                 <div class="col-sm-3 col-12">
-                    <div class="form-group">
+                    <div class="mb-3">
                         {{ fsc.todeduct }}% {{ trans('after-deduct') }}
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">04</span>
-                            </div>
-                            <input type="number" value="{{ fsc.afterdeduct }}" class="form-control text-right"
+                            <span class="input-group-text">04</span>
+                            <input type="number" value="{{ fsc.afterdeduct }}" class="form-control text-end"
                                    readonly/>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-3 col-12">
-                    <div class="form-group">
+                    <div class="mb-3">
                         {{ trans('previous-model') }}
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">05</span>
-                            </div>
-                            <input type="number" value="{{ fsc.positivosTrimestres }}" class="form-control text-right"
+                            <span class="input-group-text">05</span>
+                            <input type="number" value="{{ fsc.positivosTrimestres }}" class="form-control text-end"
                                    readonly/>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-3 col-12">
-                    <div class="form-group">
+                    <div class="mb-3">
                         {{ trans('retentions') }}
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">06</span>
-                            </div>
-                            <input type="number" value="{{ fsc.taxbaseRetenciones }}" class="form-control text-right"
+                            <span class="input-group-text">06</span>
+                            <input type="number" value="{{ fsc.taxbaseRetenciones }}" class="form-control text-end"
                                    readonly/>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-3 col-12">
-                    <div class="form-group">
+                    <div class="mb-3">
                         {{ trans('result') }}
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">07</span>
-                            </div>
-                            <input type="number" value="{{ fsc.result }}" class="form-control text-right"
+                            <span class="input-group-text">07</span>
+                            <input type="number" value="{{ fsc.result }}" class="form-control text-end"
                                    readonly/>
                         </div>
                         <p class="form-text text-muted">{{ trans('tax-negative-info') }}</p>
                         {% if fsc.result > 0 %}
-                            <button type="button" class="btn btn-success mt-2 float-left float-sm-right" data-toggle="modal" data-target="#createAccountingModal">
+                            <button type="button" class="btn btn-success mt-2 float-start float-sm-right" data-bs-toggle="modal" data-bs-target="#createAccountingModal">
                                 <i class="fa-solid fa-scale-balanced"></i> {{ trans('create-accounting-entry') }}
                             </button>
                         {% endif %}
@@ -220,41 +206,41 @@
     </form>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <a class="nav-link {{ fsc.activeTab is empty ? 'active' : '' }}" id="sales-tab" data-toggle="tab"
+            <a class="nav-link {{ fsc.activeTab is empty ? 'active' : '' }}" id="sales-tab" data-bs-toggle="tab"
                href="#sales" role="tab"
                aria-controls="sales" aria-selected="{{ fsc.tabDeductibleSubaccount ? 'false' : 'true' }}"
                title="{{ trans('sales') }}">
                 <i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i>
                 <span class="d-none d-sm-inline-block">{{ trans('sales') }}</span>
-                <span class="badge badge-secondary">{{ fsc.customerInvoices|length }}</span>
+                <span class="badge bg-secondary">{{ fsc.customerInvoices|length }}</span>
             </a>
         </li>
         <li class="nav-item" role="presentation">
-            <a class="nav-link" id="purchases-tab" data-toggle="tab" href="#purchases" role="tab"
+            <a class="nav-link" id="purchases-tab" data-bs-toggle="tab" href="#purchases" role="tab"
                aria-controls="purchases" aria-selected="false" title="{{ trans('purchases') }}">
                 <i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i>
                 <span class="d-none d-sm-inline-block">{{ trans('purchases') }}</span>
-                <span class="badge badge-secondary">{{ fsc.supplierInvoices|length }}</span>
+                <span class="badge bg-secondary">{{ fsc.supplierInvoices|length }}</span>
             </a>
         </li>
         <li class="nav-item" role="presentation">
-            <a class="nav-link" id="accounting-tab" data-toggle="tab" href="#accounting" role="tab"
+            <a class="nav-link" id="accounting-tab" data-bs-toggle="tab" href="#accounting" role="tab"
                aria-controls="accounting" aria-selected="false" title="{{ trans('accounting-entries') }}">
                 <i class="fa-solid fa-balance-scale" aria-hidden="true"></i>
                 <span class="d-none d-sm-inline-block">{{ trans('accounting-entries') }}</span>
-                <span class="badge badge-secondary">{{ fsc.accountingEntries|length }}</span>
+                <span class="badge bg-secondary">{{ fsc.accountingEntries|length }}</span>
             </a>
         </li>
         <li class="nav-item" role="presentation">
             <a class="nav-link {{ fsc.activeTab == 'deductible-subaccount' ? 'active' : '' }}"
-               id="deductible-subaccounts-tab" data-toggle="tab" href="#deductible-subaccounts"
+               id="deductible-subaccounts-tab" data-bs-toggle="tab" href="#deductible-subaccounts"
                role="tab"
                aria-controls="deductible-subaccounts"
                aria-selected="{{ fsc.tabDeductibleSubaccount ? 'true' : 'false' }}"
                title="{{ trans('deductible-subaccounts') }}">
                 <i class="fa-solid fa-book" aria-hidden="true"></i>
                 <span class="d-none d-sm-inline-block">{{ trans('deductible-subaccounts') }}</span>
-                <span class="badge badge-secondary">{{ fsc.deductibleSubaccount.count() }}</span>
+                <span class="badge bg-secondary">{{ fsc.deductibleSubaccount.count() }}</span>
             </a>
         </li>
     </ul>
@@ -267,12 +253,12 @@
                     <tr>
                         <th>{{ trans('invoice') }}</th>
                         <th>{{ trans('customer') }}</th>
-                        <th class="text-right">{{ trans('tax-base') }}</th>
-                        <th class="text-right">{{ trans('vat') }}</th>
-                        <th class="text-right">{{ trans('surcharge') }}</th>
-                        <th class="text-right">{{ trans('irpf') }}</th>
-                        <th class="text-right">{{ trans('total') }}</th>
-                        <th class="text-right">{{ trans('date') }}</th>
+                        <th class="text-end">{{ trans('tax-base') }}</th>
+                        <th class="text-end">{{ trans('vat') }}</th>
+                        <th class="text-end">{{ trans('surcharge') }}</th>
+                        <th class="text-end">{{ trans('irpf') }}</th>
+                        <th class="text-end">{{ trans('total') }}</th>
+                        <th class="text-end">{{ trans('date') }}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -292,12 +278,12 @@
                                 <a href="{{ item.url() }}">{{ item.codigo }}</a>
                             </td>
                             <td>{{ item.nombrecliente | raw }}</td>
-                            <td class="text-right">{{ money(item.neto) }}</td>
-                            <td class="text-right">{{ money(item.totaliva) }}</td>
-                            <td class="text-right">{{ money(item.totalrecargo) }}</td>
-                            <td class="text-right">{{ money(item.totalirpf) }}</td>
-                            <td class="text-right">{{ money(item.total) }}</td>
-                            <td class="text-right">{{ item.fecha }}</td>
+                            <td class="text-end">{{ money(item.neto) }}</td>
+                            <td class="text-end">{{ money(item.totaliva) }}</td>
+                            <td class="text-end">{{ money(item.totalrecargo) }}</td>
+                            <td class="text-end">{{ money(item.totalirpf) }}</td>
+                            <td class="text-end">{{ money(item.total) }}</td>
+                            <td class="text-end">{{ item.fecha }}</td>
                         </tr>
                     {% else %}
                         <tr class="table-warning">
@@ -310,29 +296,29 @@
                     <thead>
                     <tr>
                         <th></th>
-                        <th class="text-right text-capitalize">{{ trans('totals') }}</th>
+                        <th class="text-end text-capitalize">{{ trans('totals') }}</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('tax-base') }}</td>
-                        <td class="text-right">{{ money(salesTotalNeto) }}</td>
+                        <td class="text-end fw-bold">{{ trans('tax-base') }}</td>
+                        <td class="text-end">{{ money(salesTotalNeto) }}</td>
                     </tr>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('vat') }}</td>
-                        <td class="text-right">{{ money(salesTotalTax) }}</td>
+                        <td class="text-end fw-bold">{{ trans('vat') }}</td>
+                        <td class="text-end">{{ money(salesTotalTax) }}</td>
                     </tr>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('surcharge') }}</td>
-                        <td class="text-right">{{ money(salesTotalSurcharge) }}</td>
+                        <td class="text-end fw-bold">{{ trans('surcharge') }}</td>
+                        <td class="text-end">{{ money(salesTotalSurcharge) }}</td>
                     </tr>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('irpf') }}</td>
-                        <td class="text-right">{{ money(salesTotalRetention) }}</td>
+                        <td class="text-end fw-bold">{{ trans('irpf') }}</td>
+                        <td class="text-end">{{ money(salesTotalRetention) }}</td>
                     </tr>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('total-amount') }}</td>
-                        <td class="text-right">{{ money(salesTotal) }}</td>
+                        <td class="text-end fw-bold">{{ trans('total-amount') }}</td>
+                        <td class="text-end">{{ money(salesTotal) }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -345,12 +331,12 @@
                     <tr>
                         <th>{{ trans('invoice') }}</th>
                         <th>{{ trans('supplier') }}</th>
-                        <th class="text-right">{{ trans('tax-base') }}</th>
-                        <th class="text-right">{{ trans('vat') }}</th>
-                        <th class="text-right">{{ trans('surcharge') }}</th>
-                        <th class="text-right">{{ trans('irpf') }}</th>
-                        <th class="text-right">{{ trans('total') }}</th>
-                        <th class="text-right">{{ trans('date') }}</th>
+                        <th class="text-end">{{ trans('tax-base') }}</th>
+                        <th class="text-end">{{ trans('vat') }}</th>
+                        <th class="text-end">{{ trans('surcharge') }}</th>
+                        <th class="text-end">{{ trans('irpf') }}</th>
+                        <th class="text-end">{{ trans('total') }}</th>
+                        <th class="text-end">{{ trans('date') }}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -370,12 +356,12 @@
                                 <a href="{{ item.url() }}">{{ item.codigo }}</a>
                             </td>
                             <td>{{ item.nombre | raw }}</td>
-                            <td class="text-right">{{ money(item.neto) }}</td>
-                            <td class="text-right">{{ money(item.totaliva) }}</td>
-                            <td class="text-right">{{ money(item.totalrecargo) }}</td>
-                            <td class="text-right">{{ money(item.totalirpf) }}</td>
-                            <td class="text-right">{{ money(item.total) }}</td>
-                            <td class="text-right">{{ item.fecha }}</td>
+                            <td class="text-end">{{ money(item.neto) }}</td>
+                            <td class="text-end">{{ money(item.totaliva) }}</td>
+                            <td class="text-end">{{ money(item.totalrecargo) }}</td>
+                            <td class="text-end">{{ money(item.totalirpf) }}</td>
+                            <td class="text-end">{{ money(item.total) }}</td>
+                            <td class="text-end">{{ item.fecha }}</td>
                         </tr>
                     {% else %}
                         <tr class="table-warning">
@@ -388,29 +374,29 @@
                     <thead>
                     <tr>
                         <th></th>
-                        <th class="text-right text-capitalize">{{ trans('totals') }}</th>
+                        <th class="text-end text-capitalize">{{ trans('totals') }}</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('tax-base') }}</td>
-                        <td class="text-right">{{ money(purchasesTotalNeto) }}</td>
+                        <td class="text-end fw-bold">{{ trans('tax-base') }}</td>
+                        <td class="text-end">{{ money(purchasesTotalNeto) }}</td>
                     </tr>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('vat') }}</td>
-                        <td class="text-right">{{ money(purchasesTotalTax) }}</td>
+                        <td class="text-end fw-bold">{{ trans('vat') }}</td>
+                        <td class="text-end">{{ money(purchasesTotalTax) }}</td>
                     </tr>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('surcharge') }}</td>
-                        <td class="text-right">{{ money(purchasesTotalSurcharge) }}</td>
+                        <td class="text-end fw-bold">{{ trans('surcharge') }}</td>
+                        <td class="text-end">{{ money(purchasesTotalSurcharge) }}</td>
                     </tr>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('irpf') }}</td>
-                        <td class="text-right">{{ money(purchasesTotalRetention) }}</td>
+                        <td class="text-end fw-bold">{{ trans('irpf') }}</td>
+                        <td class="text-end">{{ money(purchasesTotalRetention) }}</td>
                     </tr>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('total-amount') }}</td>
-                        <td class="text-right">{{ money(purchasesTotal) }}</td>
+                        <td class="text-end fw-bold">{{ trans('total-amount') }}</td>
+                        <td class="text-end">{{ money(purchasesTotal) }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -424,8 +410,8 @@
                         <th>{{ trans('accounting-entry') }}</th>
                         <th>{{ trans('subaccount') }}</th>
                         <th>{{ trans('concept') }}</th>
-                        <th class="text-right">{{ trans('total') }}</th>
-                        <th class="text-right">{{ trans('date') }}</th>
+                        <th class="text-end">{{ trans('total') }}</th>
+                        <th class="text-end">{{ trans('date') }}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -438,8 +424,8 @@
                             </td>
                             <td>{{ item.codsubcuenta }}</td>
                             <td>{{ item.concepto | raw }}</td>
-                            <td class="text-right">{{ money(item.debe) }}</td>
-                            <td class="text-right">{{ item.fecha }}</td>
+                            <td class="text-end">{{ money(item.debe) }}</td>
+                            <td class="text-end">{{ item.fecha }}</td>
                         </tr>
                     {% else %}
                         <tr class="table-warning">
@@ -452,13 +438,13 @@
                     <thead>
                     <tr>
                         <th></th>
-                        <th class="text-right text-capitalize">{{ trans('totals') }}</th>
+                        <th class="text-end text-capitalize">{{ trans('totals') }}</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
-                        <td class="text-right font-weight-bold">{{ trans('total-amount') }}</td>
-                        <td class="text-right">{{ money(accountingTotalNeto) }}</td>
+                        <td class="text-end fw-bold">{{ trans('total-amount') }}</td>
+                        <td class="text-end">{{ money(accountingTotalNeto) }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -480,13 +466,13 @@
                         <tr>
                             <td>{{ subaccount.codsubcuenta }}</td>
                             <td>{{ subaccount.getSubcuenta().descripcion }}</td>
-                            <td class="text-right">
+                            <td class="text-end">
                                 <form method="post" onsubmit="animateSpinner('add')">
                                     {{ formToken() }}
                                     <input type="hidden" name="id" value="{{ subaccount.id }}">
                                     <input type="hidden" name="action" value="delete-deductible-subaccount">
                                     <button type="submit" class="btn btn-sm btn-danger btn-spin-action">
-                                        <i class="fa-solid fa-trash-alt mr-1"></i> {{ trans('delete') }}
+                                        <i class="fa-solid fa-trash-alt me-1"></i> {{ trans('delete') }}
                                     </button>
                                 </form>
                             </td>
@@ -503,11 +489,9 @@
                     <div class="card-body">
                         <div class="input-group">
                             <input type="text" id="findSubaccount" class="form-control" placeholder="{{ trans('search') }}">
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-outline-success">
-                                    <i class="fa-solid fa-plus mr-1"></i> {{ trans('add') }}
+                            <button type="submit" class="btn btn-outline-success">
+                                    <i class="fa-solid fa-plus me-1"></i> {{ trans('add') }}
                                 </button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -521,9 +505,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createAccountingModalLabel">{{ trans('create-accounting-entry') }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form name="create-accounting" method="post" onsubmit="animateSpinner('add')">
                     {{ formToken() }}
@@ -533,7 +515,7 @@
                     <input type="hidden" name="codejercicio" value="{{ fsc.codejercicio }}">
                     <input type="hidden" name="period" value="{{ fsc.period }}">
                     <div class="modal-body">
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="entryDate">{{ trans('accounting-entry-date') }}</label>
                             {% set year = exercise.fechainicio|date("Y") %}
                             {% set date = "now"|date("Y-m-d") %}
@@ -548,13 +530,13 @@
                             {% endif %}
                             <input type="date" class="form-control" id="date" name="date" value="{{ date }}" required readonly>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="entryAmount">{{ trans('amount') }}</label>
                             <input type="number" step="any" class="form-control" id="amount" name="amount" value="{{ fsc.result }}" required>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="paymentMethod">{{ trans('payment-method') }}</label>
-                            <select class="form-control" id="paymentMethod" name="paymentMethod" required>
+                            <select class="form-select" id="paymentMethod" name="paymentMethod" required>
                                 {% for method in fsc.paymentMethods %}
                                     {% if method.idempresa == exercise.idempresa %}
                                         <option value="{{ method.codpago }}">{{ method.descripcion }}</option>
@@ -564,7 +546,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                             <i class="fa-solid fa-xmark"></i> {{ trans('cancel') }}
                         </button>
                         <button type="submit" class="btn btn-primary">
