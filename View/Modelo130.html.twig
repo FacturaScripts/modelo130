@@ -58,8 +58,8 @@
                     <p>{{ trans('model-130-p') }}</p>
                 </div>
             </div>
-            <div class="row align-items-end">
-                <div class="col-sm-3">
+            <div class="row g-2 align-items-end">
+                <div class="col-sm-6 col-md-3">
                     <div class="mb-3">
                         {{ trans('exercise') }}
                         <select name="codejercicio" class="form-select" required>
@@ -79,7 +79,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-6 col-md-3">
                     <div class="mb-3">
                         {{ trans('period') }}
                         <select name="period" class="form-select" required>
@@ -96,7 +96,7 @@
                 <div class="col">
                     <div class="mb-3">
                         <button type="submit" name="action" value="show" class="btn btn-primary">
-                            <i class="fa-solid fa-eye fa-fw"></i> {{ trans('preview') }}
+                            <i class="fa-solid fa-eye me-1"></i> {{ trans('preview') }}
                         </button>
                     </div>
                 </div>
@@ -112,8 +112,8 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-3 col-12">
+            <div class="row g-2">
+                <div class="col-sm-6 col-md-4 col-lg-3">
                     <div class="mb-3">
                         {{ trans('tax-incomes') }}
                         <div class="input-group">
@@ -123,7 +123,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-3 col-12">
+                <div class="col-sm-6 col-md-4 col-lg-3">
                     <div class="mb-3">
                         {{ trans('tax-expenses') }}
                         <div class="input-group">
@@ -133,7 +133,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-3 col-12">
+                <div class="col-sm-6 col-md-4 col-lg-3">
                     <div class="mb-3">
                         {{ trans('net-total') }}
                         <div class="input-group">
@@ -142,20 +142,18 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-3 col-12">
+                <div class="col-sm-6 col-md-4 col-lg-3">
                     <div class="mb-3">
                         {{ trans('pct-to-deduct') }}
                         <div class="input-group">
                             <input type="number" name="todeduct" min="0" max="100" value="{{ fsc.todeduct }}"
-                                   class="form-control text-end" 
-                                   onchange="if (this.value < 0) this.value = 0; if (this.value > 100) this.value = 100; this.form.submit();" 
+                                   class="form-control text-end"
+                                   onchange="if (this.value < 0) this.value = 0; if (this.value > 100) this.value = 100; this.form.submit();"
                                    required/>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-3 col-12">
+                <div class="col-sm-6 col-md-4 col-lg-3">
                     <div class="mb-3">
                         {{ fsc.todeduct }}% {{ trans('after-deduct') }}
                         <div class="input-group">
@@ -165,7 +163,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-3 col-12">
+                <div class="col-sm-6 col-md-4 col-lg-3">
                     <div class="mb-3">
                         {{ trans('previous-model') }}
                         <div class="input-group">
@@ -175,7 +173,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-3 col-12">
+                <div class="col-sm-6 col-md-4 col-lg-3">
                     <div class="mb-3">
                         {{ trans('retentions') }}
                         <div class="input-group">
@@ -185,7 +183,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-3 col-12">
+                <div class="col-sm-6 col-md-4 col-lg-3">
                     <div class="mb-3">
                         {{ trans('result') }}
                         <div class="input-group">
@@ -195,7 +193,8 @@
                         </div>
                         <p class="form-text text-muted">{{ trans('tax-negative-info') }}</p>
                         {% if fsc.result > 0 %}
-                            <button type="button" class="btn btn-success mt-2 float-start float-sm-right" data-bs-toggle="modal" data-bs-target="#createAccountingModal">
+                            <button type="button" class="btn btn-success mt-2 float-start float-sm-right"
+                                    data-bs-toggle="modal" data-bs-target="#createAccountingModal">
                                 <i class="fa-solid fa-scale-balanced"></i> {{ trans('create-accounting-entry') }}
                             </button>
                         {% endif %}
@@ -210,25 +209,31 @@
                href="#sales" role="tab"
                aria-controls="sales" aria-selected="{{ fsc.tabDeductibleSubaccount ? 'false' : 'true' }}"
                title="{{ trans('sales') }}">
-                <i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i>
+                <i class="fa-solid fa-file-invoice-dollar me-1" aria-hidden="true"></i>
                 <span class="d-none d-sm-inline-block">{{ trans('sales') }}</span>
-                <span class="badge bg-secondary">{{ fsc.customerInvoices|length }}</span>
+                {% if fsc.customerInvoices %}
+                    <span class="badge bg-secondary">{{ fsc.customerInvoices|length }}</span>
+                {% endif %}
             </a>
         </li>
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="purchases-tab" data-bs-toggle="tab" href="#purchases" role="tab"
                aria-controls="purchases" aria-selected="false" title="{{ trans('purchases') }}">
-                <i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i>
+                <i class="fa-solid fa-file-invoice-dollar me-1" aria-hidden="true"></i>
                 <span class="d-none d-sm-inline-block">{{ trans('purchases') }}</span>
-                <span class="badge bg-secondary">{{ fsc.supplierInvoices|length }}</span>
+                {% if fsc.supplierInvoices %}
+                    <span class="badge bg-secondary">{{ fsc.supplierInvoices|length }}</span>
+                {% endif %}
             </a>
         </li>
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="accounting-tab" data-bs-toggle="tab" href="#accounting" role="tab"
                aria-controls="accounting" aria-selected="false" title="{{ trans('accounting-entries') }}">
-                <i class="fa-solid fa-balance-scale" aria-hidden="true"></i>
+                <i class="fa-solid fa-balance-scale me-1" aria-hidden="true"></i>
                 <span class="d-none d-sm-inline-block">{{ trans('accounting-entries') }}</span>
-                <span class="badge bg-secondary">{{ fsc.accountingEntries|length }}</span>
+                {% if fsc.accountingEntries %}
+                    <span class="badge bg-secondary">{{ fsc.accountingEntries|length }}</span>
+                {% endif %}
             </a>
         </li>
         <li class="nav-item" role="presentation">
@@ -238,9 +243,11 @@
                aria-controls="deductible-subaccounts"
                aria-selected="{{ fsc.tabDeductibleSubaccount ? 'true' : 'false' }}"
                title="{{ trans('deductible-subaccounts') }}">
-                <i class="fa-solid fa-book" aria-hidden="true"></i>
+                <i class="fa-solid fa-book me-1" aria-hidden="true"></i>
                 <span class="d-none d-sm-inline-block">{{ trans('deductible-subaccounts') }}</span>
-                <span class="badge bg-secondary">{{ fsc.deductibleSubaccount.count() }}</span>
+                {% if fsc.deductibleSubaccount.count() %}
+                    <span class="badge bg-secondary">{{ fsc.deductibleSubaccount.count() }}</span>
+                {% endif %}
             </a>
         </li>
     </ul>
@@ -488,10 +495,11 @@
                 <div class="card shadow m-3">
                     <div class="card-body">
                         <div class="input-group">
-                            <input type="text" id="findSubaccount" class="form-control" placeholder="{{ trans('search') }}">
+                            <input type="text" id="findSubaccount" class="form-control"
+                                   placeholder="{{ trans('search') }}">
                             <button type="submit" class="btn btn-outline-success">
-                                    <i class="fa-solid fa-plus me-1"></i> {{ trans('add') }}
-                                </button>
+                                <i class="fa-solid fa-plus me-1"></i> {{ trans('add') }}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -500,7 +508,8 @@
     </div>
 
     <!-- Create Accounting Modal -->
-    <div class="modal fade" id="createAccountingModal" tabindex="-1" role="dialog" aria-labelledby="createAccountingModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createAccountingModal" tabindex="-1" role="dialog"
+         aria-labelledby="createAccountingModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -528,11 +537,13 @@
                             {% elseif fsc.period == 'T4' %}
                                 {% set date = year ~ '-12-31' %}
                             {% endif %}
-                            <input type="date" class="form-control" id="date" name="date" value="{{ date }}" required readonly>
+                            <input type="date" class="form-control" id="date" name="date" value="{{ date }}" required
+                                   readonly>
                         </div>
                         <div class="mb-3">
                             <label for="entryAmount">{{ trans('amount') }}</label>
-                            <input type="number" step="any" class="form-control" id="amount" name="amount" value="{{ fsc.result }}" required>
+                            <input type="number" step="any" class="form-control" id="amount" name="amount"
+                                   value="{{ fsc.result }}" required>
                         </div>
                         <div class="mb-3">
                             <label for="paymentMethod">{{ trans('payment-method') }}</label>

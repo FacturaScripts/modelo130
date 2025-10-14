@@ -20,7 +20,6 @@ namespace FacturaScripts\Plugins\Modelo130;
 
 use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Template\InitClass;
-use FacturaScripts\Plugins\Modelo130\Model\Subcuenta130;
 
 final class Init extends InitClass
 {
@@ -34,15 +33,15 @@ final class Init extends InitClass
 
     public function update(): void
     {
-        new Subcuenta130();
         $this->cleanInvalidUsers();
     }
 
     private function cleanInvalidUsers(): void
     {
         // ver si existe la tabla subcuentas o usuario
-        $dataBase = new DataBase();
-        if (false === $dataBase->tableExists('subcuentas_130') || false === $dataBase->tableExists('users')) {
+        $db = new DataBase();
+        if (false === $db->tableExists('subcuentas_130') ||
+            false === $db->tableExists('users')) {
             return;
         }
 
@@ -60,7 +59,7 @@ final class Init extends InitClass
         foreach (['nick', 'last_nick'] as $column) {
             // reemplazar la columna de user en la tabla subcuentas_130 y ejecutar
             $sql = str_replace("REPLACE_COLUMN", $column, $templateSql);
-            $dataBase->exec($sql);
+            $db->exec($sql);
         }
     }
 }
