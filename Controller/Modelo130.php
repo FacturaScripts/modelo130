@@ -92,7 +92,7 @@ class Modelo130 extends Controller
     /** @var string */
     protected $dateStart;
 
-    /** @var int */
+    /** @var int|null */
     protected $idempresa;
 
     /** @var float */
@@ -317,11 +317,7 @@ class Modelo130 extends Controller
 
     protected function loadAsientos(): void
     {
-        $codsubs = [];
-        $subaccount130 = new Subcuenta130();
-        foreach ($subaccount130->all([], [], 0, 0) as $subaccount) {
-            $codsubs[] = $subaccount->codsubcuenta;
-        }
+        $codsubs = $this->getAccountingEntrySubaccounts();
 
         if (empty($codsubs)) {
             return;
@@ -331,16 +327,61 @@ class Modelo130 extends Controller
         // también obtiene las facturas con retención aplicada que se mostrarán en asientos
         $sql = 'SELECT * FROM ' . Partida::tableName() . ' as p'
             . ' LEFT JOIN ' . Asiento::tableName() . ' as a ON p.idasiento = a.idasiento'
-            . ' WHERE a.idempresa = ' . $this->dataBase->var2str($this->idempresa)
+            . ' WHERE ' . $this->getSqlValueCondition('a.idempresa', $this->idempresa)
             . ' AND a.fecha BETWEEN ' . $this->dataBase->var2str(date('Y-m-d', strtotime($this->dateStart)))
             . ' AND ' . $this->dataBase->var2str(date('Y-m-d', strtotime($this->dateEnd)))
-            . ' AND p.codsubcuenta IN (' . implode(',', $codsubs) . ')'
+            . ' AND p.codsubcuenta IN (' . $this->getSqlValueList($codsubs) . ')'
             . ' AND a.operacion IS ' . $this->dataBase->var2str(Asiento::OPERATION_GENERAL)
             . ' ORDER BY numero ASC';
 
         foreach ($this->dataBase->select($sql) as $row) {
             $this->accountingEntries[] = new Partida($row);
         }
+    }
+
+    protected function getAccountingEntrySubaccounts(): array
+    {
+        $codsubs = [];
+        $subaccount130 = new Subcuenta130();
+        foreach ($subaccount130->all([], [], 0, 0) as $subaccount) {
+            $codsubs[] = $subaccount->codsubcuenta;
+        }
+
+        return self::sanitizeSubaccountCodes($codsubs);
+    }
+
+    protected function getSqlValueCondition(string $field, $value): string
+    {
+        if (null === $value) {
+            return $field . ' IS NULL';
+        }
+
+        return $field . ' = ' . $this->dataBase->var2str($value);
+    }
+
+    protected function getSqlValueList(array $values): string
+    {
+        $result = [];
+        foreach ($values as $value) {
+            $result[] = $this->dataBase->var2str($value);
+        }
+
+        return implode(',', $result);
+    }
+
+    protected static function sanitizeSubaccountCodes(array $codes): array
+    {
+        $result = [];
+        foreach ($codes as $code) {
+            $code = trim((string)$code);
+            if ($code === '') {
+                continue;
+            }
+
+            $result[] = $code;
+        }
+
+        return array_values(array_unique($result));
     }
 
     protected function loadResults(): void

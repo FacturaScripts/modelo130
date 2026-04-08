@@ -87,8 +87,17 @@ class Subcuenta130 extends ModelClass
             $this->nick = $this->nick ?? Session::user()->nick;
         }
 
-        $this->codsubcuenta = Tools::noHtml($this->codsubcuenta);
+        $this->codsubcuenta = trim(Tools::noHtml((string)$this->codsubcuenta));
         $this->name = Tools::noHtml($this->name);
+
+        if (strlen($this->codsubcuenta) < 1 || strlen($this->codsubcuenta) > 15) {
+            Tools::log()->warning('invalid-column-lenght', [
+                '%column%' => 'codsubcuenta',
+                '%min%' => '1',
+                '%max%' => '15'
+            ]);
+            return false;
+        }
 
         return parent::test();
     }

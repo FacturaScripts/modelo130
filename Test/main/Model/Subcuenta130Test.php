@@ -74,6 +74,14 @@ final class ModTest extends TestCase
         $this->assertTrue($account->delete(), 'account-cant-delete');
     }
 
+    public function testCreateEmptySubcuenta130Fails(): void
+    {
+        $subcuenta130 = new Subcuenta130();
+        $subcuenta130->codsubcuenta = '   ';
+
+        $this->assertFalse($subcuenta130->save(), 'empty-subcuenta130-should-fail');
+    }
+
     protected function getRandomExercise(): Ejercicio
     {
         $model = new Ejercicio();
