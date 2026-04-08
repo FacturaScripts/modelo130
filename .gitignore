@@ -8,3 +8,5 @@
 *.lock
 .vscode
 *.code-workspace
+.codex
+.claude
