@@ -10,3 +10,7 @@
 *.code-workspace
 .codex
 .claude
+# IA
+CLAUDE.md
+/.claude
+.codex
