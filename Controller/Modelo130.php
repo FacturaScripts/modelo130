@@ -35,7 +35,7 @@ use FacturaScripts\Dinamic\Model\Subcuenta130;
  * Description of Modelo130
  *
  * @author Carlos Garcia Gomez            <carlos@facturascripts.com>
- * @author Daniel Fernández Giménez       <hola@danielfg.es>
+ * @author Daniel Fernández Giménez       <contacto@danielfg.es>
  * @author Jerónimo Pedro Sánchez Manzano <socger@gmail.com>
  * @author Javier Martín González         <javier@javiermarting.es>
  */
