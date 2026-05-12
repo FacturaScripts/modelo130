@@ -82,6 +82,68 @@ final class ModTest extends TestCase
         $this->assertFalse($subcuenta130->save(), 'empty-subcuenta130-should-fail');
     }
 
+    public function testSubcuenta130TieneTipoDeduciblePorDefecto(): void
+    {
+        $sub130 = new Subcuenta130();
+        $this->assertSame(Subcuenta130::TIPO_DEDUCIBLE, $sub130->tipo);
+    }
+
+    public function testTipoInvalidoFuerzaTipoDeducible(): void
+    {
+        $exercise = $this->getRandomExercise();
+
+        $account = new Cuenta();
+        $account->codcuenta = '9998';
+        $account->codejercicio = $exercise->codejercicio;
+        $account->descripcion = 'Test tipo invalido';
+        $this->assertTrue($account->save(), 'cant-save-account');
+
+        $subaccount = new Subcuenta();
+        $subaccount->codcuenta = $account->codcuenta;
+        $subaccount->codejercicio = $exercise->codejercicio;
+        $subaccount->codsubcuenta = '9998000000';
+        $subaccount->descripcion = 'Test tipo invalido';
+        $this->assertTrue($subaccount->save(), 'cant-save-subaccount');
+
+        $sub130 = new Subcuenta130();
+        $sub130->codsubcuenta = $subaccount->codsubcuenta;
+        $sub130->tipo = 'tipo_invalido_xyz';
+        $this->assertTrue($sub130->save(), 'cant-save-subcuenta130');
+        $this->assertSame(Subcuenta130::TIPO_DEDUCIBLE, $sub130->tipo, 'invalid-tipo-should-fallback-to-deducible');
+
+        $this->assertTrue($sub130->delete());
+        $this->assertTrue($subaccount->delete());
+        $this->assertTrue($account->delete());
+    }
+
+    public function testCreateSubcuenta130ConTipoIngreso(): void
+    {
+        $exercise = $this->getRandomExercise();
+
+        $account = new Cuenta();
+        $account->codcuenta = '9997';
+        $account->codejercicio = $exercise->codejercicio;
+        $account->descripcion = 'Test ingreso';
+        $this->assertTrue($account->save(), 'cant-save-account');
+
+        $subaccount = new Subcuenta();
+        $subaccount->codcuenta = $account->codcuenta;
+        $subaccount->codejercicio = $exercise->codejercicio;
+        $subaccount->codsubcuenta = '9997000000';
+        $subaccount->descripcion = 'Test ingreso';
+        $this->assertTrue($subaccount->save(), 'cant-save-subaccount');
+
+        $sub130 = new Subcuenta130();
+        $sub130->codsubcuenta = $subaccount->codsubcuenta;
+        $sub130->tipo = Subcuenta130::TIPO_INGRESO;
+        $this->assertTrue($sub130->save(), 'cant-save-subcuenta130-ingreso');
+        $this->assertSame(Subcuenta130::TIPO_INGRESO, $sub130->tipo, 'tipo-should-be-ingreso');
+
+        $this->assertTrue($sub130->delete());
+        $this->assertTrue($subaccount->delete());
+        $this->assertTrue($account->delete());
+    }
+
     protected function getRandomExercise(): Ejercicio
     {
         $model = new Ejercicio();
