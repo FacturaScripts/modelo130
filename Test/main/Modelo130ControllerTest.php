@@ -115,10 +115,10 @@ final class Modelo130ControllerTest extends TestCase
 
     public function testIncomeEntriesSeAcumulanEnTaxbaseIngresos(): void
     {
-        // conseguir un ejercicio del año actual
-        $ejercicio = new Ejercicio();
-        $ejercicio->loadFromDate(date('d-m-Y'));
-        $this->assertNotEmpty($ejercicio->codejercicio, 'no-exercise-found');
+        // conseguir un ejercicio existente (all() garantiza que el codejercicio está en BD)
+        $ejercicios = (new Ejercicio())->all([], ['codejercicio' => 'DESC'], 0, 1);
+        $this->assertNotEmpty($ejercicios, 'no-exercise-found');
+        $ejercicio = $ejercicios[0];
 
         // crear cuenta y subcuenta de ingreso (9996 para no colisionar con el plan contable)
         $account = new Cuenta();
