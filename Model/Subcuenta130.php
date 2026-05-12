@@ -58,6 +58,12 @@ class Subcuenta130 extends ModelClass
     /** @var string */
     public $tipo = self::TIPO_DEDUCIBLE;
 
+    public function clear(): void
+    {
+        parent::clear();
+        $this->tipo = self::TIPO_DEDUCIBLE;
+    }
+
     public function getSubcuenta(): Subcuenta
     {
         $subcuenta = new Subcuenta();
