@@ -20,9 +20,9 @@
 namespace FacturaScripts\Plugins\Modelo130\Controller;
 
 use FacturaScripts\Core\Base\Controller;
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\DataSrc\Ejercicios;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Model\Asiento;
 use FacturaScripts\Dinamic\Model\Ejercicio;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
@@ -58,6 +58,12 @@ class Modelo130 extends Controller
 
     /** @var Subcuenta130 */
     public $deductibleSubaccount;
+
+    /** @var Partida[] */
+    public $incomeEntries = [];
+
+    /** @var Subcuenta130 */
+    public $incomeSubaccount;
 
     /** @var string */
     public $period = 'T1';
@@ -123,6 +129,12 @@ class Modelo130 extends Controller
         return $list;
     }
 
+    public function getDeductibleSubaccounts(): array
+    {
+        $where = [new Where('tipo', Subcuenta130::TIPO_DEDUCIBLE)];
+        return (new Subcuenta130())->all($where, ['codsubcuenta' => 'ASC'], 0, 0);
+    }
+
     /**
      * @param string|null $codejercicio
      * @return Ejercicio
@@ -133,6 +145,12 @@ class Modelo130 extends Controller
         $exercise->load($this->codejercicio);
 
         return $exercise;
+    }
+
+    public function getIncomeSubaccounts(): array
+    {
+        $where = [new Where('tipo', Subcuenta130::TIPO_INGRESO)];
+        return (new Subcuenta130())->all($where, ['codsubcuenta' => 'ASC'], 0, 0);
     }
 
     public function getPageData(): array
@@ -158,6 +176,7 @@ class Modelo130 extends Controller
     {
         parent::privateCore($response, $user, $permissions);
         $this->deductibleSubaccount = new Subcuenta130();
+        $this->incomeSubaccount = new Subcuenta130();
 
         $this->paymentMethods = FormaPago::all();
 
@@ -173,6 +192,12 @@ class Modelo130 extends Controller
             case 'delete-deductible-subaccount':
                 return $this->deleteDeductibleSubaccount();
 
+            case 'add-income-subaccount':
+                return $this->addIncomeSubaccount();
+
+            case 'delete-income-subaccount':
+                return $this->deleteIncomeSubaccount();
+
             case 'gen-accounting':
                 return $this->createAccountingEntry();
         }
@@ -180,6 +205,7 @@ class Modelo130 extends Controller
         $this->loadDates();
         $this->loadInvoices();
         $this->loadAsientos();
+        $this->loadIncomeAsientos();
         $this->loadResults();
     }
 
@@ -194,6 +220,26 @@ class Modelo130 extends Controller
         $subaccount130 = new Subcuenta130();
         $subaccount130->codsubcuenta = $this->request->request->get('codsubcuenta');
         if (false === $subaccount130->save()) {
+            Tools::log()->error('record-save-error');
+            return false;
+        }
+
+        Tools::log()->notice('record-updated-correctly');
+        return true;
+    }
+
+    protected function addIncomeSubaccount(): bool
+    {
+        $this->activeTab = 'income-subaccount';
+
+        if (false === $this->validateFormToken()) {
+            return false;
+        }
+
+        $subaccount = new Subcuenta130();
+        $subaccount->codsubcuenta = $this->request->request->get('codsubcuenta');
+        $subaccount->tipo = Subcuenta130::TIPO_INGRESO;
+        if (false === $subaccount->save()) {
             Tools::log()->error('record-save-error');
             return false;
         }
@@ -248,6 +294,29 @@ class Modelo130 extends Controller
         return false;
     }
 
+    protected function deleteIncomeSubaccount(): bool
+    {
+        $this->activeTab = 'income-subaccount';
+
+        if (false === $this->validateFormToken()) {
+            return false;
+        }
+
+        $subaccount = new Subcuenta130();
+        if (false === $subaccount->load($this->request->request->get('id'))) {
+            Tools::log()->error('record-not-found');
+            return false;
+        }
+
+        if (false === $subaccount->delete()) {
+            Tools::log()->error('record-deleted-error');
+            return false;
+        }
+
+        Tools::log()->notice('record-deleted-correctly');
+        return false;
+    }
+
     // Traemos del codejercicio y period elegido idempresa, dateStart y dateEnd
     protected function loadDates(): void
     {
@@ -289,20 +358,20 @@ class Modelo130 extends Controller
 
         $whereFtrasProveedores = [
             // Para buscar en el margen de fechas del periodo
-            new DataBaseWhere('fecha', date('Y-m-d', strtotime($this->dateStart)), '>='),
-            new DataBaseWhere('fecha', date('Y-m-d', strtotime($this->dateEnd)), '<='),
+            new Where('fecha', date('Y-m-d', strtotime($this->dateStart)), '>='),
+            new Where('fecha', date('Y-m-d', strtotime($this->dateEnd)), '<='),
 
             // Para buscar ftras solo de la empresa/Ejercicio elegido
-            new DataBaseWhere('idempresa', $this->idempresa),
+            new Where('idempresa', $this->idempresa),
         ];
 
         $whereFtrasClientes = [
             // Para buscar en el margen de fechas del periodo
-            new DataBaseWhere('fecha', date('Y-m-d', strtotime($this->dateStart)), '>='),
-            new DataBaseWhere('fecha', date('Y-m-d', strtotime($this->dateEnd)), '<='),
+            new Where('fecha', date('Y-m-d', strtotime($this->dateStart)), '>='),
+            new Where('fecha', date('Y-m-d', strtotime($this->dateEnd)), '<='),
 
             // Para buscar ftras solo de la empresa/Ejercicio elegido
-            new DataBaseWhere('idempresa', $this->idempresa),
+            new Where('idempresa', $this->idempresa),
         ];
 
         // Preparamos el orderBy de como vamos a traer las facturas (fecha + numero ftra)
@@ -343,11 +412,40 @@ class Modelo130 extends Controller
     {
         $codsubs = [];
         $subaccount130 = new Subcuenta130();
-        foreach ($subaccount130->all([], [], 0, 0) as $subaccount) {
+        $where = [new Where('tipo', Subcuenta130::TIPO_DEDUCIBLE)];
+        foreach ($subaccount130->all($where, [], 0, 0) as $subaccount) {
             $codsubs[] = $subaccount->codsubcuenta;
         }
 
         return self::sanitizeSubaccountCodes($codsubs);
+    }
+
+    protected function loadIncomeAsientos(): void
+    {
+        $codsubs = [];
+        $sub = new Subcuenta130();
+        $where = [new Where('tipo', Subcuenta130::TIPO_INGRESO)];
+        foreach ($sub->all($where, [], 0, 0) as $subaccount) {
+            $codsubs[] = $subaccount->codsubcuenta;
+        }
+        $codsubs = self::sanitizeSubaccountCodes($codsubs);
+
+        if (empty($codsubs)) {
+            return;
+        }
+
+        $sql = 'SELECT * FROM ' . Partida::tableName() . ' as p'
+            . ' LEFT JOIN ' . Asiento::tableName() . ' as a ON p.idasiento = a.idasiento'
+            . ' WHERE ' . $this->getSqlValueCondition('a.idempresa', $this->idempresa)
+            . ' AND a.fecha BETWEEN ' . $this->dataBase->var2str(date('Y-m-d', strtotime($this->dateStart)))
+            . ' AND ' . $this->dataBase->var2str(date('Y-m-d', strtotime($this->dateEnd)))
+            . ' AND p.codsubcuenta IN (' . $this->getSqlValueList($codsubs) . ')'
+            . ' AND a.operacion IS ' . $this->dataBase->var2str(Asiento::OPERATION_GENERAL)
+            . ' ORDER BY numero ASC';
+
+        foreach ($this->dataBase->select($sql) as $row) {
+            $this->incomeEntries[] = new Partida($row);
+        }
     }
 
     protected function getSqlValueCondition(string $field, $value): string
@@ -389,6 +487,10 @@ class Modelo130 extends Controller
         foreach ($this->customerInvoices as $invoice) {
             $this->taxbaseIngresos += $invoice->neto;
             $this->taxbaseRetenciones += $invoice->totalirpf;
+        }
+
+        foreach ($this->incomeEntries as $partida) {
+            $this->taxbaseIngresos += $partida->haber;
         }
 
         foreach ($this->supplierInvoices as $invoice) {

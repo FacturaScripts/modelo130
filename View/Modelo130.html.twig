@@ -43,6 +43,40 @@
                     return false;
                 }
             });
+
+            $("#findIncomeSubaccount").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        method: "POST",
+                        url: '{{ fsc.url() }}',
+                        data: {action: 'autocomplete-subaccount', term: request.term},
+                        dataType: "json",
+                        success: function (results) {
+                            let values = [];
+                            results.forEach(function (element) {
+                                if (element.key === null || element.key === element.value) {
+                                    values.push(element);
+                                } else {
+                                    values.push({key: element.key, value: element.key + " | " + element.value});
+                                }
+                            });
+                            response(values);
+                        },
+                        error: function (msg) {
+                            alert(msg.status + " " + msg.responseText);
+                        }
+                    });
+                },
+                select: function (event, ui) {
+                    if (ui.item.key !== null) {
+                        $('form[name="add-income-subaccount"] input[name="codsubcuenta"]').val(ui.item.key);
+                    }
+                },
+                open: function (event, ui) {
+                    $(this).autocomplete('widget').css('z-index', 1500);
+                    return false;
+                }
+            });
         });
     </script>
 {% endblock %}
@@ -241,12 +275,28 @@
                id="deductible-subaccounts-tab" data-bs-toggle="tab" href="#deductible-subaccounts"
                role="tab"
                aria-controls="deductible-subaccounts"
-               aria-selected="{{ fsc.tabDeductibleSubaccount ? 'true' : 'false' }}"
+               aria-selected="{{ fsc.activeTab == 'deductible-subaccount' ? 'true' : 'false' }}"
                title="{{ trans('deductible-subaccounts') }}">
                 <i class="fa-solid fa-book me-1" aria-hidden="true"></i>
                 <span class="d-none d-sm-inline-block">{{ trans('deductible-subaccounts') }}</span>
-                {% if fsc.deductibleSubaccount.count() %}
-                    <span class="badge bg-secondary">{{ fsc.deductibleSubaccount.count() }}</span>
+                {% set deductibleList = fsc.getDeductibleSubaccounts() %}
+                {% if deductibleList|length %}
+                    <span class="badge bg-secondary">{{ deductibleList|length }}</span>
+                {% endif %}
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link {{ fsc.activeTab == 'income-subaccount' ? 'active' : '' }}"
+               id="income-subaccounts-tab" data-bs-toggle="tab" href="#income-subaccounts"
+               role="tab"
+               aria-controls="income-subaccounts"
+               aria-selected="{{ fsc.activeTab == 'income-subaccount' ? 'true' : 'false' }}"
+               title="{{ trans('income-subaccounts') }}">
+                <i class="fa-solid fa-coins me-1" aria-hidden="true"></i>
+                <span class="d-none d-sm-inline-block">{{ trans('income-subaccounts') }}</span>
+                {% set incomeList = fsc.getIncomeSubaccounts() %}
+                {% if incomeList|length %}
+                    <span class="badge bg-secondary">{{ incomeList|length }}</span>
                 {% endif %}
             </a>
         </li>
@@ -469,7 +519,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for subaccount in fsc.deductibleSubaccount.all({}, {'codsubcuenta':'ASC'}, 0, 0) %}
+                    {% for subaccount in fsc.getDeductibleSubaccounts() %}
                         <tr>
                             <td>{{ subaccount.codsubcuenta }}</td>
                             <td>{{ subaccount.getSubcuenta().descripcion }}</td>
@@ -496,6 +546,54 @@
                     <div class="card-body">
                         <div class="input-group">
                             <input type="text" id="findSubaccount" class="form-control"
+                                   placeholder="{{ trans('search') }}">
+                            <button type="submit" class="btn btn-outline-success">
+                                <i class="fa-solid fa-plus me-1"></i> {{ trans('add') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane fade {{ fsc.activeTab == 'income-subaccount' ? 'show active' : '' }}"
+             id="income-subaccounts" role="tabpanel" aria-labelledby="income-subaccounts-tab">
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead>
+                    <tr>
+                        <th>{{ trans('code') }}</th>
+                        <th>{{ trans('description') }}</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for subaccount in fsc.getIncomeSubaccounts() %}
+                        <tr>
+                            <td>{{ subaccount.codsubcuenta }}</td>
+                            <td>{{ subaccount.getSubcuenta().descripcion }}</td>
+                            <td class="text-end">
+                                <form method="post" onsubmit="animateSpinner('add')">
+                                    {{ formToken() }}
+                                    <input type="hidden" name="id" value="{{ subaccount.id }}">
+                                    <input type="hidden" name="action" value="delete-income-subaccount">
+                                    <button type="submit" class="btn btn-sm btn-danger btn-spin-action">
+                                        <i class="fa-solid fa-trash-alt me-1"></i> {{ trans('delete') }}
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <form name="add-income-subaccount" method="post" onsubmit="animateSpinner('add')">
+                {{ formToken() }}
+                <input type="hidden" name="action" value="add-income-subaccount">
+                <input type="hidden" name="codsubcuenta">
+                <div class="card shadow m-3">
+                    <div class="card-body">
+                        <div class="input-group">
+                            <input type="text" id="findIncomeSubaccount" class="form-control"
                                    placeholder="{{ trans('search') }}">
                             <button type="submit" class="btn btn-outline-success">
                                 <i class="fa-solid fa-plus me-1"></i> {{ trans('add') }}
