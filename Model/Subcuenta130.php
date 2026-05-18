@@ -67,7 +67,7 @@ class Subcuenta130 extends ModelClass
     public function getSubcuenta(): Subcuenta
     {
         $subcuenta = new Subcuenta();
-        $where = [new Where('codsubcuenta', $this->codsubcuenta)];
+        $where = [Where::eq('codsubcuenta', $this->codsubcuenta)];
         $subcuenta->loadWhere($where);
         return $subcuenta;
     }

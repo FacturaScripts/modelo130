@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of Modelo130 plugin for FacturaScripts
  * Copyright (C) 2021-2026 Carlos Garcia Gomez            <carlos@facturascripts.com>
@@ -30,6 +31,7 @@ use FacturaScripts\Dinamic\Model\FacturaProveedor;
 use FacturaScripts\Dinamic\Model\FormaPago;
 use FacturaScripts\Dinamic\Model\Partida;
 use FacturaScripts\Dinamic\Model\Subcuenta130;
+use FacturaScripts\Plugins\Modelo130\Lib\Modelo130 as LibModelo130;
 
 /**
  * Description of Modelo130
@@ -113,9 +115,6 @@ class Modelo130 extends Controller
     /** @var float */
     protected $otrasDeducciones = 0.0;
 
-    /** @var FormaPago[] */
-    public $paymentMethods = [];
-
     /**
      * @param int|null $idempresa
      * @return Ejercicio[]
@@ -137,7 +136,7 @@ class Modelo130 extends Controller
 
     public function getDeductibleSubaccounts(): array
     {
-        $where = [new Where('tipo', Subcuenta130::TIPO_DEDUCIBLE)];
+        $where = [Where::eq('tipo', Subcuenta130::TIPO_DEDUCIBLE)];
         return (new Subcuenta130())->all($where, ['codsubcuenta' => 'ASC'], 0, 0);
     }
 
@@ -149,13 +148,12 @@ class Modelo130 extends Controller
     {
         $exercise = new Ejercicio();
         $exercise->load($this->codejercicio);
-
         return $exercise;
     }
 
     public function getIncomeSubaccounts(): array
     {
-        $where = [new Where('tipo', Subcuenta130::TIPO_INGRESO)];
+        $where = [Where::eq('tipo', Subcuenta130::TIPO_INGRESO)];
         return (new Subcuenta130())->all($where, ['codsubcuenta' => 'ASC'], 0, 0);
     }
 
@@ -166,6 +164,11 @@ class Modelo130 extends Controller
         $data['title'] = 'model-130';
         $data['icon'] = 'fa-solid fa-book';
         return $data;
+    }
+
+    public function getPaymentMethods(): array
+    {
+        return FormaPago::all();
     }
 
     public function getPeriodsForComboBoxHtml(): array
@@ -184,28 +187,31 @@ class Modelo130 extends Controller
         $this->deductibleSubaccount = new Subcuenta130();
         $this->incomeSubaccount = new Subcuenta130();
 
-        $this->paymentMethods = FormaPago::all();
-
-        $action = $this->request->request->get('action', $this->request->get('action'));
+        $action = $this->request->request->get('action', $this->request->input('action'));
         switch ($action) {
             case 'autocomplete-subaccount':
                 $this->autocompleteSubaccount();
                 return;
 
             case 'add-deductible-subaccount':
-                return $this->addDeductibleSubaccount();
+                $this->addDeductibleSubaccount();
+                return;
 
             case 'delete-deductible-subaccount':
-                return $this->deleteDeductibleSubaccount();
+                $this->deleteDeductibleSubaccount();
+                return;
 
             case 'add-income-subaccount':
-                return $this->addIncomeSubaccount();
+                $this->addIncomeSubaccount();
+                return;
 
             case 'delete-income-subaccount':
-                return $this->deleteIncomeSubaccount();
+                $this->deleteIncomeSubaccount();
+                return;
 
             case 'gen-accounting':
-                return $this->createAccountingEntry();
+                $this->createAccountingEntry();
+                return;
         }
 
         $this->loadDates();
@@ -215,31 +221,30 @@ class Modelo130 extends Controller
         $this->loadResults();
     }
 
-    protected function addDeductibleSubaccount(): bool
+    protected function addDeductibleSubaccount(): void
     {
         $this->activeTab = 'deductible-subaccount';
 
         if (false === $this->validateFormToken()) {
-            return false;
+            return;
         }
 
         $subaccount130 = new Subcuenta130();
         $subaccount130->codsubcuenta = $this->request->request->get('codsubcuenta');
         if (false === $subaccount130->save()) {
             Tools::log()->error('record-save-error');
-            return false;
+            return;
         }
 
         Tools::log()->notice('record-updated-correctly');
-        return true;
     }
 
-    protected function addIncomeSubaccount(): bool
+    protected function addIncomeSubaccount(): void
     {
         $this->activeTab = 'income-subaccount';
 
         if (false === $this->validateFormToken()) {
-            return false;
+            return;
         }
 
         $subaccount = new Subcuenta130();
@@ -247,11 +252,10 @@ class Modelo130 extends Controller
         $subaccount->tipo = Subcuenta130::TIPO_INGRESO;
         if (false === $subaccount->save()) {
             Tools::log()->error('record-save-error');
-            return false;
+            return;
         }
 
         Tools::log()->notice('record-updated-correctly');
-        return true;
     }
 
     protected function autocompleteSubaccount(): void
@@ -277,50 +281,48 @@ class Modelo130 extends Controller
         $this->response->setContent(json_encode($list));
     }
 
-    protected function deleteDeductibleSubaccount(): bool
+    protected function deleteDeductibleSubaccount(): void
     {
         $this->activeTab = 'deductible-subaccount';
 
         if (false === $this->validateFormToken()) {
-            return false;
+            return;
         }
 
         $subaccount130 = new Subcuenta130();
         if (false === $subaccount130->load($this->request->request->get('id'))) {
             Tools::log()->error('record-not-found');
-            return false;
+            return;
         }
 
         if (false === $subaccount130->delete()) {
             Tools::log()->error('record-deleted-error');
-            return false;
+            return;
         }
 
         Tools::log()->notice('record-deleted-correctly');
-        return false;
     }
 
-    protected function deleteIncomeSubaccount(): bool
+    protected function deleteIncomeSubaccount(): void
     {
         $this->activeTab = 'income-subaccount';
 
         if (false === $this->validateFormToken()) {
-            return false;
+            return;
         }
 
         $subaccount = new Subcuenta130();
         if (false === $subaccount->load($this->request->request->get('id'))) {
             Tools::log()->error('record-not-found');
-            return false;
+            return;
         }
 
         if (false === $subaccount->delete()) {
             Tools::log()->error('record-deleted-error');
-            return false;
+            return;
         }
 
         Tools::log()->notice('record-deleted-correctly');
-        return false;
     }
 
     // Traemos del codejercicio y period elegido idempresa, dateStart y dateEnd
@@ -418,7 +420,7 @@ class Modelo130 extends Controller
     {
         $codsubs = [];
         $subaccount130 = new Subcuenta130();
-        $where = [new Where('tipo', Subcuenta130::TIPO_DEDUCIBLE)];
+        $where = [Where::eq('tipo', Subcuenta130::TIPO_DEDUCIBLE)];
         foreach ($subaccount130->all($where, [], 0, 0) as $subaccount) {
             $codsubs[] = $subaccount->codsubcuenta;
         }
@@ -430,7 +432,7 @@ class Modelo130 extends Controller
     {
         $codsubs = [];
         $sub = new Subcuenta130();
-        $where = [new Where('tipo', Subcuenta130::TIPO_INGRESO)];
+        $where = [Where::eq('tipo', Subcuenta130::TIPO_INGRESO)];
         foreach ($sub->all($where, [], 0, 0) as $subaccount) {
             $codsubs[] = $subaccount->codsubcuenta;
         }
@@ -552,53 +554,22 @@ class Modelo130 extends Controller
         }
     }
 
-    protected function createAccountingEntry(): bool
+    protected function createAccountingEntry(): void
     {
         if (false === $this->validateFormToken()) {
-            return false;
+            return;
         }
 
         // Preparamos los valores introducidos en la vista
-        $idempresa = $this->request->request->get('idempresa');
-        $codejercicio = $this->request->request->get('codejercicio');
-        $period = $this->request->request->get('period');
-        $date = $this->request->request->get('date');
+        $idempresa = (int)$this->request->request->get('idempresa');
+        $codejercicio = (string)$this->request->request->get('codejercicio');
+        $period = (string)$this->request->request->get('period');
+        $date = (string)$this->request->request->get('date');
         $amount = (float)$this->request->request->get('amount');
-        $paymentMethodId = $this->request->request->get('paymentMethod');
+        $paymentMethodId = (int)$this->request->request->get('paymentMethod');
 
-        // Buscamos si la forma de pago tiene una subcuenta de cara a asignarla o dejar el valor por defecto en la partida
-        $paymentMethod = new FormaPago();
-        if ($paymentMethod->load($paymentMethodId)) {
-            $bankAccount = $paymentMethod->getBankAccount();
+        if (LibModelo130::generateEntries($idempresa, $codejercicio, $period, $date, $amount, $paymentMethodId)) {
+            Tools::log()->notice('record-updated-correctly');
         }
-
-        $asiento = new Asiento();
-        $asiento->idempresa = $idempresa;
-        $asiento->codejercicio = $codejercicio;
-        $asiento->concepto = 'Regularización de IRPF ' . $period;
-        $asiento->fecha = $date;
-        $asiento->importe = $amount;
-
-        if (false === $asiento->save()) {
-            return false;
-        }
-
-        $partida1 = new Partida();
-        $partida1->idasiento = $asiento->idasiento;
-        $partida1->concepto = 'Regularización de IRPF ' . $period;
-        $partida1->debe = $amount;
-        $partida1->codsubcuenta = '4730000000'; // Código de subcuenta de IRPF
-        $partida1->save();
-
-        $partida2 = new Partida();
-        $partida2->idasiento = $asiento->idasiento;
-        $partida2->concepto = 'Regularización de IRPF ' . $period;
-        $partida2->haber = $amount;
-        $partida2->codsubcuenta = !empty($bankAccount->codsubcuenta) ? $bankAccount->codsubcuenta : '5720000000';
-        $partida2->save();
-
-        Tools::log()->notice('record-updated-correctly');
-
-        return true;
     }
 }

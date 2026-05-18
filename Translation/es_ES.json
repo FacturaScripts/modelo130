@@ -13,5 +13,8 @@
     "previous-model": "Ingresos trimestres anteriores",
     "tax-expenses": "Gastos deducibles",
     "tax-incomes": "Ingresos computables",
-    "tax-negative-info": "Si da pérdidas (negativo) = 0"
+    "tax-negative-info": "Si da pérdidas (negativo) = 0",
+    "acc-concept-irpf-130": "Regularización de IRPF %period%",
+    "exists-accounting-130": "Ya existe un asiento en el ejercicio %codejercicio% con el concepto: %concepto%",
+    "accounting-created-130": "Se ha creado el asiento en el ejercicio %codejercicio% con el concepto: %concepto%"
 }
