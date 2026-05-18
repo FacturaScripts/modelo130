@@ -144,6 +144,28 @@
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3">
                     <div class="mb-3">
+                        <div class="form-check mb-1">
+                            <input type="checkbox" class="form-check-input" id="gastosJustificacion"
+                                   name="gastosJustificacion" value="1"
+                                   onchange="this.form.submit();"
+                                   {{ fsc.applyGastosJustificacion ? 'checked' : '' }}>
+                            <label class="form-check-label" for="gastosJustificacion">
+                                {{ trans('gastos-justificacion') }}
+                            </label>
+                        </div>
+                        <div class="input-group">
+                            <input type="number" value="{{ fsc.gastosJustificacion }}" class="form-control text-end"
+                                   readonly/>
+                        </div>
+                        {% if fsc.gastosJustificacion > 2000 %}
+                            <p class="form-text text-warning fw-bold">
+                                <i class="fa-solid fa-triangle-exclamation me-1"></i>{{ trans('gastos-justificacion-limit') }}
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="mb-3">
                         {{ trans('pct-to-deduct') }}
                         <div class="input-group">
                             <input type="number" name="todeduct" min="0" max="100" value="{{ fsc.todeduct }}"

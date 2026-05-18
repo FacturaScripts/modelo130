@@ -62,6 +62,40 @@ final class Modelo130ControllerTest extends TestCase
         $this->assertSame("'6400000000','9999.1'", $controller->sqlValueList(['6400000000', '9999.1']));
     }
 
+    public function testGastosJustificacionCalculaEl5PorCiento(): void
+    {
+        $controller = new Modelo130TestAccess(Modelo130TestAccess::class);
+        $controller->calcularGastos(10000, 2500, true);
+
+        $this->assertEquals(375.0, $controller->gastosJustificacion);
+    }
+
+    public function testGastosJustificacionEsCeroSiRendimientoNegativo(): void
+    {
+        $controller = new Modelo130TestAccess(Modelo130TestAccess::class);
+        $controller->calcularGastos(1000, 5000, true);
+
+        $this->assertEquals(0.0, $controller->gastosJustificacion);
+    }
+
+    public function testGastosJustificacionDesactivadoNoAfectaAfterdeduct(): void
+    {
+        $controller = new Modelo130TestAccess(Modelo130TestAccess::class);
+        $controller->calcularGastos(10000, 2500, false);
+
+        $this->assertEquals(0.0, $controller->gastosJustificacion);
+        $this->assertEquals(round(7500 * 0.20, 2), $controller->afterdeduct);
+    }
+
+    public function testAfterdeductSeCalculaSobreBaseReducida(): void
+    {
+        $controller = new Modelo130TestAccess(Modelo130TestAccess::class);
+        $controller->calcularGastos(10000, 2500, true);
+
+        // taxbase = 7500, gastosJustificacion = 375, base = 7125, afterdeduct = 7125 * 20% = 1425
+        $this->assertEquals(1425.0, $controller->afterdeduct);
+    }
+
     protected function tearDown(): void
     {
         $this->logErrors();
@@ -83,5 +117,17 @@ class Modelo130TestAccess extends Modelo130
     public function sqlValueList(array $values): string
     {
         return $this->getSqlValueList($values);
+    }
+
+    public function calcularGastos(float $ingresos, float $gastos, bool $apply): void
+    {
+        $this->taxbaseIngresos = $ingresos;
+        $this->taxbaseGastos = $gastos;
+        $this->taxbase = round($ingresos - $gastos, 2);
+        $this->applyGastosJustificacion = $apply;
+        if ($apply && $this->taxbase > 0) {
+            $this->gastosJustificacion = round($this->taxbase * 0.05, 2);
+        }
+        $this->afterdeduct = round((($this->taxbase - $this->gastosJustificacion) * $this->todeduct) / 100, 2);
     }
 }
