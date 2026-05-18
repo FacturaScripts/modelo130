@@ -1,6 +1,7 @@
 {
     "after-deduct": "sobre casilla 04",
     "deductible-subaccounts": "Cuentas deducibles",
+    "income-subaccounts": "Cuentas de ingresos",
     "gastos-justificacion": "Gastos de difícil justificación (5%)",
     "gastos-justificacion-limit": "Atención: el importe supera el límite anual de 2.000 €",
     "model-130": "Modelo 130",

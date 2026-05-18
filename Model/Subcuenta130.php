@@ -19,17 +19,20 @@
 
 namespace FacturaScripts\Plugins\Modelo130\Model;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Session;
 use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Template\ModelTrait;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Model\Subcuenta;
 use FacturaScripts\Dinamic\Model\User;
 
 class Subcuenta130 extends ModelClass
 {
     use ModelTrait;
+
+    const TIPO_DEDUCIBLE = 'deducible';
+    const TIPO_INGRESO = 'ingreso';
 
     /** @var string */
     public $codsubcuenta;
@@ -52,10 +55,19 @@ class Subcuenta130 extends ModelClass
     /** @var string */
     public $nick;
 
+    /** @var string */
+    public $tipo = self::TIPO_DEDUCIBLE;
+
+    public function clear(): void
+    {
+        parent::clear();
+        $this->tipo = self::TIPO_DEDUCIBLE;
+    }
+
     public function getSubcuenta(): Subcuenta
     {
         $subcuenta = new Subcuenta();
-        $where = [new DataBaseWhere('codsubcuenta', $this->codsubcuenta)];
+        $where = [new Where('codsubcuenta', $this->codsubcuenta)];
         $subcuenta->loadWhere($where);
         return $subcuenta;
     }
@@ -89,6 +101,9 @@ class Subcuenta130 extends ModelClass
 
         $this->codsubcuenta = trim(Tools::noHtml((string)$this->codsubcuenta));
         $this->name = Tools::noHtml($this->name);
+        $this->tipo = in_array($this->tipo, [self::TIPO_DEDUCIBLE, self::TIPO_INGRESO], true)
+            ? $this->tipo
+            : self::TIPO_DEDUCIBLE;
 
         if (strlen($this->codsubcuenta) < 1 || strlen($this->codsubcuenta) > 15) {
             Tools::log()->warning('invalid-column-lenght', [
