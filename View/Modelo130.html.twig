@@ -167,7 +167,7 @@ return false;
 						{{ trans('tax-incomes') }}
 						<div class="input-group">
 							<span class="input-group-text">01</span>
-							<input type="number" value="{{ fsc.taxbaseIngresos }}" class="form-control text-end" readonly/>
+							<input type="number" value="{{ fsc.result.taxbaseIngresos }}" class="form-control text-end" readonly/>
 						</div>
 					</div>
 				</div>
@@ -176,7 +176,7 @@ return false;
 						{{ trans('tax-expenses') }}
 						<div class="input-group">
 							<span class="input-group-text">02</span>
-							<input type="number" value="{{ fsc.taxbaseGastos }}" class="form-control text-end" readonly/>
+							<input type="number" value="{{ fsc.result.taxbaseGastos }}" class="form-control text-end" readonly/>
 						</div>
 					</div>
 				</div>
@@ -185,7 +185,7 @@ return false;
 						{{ trans('net-total') }}
 						<div class="input-group">
 							<span class="input-group-text">03</span>
-							<input type="number" value="{{ fsc.taxbase }}" class="form-control text-end" readonly/>
+							<input type="number" value="{{ fsc.result.taxbase }}" class="form-control text-end" readonly/>
 						</div>
 					</div>
 				</div>
@@ -198,9 +198,9 @@ return false;
 							</label>
 						</div>
 						<div class="input-group">
-							<input type="number" value="{{ fsc.gastosJustificacion }}" class="form-control text-end" readonly/>
+							<input type="number" value="{{ fsc.result.gastosJustificacion }}" class="form-control text-end" readonly/>
 						</div>
-						{% if fsc.gastosJustificacion > 2000 %}
+						{% if fsc.result.gastosJustificacion > 2000 %}
 							<p class="form-text text-warning fw-bold">
 								<i class="fa-solid fa-triangle-exclamation me-1"></i>
 								{{ trans('gastos-justificacion-limit') }}
@@ -218,11 +218,11 @@ return false;
 				</div>
 				<div class="col-sm-6 col-md-4 col-lg-3">
 					<div class="mb-3">
-						{{ fsc.todeduct }}%
+						{{ fsc.result.todeduct }}%
 						{{ trans('after-deduct') }}
 						<div class="input-group">
 							<span class="input-group-text">04</span>
-							<input type="number" value="{{ fsc.afterdeduct }}" class="form-control text-end" readonly/>
+							<input type="number" value="{{ fsc.result.afterdeduct }}" class="form-control text-end" readonly/>
 						</div>
 					</div>
 				</div>
@@ -231,7 +231,7 @@ return false;
 						{{ trans('previous-model') }}
 						<div class="input-group">
 							<span class="input-group-text">05</span>
-							<input type="number" value="{{ fsc.positivosTrimestres }}" class="form-control text-end" readonly/>
+							<input type="number" value="{{ fsc.result.positivosTrimestres }}" class="form-control text-end" readonly/>
 						</div>
 					</div>
 				</div>
@@ -240,7 +240,7 @@ return false;
 						{{ trans('retentions') }}
 						<div class="input-group">
 							<span class="input-group-text">06</span>
-							<input type="number" value="{{ fsc.taxbaseRetenciones }}" class="form-control text-end" readonly/>
+							<input type="number" value="{{ fsc.result.taxbaseRetenciones }}" class="form-control text-end" readonly/>
 						</div>
 					</div>
 				</div>
@@ -249,14 +249,14 @@ return false;
 						{{ trans('result') }}
 						<div class="input-group">
 							<span class="input-group-text">07</span>
-							<input type="number" value="{{ fsc.result }}" class="form-control text-end" readonly/>
+							<input type="number" value="{{ fsc.result.result }}" class="form-control text-end" readonly/>
 						</div>
 						<p class="form-text text-muted">{{ trans('tax-negative-info') }}</p>
 
 
 					</div>
 				</div>
-				{% if fsc.result > 0 %}
+				{% if fsc.result.result > 0 %}
 					<div class="col d-flex justify-content-end align-items-center">
 						<button type="button" class="btn btn-success mt-2 float-start float-sm-right" data-bs-toggle="modal" data-bs-target="#createAccountingModal">
 							<i class="fa-solid fa-scale-balanced"></i>
@@ -272,8 +272,8 @@ return false;
 			<a class="nav-link {{ fsc.activeTab is empty ? 'active' : '' }}" id="sales-tab" data-bs-toggle="tab" href="#sales" role="tab" aria-controls="sales" aria-selected="{{ fsc.tabDeductibleSubaccount ? 'false' : 'true' }}" title="{{ trans('sales') }}">
 				<i class="fa-solid fa-file-invoice-dollar me-1" aria-hidden="true"></i>
 				<span class="d-none d-sm-inline-block">{{ trans('sales') }}</span>
-				{% if fsc.customerInvoices %}
-					<span class="badge bg-secondary">{{ fsc.customerInvoices|length }}</span>
+				{% if fsc.result.customerInvoices %}
+					<span class="badge bg-secondary">{{ fsc.result.customerInvoices|length }}</span>
 				{% endif %}
 			</a>
 		</li>
@@ -281,8 +281,8 @@ return false;
 			<a class="nav-link" id="purchases-tab" data-bs-toggle="tab" href="#purchases" role="tab" aria-controls="purchases" aria-selected="false" title="{{ trans('purchases') }}">
 				<i class="fa-solid fa-file-invoice-dollar me-1" aria-hidden="true"></i>
 				<span class="d-none d-sm-inline-block">{{ trans('purchases') }}</span>
-				{% if fsc.supplierInvoices %}
-					<span class="badge bg-secondary">{{ fsc.supplierInvoices|length }}</span>
+				{% if fsc.result.supplierInvoices %}
+					<span class="badge bg-secondary">{{ fsc.result.supplierInvoices|length }}</span>
 				{% endif %}
 			</a>
 		</li>
@@ -290,8 +290,8 @@ return false;
 			<a class="nav-link" id="accounting-tab" data-bs-toggle="tab" href="#accounting" role="tab" aria-controls="accounting" aria-selected="false" title="{{ trans('accounting-entries') }}">
 				<i class="fa-solid fa-balance-scale me-1" aria-hidden="true"></i>
 				<span class="d-none d-sm-inline-block">{{ trans('accounting-entries') }}</span>
-				{% if fsc.accountingEntries %}
-					<span class="badge bg-secondary">{{ fsc.accountingEntries|length }}</span>
+				{% if fsc.result.accountingEntries %}
+					<span class="badge bg-secondary">{{ fsc.result.accountingEntries|length }}</span>
 				{% endif %}
 			</a>
 		</li>
@@ -338,7 +338,7 @@ return false;
 						{% set salesTotalSurcharge = 0 %}
 						{% set salesTotalRetention = 0 %}
 						{% set salesTotal = 0 %}
-						{% for item in fsc.customerInvoices %}
+						{% for item in fsc.result.customerInvoices %}
 							{% set salesTotalNeto = salesTotalNeto + item.neto %}
 							{% set salesTotalTax = salesTotalTax + item.totaliva %}
 							{% set salesTotalSurcharge = salesTotalSurcharge + item.totalrecargo %}
@@ -416,7 +416,7 @@ return false;
 						{% set purchasesTotalSurcharge = 0 %}
 						{% set purchasesTotalRetention = 0 %}
 						{% set purchasesTotal = 0 %}
-						{% for item in fsc.supplierInvoices %}
+						{% for item in fsc.result.supplierInvoices %}
 							{% set purchasesTotalNeto = purchasesTotalNeto + item.neto %}
 							{% set purchasesTotalTax = purchasesTotalTax + item.totaliva %}
 							{% set purchasesTotalSurcharge = purchasesTotalSurcharge + item.totalrecargo %}
@@ -487,7 +487,7 @@ return false;
 					</thead>
 					<tbody>
 						{% set accountingTotalNeto = 0 %}
-						{% for item in fsc.accountingEntries %}
+						{% for item in fsc.result.accountingEntries %}
 							{% set accountingTotalNeto = accountingTotalNeto + item.debe %}
 							<tr>
 								<td>
@@ -652,7 +652,7 @@ return false;
 						</div>
 						<div class="mb-3">
 							<label for="entryAmount">{{ trans('amount') }}</label>
-							<input type="number" step="any" class="form-control" id="amount" name="amount" value="{{ fsc.result }}" required>
+							<input type="number" step="any" class="form-control" id="amount" name="amount" value="{{ fsc.result.result }}" required>
 						</div>
 						<div class="mb-3">
 							<label for="paymentMethod">{{ trans('payment-method') }}</label>
