@@ -1,6 +1,12 @@
 {
+    "acc-concept-irpf-130": "Regularización de IRPF %period%",
+    "accounting-created-130": "Se ha creado el asiento en el ejercicio %codejercicio% con el concepto: %concepto%",
     "after-deduct": "na rubrykę 04",
     "deductible-subaccounts": "Podkonty do odliczeń",
+    "exists-accounting-130": "Ya existe un asiento en el ejercicio %codejercicio% con el concepto: %concepto%",
+    "gastos-justificacion": "Gastos de difícil justificación (5%)",
+    "gastos-justificacion-limit": "Atención: el importe supera el límite anual de 2.000 €",
+    "income-subaccounts": "Cuentas de ingresos",
     "model-130": "Model 130",
     "model-130-desc": "Se calcula sumando y acumulando cada trimestre, por ejemplo, si visualizamos el 3º trimestre veremos la suma de los trimestres 1, 2 y 3.",
     "model-130-p": "Model 130 to kwartalne zgłoszenie podatku dochodowego od osób fizycznych (IRPF), w którym rozlicza się zaliczkę na ten podatek, na podstawie rocznego zeznania dokonywanego w roku następnym.",

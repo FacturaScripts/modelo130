@@ -1,0 +1,20 @@
+{
+    "acc-concept-irpf-130": "Regularización de IRPF %period%",
+    "accounting-created-130": "Se ha creado el asiento en el ejercicio %codejercicio% con el concepto: %concepto%",
+    "after-deduct": "04 numaralı kutu hakkında",
+    "deductible-subaccounts": "İndirilebilir alt hesaplar",
+    "exists-accounting-130": "Ya existe un asiento en el ejercicio %codejercicio% con el concepto: %concepto%",
+    "gastos-justificacion": "Gastos de difícil justificación (5%)",
+    "gastos-justificacion-limit": "Atención: el importe supera el límite anual de 2.000 €",
+    "income-subaccounts": "Cuentas de ingresos",
+    "model-130": "Model 130",
+    "model-130-desc": "Her çeyreği toplama ve biriktirme yoluyla hesaplanır. Örneğin, 3. çeyreği görüntülediğimizde 1, 2 ve 3. çeyreklerin toplamını göreceğiz.",
+    "model-130-p": "Model 130, gelir vergisi beyannamesinin (IRPF) üç aylık bir beyanıdır; bu beyannamede, bir sonraki yıl yapılacak yıllık beyannamede mahsup edilecek bu verginin taksitli ödemesi yapılır.",
+    "model-130-r": "Seçilen çeyreğin ilk günü ile son günü arasındaki birikmiş veriler.",
+    "net-total": "Net performans",
+    "pct-to-deduct": "Düşülecek %",
+    "previous-model": "Önceki çeyrek gelirleri",
+    "tax-expenses": "Düşürülebilir Harcamalar",
+    "tax-incomes": "Gelir hesaplamaları",
+    "tax-negative-info": "Zarar veriyorsa (negatif) = 0"
+}

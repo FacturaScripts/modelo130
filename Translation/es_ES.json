@@ -1,9 +1,12 @@
 {
+    "acc-concept-irpf-130": "Regularización de IRPF %period%",
+    "accounting-created-130": "Se ha creado el asiento en el ejercicio %codejercicio% con el concepto: %concepto%",
     "after-deduct": "sobre casilla 04",
     "deductible-subaccounts": "Cuentas deducibles",
-    "income-subaccounts": "Cuentas de ingresos",
+    "exists-accounting-130": "Ya existe un asiento en el ejercicio %codejercicio% con el concepto: %concepto%",
     "gastos-justificacion": "Gastos de difícil justificación (5%)",
     "gastos-justificacion-limit": "Atención: el importe supera el límite anual de 2.000 €",
+    "income-subaccounts": "Cuentas de ingresos",
     "model-130": "Modelo 130",
     "model-130-desc": "Se calcula sumando y acumulando cada trimestre, por ejemplo, si visualizamos el 3º trimestre veremos la suma de los trimestres 1, 2 y 3.",
     "model-130-p": "El Modelo 130 es una declaración trimestral del impuesto de la renta de las personas físicas (IRPF) en el que se liquida el pago fraccionado de este impuesto, a cuenta de la declaración anual que se realiza el año siguiente.",
@@ -13,8 +16,5 @@
     "previous-model": "Ingresos trimestres anteriores",
     "tax-expenses": "Gastos deducibles",
     "tax-incomes": "Ingresos computables",
-    "tax-negative-info": "Si da pérdidas (negativo) = 0",
-    "acc-concept-irpf-130": "Regularización de IRPF %period%",
-    "exists-accounting-130": "Ya existe un asiento en el ejercicio %codejercicio% con el concepto: %concepto%",
-    "accounting-created-130": "Se ha creado el asiento en el ejercicio %codejercicio% con el concepto: %concepto%"
+    "tax-negative-info": "Si da pérdidas (negativo) = 0"
 }

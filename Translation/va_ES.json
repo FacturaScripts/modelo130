@@ -1,6 +1,12 @@
 {
+    "acc-concept-irpf-130": "Regularización de IRPF %period%",
+    "accounting-created-130": "Se ha creado el asiento en el ejercicio %codejercicio% con el concepto: %concepto%",
     "after-deduct": "sobre casella 04",
     "deductible-subaccounts": "Comptes deduïbles",
+    "exists-accounting-130": "Ya existe un asiento en el ejercicio %codejercicio% con el concepto: %concepto%",
+    "gastos-justificacion": "Gastos de difícil justificación (5%)",
+    "gastos-justificacion-limit": "Atención: el importe supera el límite anual de 2.000 €",
+    "income-subaccounts": "Cuentas de ingresos",
     "model-130": "Modelo 130",
     "model-130-desc": "Es calcula sumant i acumulant cada trimestre, per exemple, si visualitzem el 3r trimestre veurem la suma dels trimestres 1, 2 i 3.",
     "model-130-p": "El Modelo 130 es una declaración trimestral del impuesto de la renta de las personas físicas (IRPF) en el que se liquida el pago fraccionado de este impuesto, a cuenta de la declaración anual que se realiza el año siguiente.",
