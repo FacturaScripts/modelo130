@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Modelo130 plugin for FacturaScripts
- * Copyright (C) 2021-2025 Carlos Garcia Gomez            <carlos@facturascripts.com>
+ * Copyright (C) 2021-2026 Carlos Garcia Gomez            <carlos@facturascripts.com>
  *                         Jeronimo Pedro Sánchez Manzano <socger@gmail.com>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -364,20 +364,20 @@ class Modelo130 extends Controller
 
         $whereFtrasProveedores = [
             // Para buscar en el margen de fechas del periodo
-            new Where('fecha', date('Y-m-d', strtotime($this->dateStart)), '>='),
-            new Where('fecha', date('Y-m-d', strtotime($this->dateEnd)), '<='),
+            Where::gte('fecha', date('Y-m-d', strtotime($this->dateStart))),
+            Where::lte('fecha', date('Y-m-d', strtotime($this->dateEnd))),
 
             // Para buscar ftras solo de la empresa/Ejercicio elegido
-            new Where('idempresa', $this->idempresa),
+            Where::eq('idempresa', $this->idempresa),
         ];
 
         $whereFtrasClientes = [
             // Para buscar en el margen de fechas del periodo
-            new Where('fecha', date('Y-m-d', strtotime($this->dateStart)), '>='),
-            new Where('fecha', date('Y-m-d', strtotime($this->dateEnd)), '<='),
+            Where::gte('fecha', date('Y-m-d', strtotime($this->dateStart))),
+            Where::gte('fecha', date('Y-m-d', strtotime($this->dateEnd))),
 
             // Para buscar ftras solo de la empresa/Ejercicio elegido
-            new Where('idempresa', $this->idempresa),
+            Where::eq('idempresa', $this->idempresa),
         ];
 
         // Preparamos el orderBy de como vamos a traer las facturas (fecha + numero ftra)
@@ -536,7 +536,7 @@ class Modelo130 extends Controller
 
         $this->taxbase = round($this->taxbaseIngresos - $this->taxbaseGastos, 2);
 
-        $this->applyGastosJustificacion = '1' === $this->request->request->get('gastosJustificacion', '0');
+        $this->applyGastosJustificacion = (bool)$this->request->request->get('applyGastosJustificacion', false);
         if ($this->applyGastosJustificacion && $this->taxbase > 0) {
             $this->gastosJustificacion = round($this->taxbase * 0.05, 2);
         }
