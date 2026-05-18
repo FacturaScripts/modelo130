@@ -103,7 +103,7 @@ class Modelo130
         ], $results);
     }
 
-    public static function generateEntries(int $idempresa, string $codejercicio, string $period, string $date, float $amount, int $paymentMethodId): bool
+    public static function generateEntries(int $idempresa, string $codejercicio, string $period, string $date, float $amount, ?string $paymentMethodId): bool
     {
         $asiento = new Asiento();
         $concepto = Tools::trans('acc-concept-irpf-130', ['%period%' => $period]);

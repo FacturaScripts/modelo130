@@ -1,0 +1,155 @@
+<?php
+/**
+ * This file is part of Modelo130 plugin for FacturaScripts
+ * Copyright (C) 2026 Carlos Garcia Gomez <carlos@facturascripts.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace FacturaScripts\Test\Plugins;
+
+use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
+use FacturaScripts\Dinamic\Model\Asiento;
+use FacturaScripts\Dinamic\Model\Ejercicio;
+use FacturaScripts\Dinamic\Model\FormaPago;
+use FacturaScripts\Plugins\Modelo130\Lib\Modelo130;
+use FacturaScripts\Test\Traits\DefaultSettingsTrait;
+use FacturaScripts\Test\Traits\LogErrorsTrait;
+use PHPUnit\Framework\TestCase;
+
+/**
+ * Tests para la clase estática Modelo130\Lib\Modelo130.
+ *
+ * @author Daniel Fernández Giménez <contacto@danielfg.es>
+ */
+final class Modelo130Test extends TestCase
+{
+    use DefaultSettingsTrait;
+    use LogErrorsTrait;
+
+    public static function setUpBeforeClass(): void
+    {
+        self::setDefaultSettings();
+        self::installAccountingPlan();
+    }
+
+    /**
+     * Verifica que generate() devuelve un array con las claves esperadas
+     * cuando se le pasa un ejercicio válido, y que devuelve [] para uno inexistente.
+     */
+    public function testGenerate(): void
+    {
+        // obtener el ejercicio más reciente disponible en BD
+        $ejercicios = (new Ejercicio())->all([], ['codejercicio' => 'DESC'], 0, 1);
+        $this->assertNotEmpty($ejercicios, 'No hay ningún ejercicio en la base de datos');
+
+        $ejercicio = $ejercicios[0];
+        $codejercicio = $ejercicio->codejercicio;
+
+        // llamar al método con ejercicio y periodo válidos
+        $resultado = Modelo130::generate($codejercicio, 'T1');
+
+        // el resultado debe ser un array no vacío
+        $this->assertIsArray($resultado, 'generate() debe devolver un array');
+        $this->assertNotEmpty($resultado, 'generate() no debe devolver un array vacío para un ejercicio válido');
+
+        // verificar que contiene todas las claves esperadas
+        $clavesEsperadas = [
+            'exercise',
+            'period',
+            'idempresa',
+            'customerInvoices',
+            'supplierInvoices',
+            'accountingEntries',
+            'incomeEntries',
+            'applyGastosJustificacion',
+            'todeduct',
+            'taxbaseIngresos',
+            'taxbaseRetenciones',
+            'taxbaseGastos',
+            'taxbase',
+            'gastosJustificacion',
+            'afterdeduct',
+            'positivosTrimestres',
+            'result',
+        ];
+
+        foreach ($clavesEsperadas as $clave) {
+            $this->assertArrayHasKey($clave, $resultado, "El resultado debe contener la clave '$clave'");
+        }
+
+        // verificar tipos concretos de las claves principales
+        $this->assertInstanceOf(Ejercicio::class, $resultado['exercise'], 'exercise debe ser una instancia de Ejercicio');
+        $this->assertSame('T1', $resultado['period'], 'El periodo debe ser T1');
+
+        // comprobar que el ejercicio cargado es el correcto
+        $this->assertSame($codejercicio, $resultado['exercise']->codejercicio, 'El ejercicio debe coincidir con el solicitado');
+
+        // llamar con un ejercicio que no existe: debe devolver array vacío
+        $resultadoVacio = Modelo130::generate('EJERCICIO_INEXISTENTE_XYZ', 'T1');
+        $this->assertIsArray($resultadoVacio, 'generate() debe devolver un array aunque el ejercicio no exista');
+        $this->assertEmpty($resultadoVacio, 'generate() debe devolver [] para un ejercicio inexistente');
+    }
+
+    /**
+     * Verifica que generateEntries() crea el asiento con las dos partidas,
+     * y que devuelve false si se intenta crear uno duplicado.
+     */
+    public function testGenerateEntries(): void
+    {
+        // obtener el ejercicio más reciente disponible en BD
+        $ejercicios = (new Ejercicio())->all([], ['codejercicio' => 'DESC'], 0, 1);
+        $this->assertNotEmpty($ejercicios, 'No hay ningún ejercicio en la base de datos');
+
+        $ejercicio = $ejercicios[0];
+        $codejercicio = $ejercicio->codejercicio;
+        $idempresa = $ejercicio->idempresa;
+
+        // obtener una forma de pago existente, o usar 0 si no hay ninguna
+        $formasPago = (new FormaPago())->all([], [], 0, 1);
+        $paymentMethodId = empty($formasPago) ? null : $formasPago[0]->id();
+
+        $periodo = 'T1';
+        $importe = 100.0;
+        $fecha = date('Y-m-d');
+
+        // la primera llamada debe crear el asiento correctamente
+        $creado = Modelo130::generateEntries($idempresa, $codejercicio, $periodo, $fecha, $importe, $paymentMethodId);
+        $this->assertTrue($creado, 'generateEntries() debe devolver true al crear el asiento por primera vez');
+
+        // buscar el asiento recién creado en BD usando el concepto generado por el método
+        $concepto = Tools::trans('acc-concept-irpf-130', ['%period%' => $periodo]);
+        $asiento = new Asiento();
+        $encontrado = $asiento->loadWhere([
+            Where::eq('codejercicio', $codejercicio),
+            Where::eq('concepto', $concepto),
+        ]);
+
+        $this->assertTrue($encontrado, 'El asiento debe existir en la base de datos tras generateEntries()');
+        $this->assertEquals($importe, $asiento->importe, 'El importe del asiento debe ser 100.0');
+
+        // una segunda llamada con los mismos parámetros debe devolver false (ya existe)
+        $duplicado = Modelo130::generateEntries($idempresa, $codejercicio, $periodo, $fecha, $importe, $paymentMethodId);
+        $this->assertFalse($duplicado, 'generateEntries() debe devolver false si ya existe el asiento');
+
+        // limpieza: eliminar el asiento (las partidas se eliminan en cascada)
+        $this->assertTrue($asiento->delete(), 'No se pudo eliminar el asiento de prueba');
+    }
+
+    protected function tearDown(): void
+    {
+        $this->logErrors();
+    }
+}
