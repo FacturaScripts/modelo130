@@ -50,6 +50,12 @@ class Modelo130 extends Controller
     /** @var string */
     public $activeTab = '';
 
+    /** @var bool */
+    public $applyGastosJustificacion = false;
+
+    /** @var float */
+    public $gastosJustificacion = 0.0;
+
     /** @var string */
     public $codejercicio;
 
@@ -530,9 +536,14 @@ class Modelo130 extends Controller
 
         $this->taxbase = round($this->taxbaseIngresos - $this->taxbaseGastos, 2);
 
+        $this->applyGastosJustificacion = '1' === $this->request->request->get('gastosJustificacion', '0');
+        if ($this->applyGastosJustificacion && $this->taxbase > 0) {
+            $this->gastosJustificacion = round($this->taxbase * 0.05, 2);
+        }
+
         $this->todeduct = (float)$this->request->request->get('todeduct', $this->todeduct);
 
-        $this->afterdeduct = round(($this->taxbase * $this->todeduct) / 100, 2);
+        $this->afterdeduct = round((($this->taxbase - $this->gastosJustificacion) * $this->todeduct) / 100, 2);
 
         $this->result = round($this->afterdeduct - $this->taxbaseRetenciones - $this->positivosTrimestres, 2);
 
