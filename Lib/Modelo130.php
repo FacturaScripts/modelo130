@@ -202,7 +202,7 @@ class Modelo130
             . ' AND ' . static::$dataBase->var2str(date('Y-m-d', strtotime(static::$dateEnd)))
             . ' AND p.codsubcuenta IN (' . static::getSqlValueList($codsubs) . ')'
             . ' AND a.operacion IS ' . static::$dataBase->var2str(Asiento::OPERATION_GENERAL)
-            . ' ORDER BY numero ASC';
+            . ' ORDER BY numero DESC';
 
         foreach (static::$dataBase->select($sql) as $row) {
             static::$accountingEntries[] = new Partida($row);
@@ -260,7 +260,7 @@ class Modelo130
             . ' AND ' . static::$dataBase->var2str(date('Y-m-d', strtotime(static::$dateEnd)))
             . ' AND p.codsubcuenta IN (' . static::getSqlValueList($codsubs) . ')'
             . ' AND a.operacion IS ' . static::$dataBase->var2str(Asiento::OPERATION_GENERAL)
-            . ' ORDER BY numero ASC';
+            . ' ORDER BY numero DESC';
 
         foreach (static::$dataBase->select($sql) as $row) {
             static::$incomeEntries[] = new Partida($row);
@@ -277,11 +277,11 @@ class Modelo130
 
         $whereFtrasClientes = [
             Where::gte('fecha', date('Y-m-d', strtotime(static::$dateStart))),
-            Where::gte('fecha', date('Y-m-d', strtotime(static::$dateEnd))),
+            Where::lte('fecha', date('Y-m-d', strtotime(static::$dateEnd))),
             Where::eq('idempresa', static::$idempresa),
         ];
 
-        $order = ['fecha' => 'ASC', 'numero' => 'ASC'];
+        $order = ['fecha' => 'DESC', 'numero' => 'DESC'];
 
         static::$supplierInvoices = (new FacturaProveedor())->all($whereFtrasProveedores, $order, 0, 0);
         static::$customerInvoices = (new FacturaCliente())->all($whereFtrasClientes, $order, 0, 0);

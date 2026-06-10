@@ -26,7 +26,7 @@ use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Model\Ejercicio;
 use FacturaScripts\Dinamic\Model\FormaPago;
 use FacturaScripts\Dinamic\Model\Subcuenta130;
-use FacturaScripts\Plugins\Modelo130\Lib\Modelo130 as LibModelo130;
+use FacturaScripts\Dinamic\Lib\Modelo130 as DinModelo130;
 
 /**
  * Description of Modelo130
@@ -166,7 +166,7 @@ class Modelo130 extends Controller
         $this->applyGastosJustificacion = (bool)$this->request->request->get('applyGastosJustificacion', false);
         $this->todeduct = (float)$this->request->request->get('todeduct', 20.0);
 
-        $this->result = LibModelo130::generate($this->codejercicio, $this->period, $this->applyGastosJustificacion, $this->todeduct);
+        $this->result = DinModelo130::generate($this->codejercicio, $this->period, $this->applyGastosJustificacion, $this->todeduct);
     }
 
     protected function addDeductibleSubaccount(): void
@@ -241,7 +241,7 @@ class Modelo130 extends Controller
         $amount = (float)$this->request->request->get('amount');
         $paymentMethodId = (int)$this->request->request->get('paymentMethod');
 
-        if (LibModelo130::generateEntries($idempresa, $codejercicio, $period, $date, $amount, $paymentMethodId)) {
+        if (DinModelo130::generateEntries($idempresa, $codejercicio, $period, $date, $amount, $paymentMethodId)) {
             Tools::log()->notice('record-updated-correctly');
         }
     }
