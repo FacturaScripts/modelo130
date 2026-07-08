@@ -161,6 +161,7 @@ return false;
 					</div>
 				</div>
 			</div>
+			<h3 class="h5 mt-2">{{ trans('net-total') }}</h3>
 			<div class="row g-2">
 				<div class="col-sm-6 col-md-4 col-lg-3">
 					<div class="mb-3">
@@ -189,6 +190,19 @@ return false;
 						</div>
 					</div>
 				</div>
+			</div>
+			<hr/>
+			<h3 class="h5">{{ trans('pct-to-deduct') }}</h3>
+			<div class="row g-2">
+				<div class="col-sm-6 col-md-4 col-lg-3">
+					<div class="mb-3">
+						{{ trans('gastos-justificacion-pct') }}
+						<div class="input-group">
+							<input type="number" name="gastosJustificacionPct" min="0" max="100" step="0.01" value="{{ fsc.gastosJustificacionPct }}" class="form-control text-end" onchange="if (this.value < 0) this.value = 0; if (this.value > 100) this.value = 100; this.form.submit();"/>
+							<span class="input-group-text">%</span>
+						</div>
+					</div>
+				</div>
 				<div class="col-sm-6 col-md-4 col-lg-3">
 					<div class="mb-3">
 						<div class="form-check mb-1">
@@ -200,7 +214,7 @@ return false;
 						<div class="input-group">
 							<input type="number" value="{{ fsc.result.gastosJustificacion }}" class="form-control text-end" readonly/>
 						</div>
-						{% if fsc.result.gastosJustificacion > 2000 %}
+						{% if fsc.result.gastosJustificacion >= 2000 %}
 							<p class="form-text text-warning fw-bold">
 								<i class="fa-solid fa-triangle-exclamation me-1"></i>
 								{{ trans('gastos-justificacion-limit') }}
@@ -226,6 +240,10 @@ return false;
 						</div>
 					</div>
 				</div>
+			</div>
+			<hr/>
+			<h3 class="h5">{{ trans('result') }}</h3>
+			<div class="row g-2">
 				<div class="col-sm-6 col-md-4 col-lg-3">
 					<div class="mb-3">
 						{{ trans('previous-model') }}
@@ -252,8 +270,6 @@ return false;
 							<input type="number" value="{{ fsc.result.result }}" class="form-control text-end" readonly/>
 						</div>
 						<p class="form-text text-muted">{{ trans('tax-negative-info') }}</p>
-
-
 					</div>
 				</div>
 				{% if fsc.result.result > 0 %}
