@@ -184,6 +184,26 @@ final class Modelo130Test extends TestCase
         $this->assertSame(2000.0, Modelo130::LIMITE_GASTOS_JUSTIFICACION);
     }
 
+    /**
+     * Verifica que la casilla 04 (20% sobre la 03) nunca es negativa, ni
+     * siquiera cuando el rendimiento neto acumulado arrastra pérdidas de
+     * trimestres anteriores del mismo ejercicio.
+     */
+    public function testCalcAfterDeduct(): void
+    {
+        // caso normal: 20% de 10.000 = 2.000
+        $this->assertSame(2000.0, Modelo130::calcAfterDeduct(10000.0, 0.0, 20.0));
+
+        // rendimiento neto negativo (pérdidas acumuladas): la casilla no baja de 0
+        $this->assertSame(0.0, Modelo130::calcAfterDeduct(-500.0, 0.0, 20.0));
+
+        // rendimiento neto exactamente 0: 0
+        $this->assertSame(0.0, Modelo130::calcAfterDeduct(0.0, 0.0, 20.0));
+
+        // con gastos de difícil justificación descontados
+        $this->assertSame(1860.0, Modelo130::calcAfterDeduct(10000.0, 700.0, 20.0));
+    }
+
     protected function tearDown(): void
     {
         $this->logErrors();

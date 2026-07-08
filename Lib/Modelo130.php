@@ -308,6 +308,19 @@ class Modelo130
         return min($importe, static::LIMITE_GASTOS_JUSTIFICACION);
     }
 
+    /**
+     * Calcula la casilla 04 (20% del rendimiento neto tras deducir los gastos
+     * de difícil justificación). Si el rendimiento neto acumulado es negativo
+     * (pérdidas de trimestres anteriores del mismo ejercicio), la casilla no
+     * puede ser negativa.
+     */
+    public static function calcAfterDeduct(float $taxbase, float $gastosJustificacion, float $todeduct): float
+    {
+        $baseDeducible = max(0.0, $taxbase - $gastosJustificacion);
+
+        return round(($baseDeducible * $todeduct) / 100, 2);
+    }
+
     protected static function loadResults(bool $applyGastosJustificacion, float $todeduct, float $gastosJustificacionPct = 7.0): array
     {
         $taxbaseIngresos = 0.0;
@@ -354,7 +367,7 @@ class Modelo130
 
         $gastosJustificacion = static::calcGastosJustificacion($taxbase, $applyGastosJustificacion, $gastosJustificacionPct);
 
-        $afterdeduct = round((($taxbase - $gastosJustificacion) * $todeduct) / 100, 2);
+        $afterdeduct = static::calcAfterDeduct($taxbase, $gastosJustificacion, $todeduct);
 
         $result = round($afterdeduct - $taxbaseRetenciones - $positivosTrimestres, 2);
         if ($result < 0) {
