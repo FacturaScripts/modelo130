@@ -76,6 +76,7 @@ final class Modelo130Test extends TestCase
             'incomeEntries',
             'applyGastosJustificacion',
             'todeduct',
+            'gastosJustificacionPct',
             'taxbaseIngresos',
             'taxbaseRetenciones',
             'taxbaseGastos',
@@ -146,6 +147,41 @@ final class Modelo130Test extends TestCase
 
         // limpieza: eliminar el asiento (las partidas se eliminan en cascada)
         $this->assertTrue($asiento->delete(), 'No se pudo eliminar el asiento de prueba');
+    }
+
+    /**
+     * Verifica el cálculo de los gastos de difícil justificación: porcentaje
+     * configurable, desactivado, bases no positivas y el tope anual de 2.000 €.
+     */
+    public function testCalcGastosJustificacion(): void
+    {
+        // desactivado: siempre 0 aunque haya base
+        $this->assertSame(0.0, Modelo130::calcGastosJustificacion(10000.0, false, 7.0));
+
+        // base cero o negativa: 0
+        $this->assertSame(0.0, Modelo130::calcGastosJustificacion(0.0, true, 7.0));
+        $this->assertSame(0.0, Modelo130::calcGastosJustificacion(-500.0, true, 7.0));
+
+        // porcentaje por defecto (7%) sobre una base por debajo del límite
+        $this->assertSame(700.0, Modelo130::calcGastosJustificacion(10000.0, true, 7.0));
+
+        // el 5% anterior sigue siendo posible de forma explícita
+        $this->assertSame(500.0, Modelo130::calcGastosJustificacion(10000.0, true, 5.0));
+
+        // redondeo a 2 decimales
+        $this->assertSame(70.35, Modelo130::calcGastosJustificacion(1005.0, true, 7.0));
+
+        // tope anual de 2.000 €: 7% de 40.000 = 2.800, pero se limita a 2.000
+        $this->assertSame(2000.0, Modelo130::calcGastosJustificacion(40000.0, true, 7.0));
+
+        // muy por encima del tope: se limita igualmente a 2.000
+        $this->assertSame(2000.0, Modelo130::calcGastosJustificacion(100000.0, true, 7.0));
+
+        // justo por debajo del límite (7% de 28.500 = 1.995): no se topa
+        $this->assertSame(1995.0, Modelo130::calcGastosJustificacion(28500.0, true, 7.0));
+
+        // la constante del límite es la esperada
+        $this->assertSame(2000.0, Modelo130::LIMITE_GASTOS_JUSTIFICACION);
     }
 
     protected function tearDown(): void

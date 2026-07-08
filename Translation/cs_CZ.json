@@ -6,7 +6,7 @@
     "exists-accounting-130": "V účetním období %codejercicio% již existuje účetní zápis s popisem: %concepto%",
     "gastos-justificacion": "Výdaje obtížně ospravedlnitelné (5%)",
     "gastos-justificacion-limit": "Pozor: částka překračuje roční limit 2 000 €",
-    "income-subaccounts": "Příjmové účty",
+    "income-subaccounts": "Podúčty příjmů",
     "model-130": "Modelo 130",
     "model-130-desc": "Vypočítává se sčítáním a akumulací každého čtvrtletí, například pokud zobrazíme 3. čtvrtletí, uvidíme součet prvních tří čtvrtletí.",
     "model-130-p": "El Modelo 130 es una declaración trimestral del impuesto de la renta de las personas físicas (IRPF) en el que se liquida el pago fraccionado de este impuesto, a cuenta de la declaración anual que se realiza el año siguiente.",

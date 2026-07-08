@@ -44,6 +44,9 @@ class Modelo130 extends Controller
     /** bool */
     public $applyGastosJustificacion = false;
 
+    /** @var float */
+    public $gastosJustificacionPct = 7.0;
+
     /** @var string */
     public $codejercicio;
 
@@ -165,8 +168,9 @@ class Modelo130 extends Controller
         $this->period = $this->request->request->get('period', $this->period);
         $this->applyGastosJustificacion = (bool)$this->request->request->get('applyGastosJustificacion', false);
         $this->todeduct = (float)$this->request->request->get('todeduct', 20.0);
+        $this->gastosJustificacionPct = (float)$this->request->request->get('gastosJustificacionPct', 7.0);
 
-        $this->result = DinModelo130::generate($this->codejercicio, $this->period, $this->applyGastosJustificacion, $this->todeduct);
+        $this->result = DinModelo130::generate($this->codejercicio, $this->period, $this->applyGastosJustificacion, $this->todeduct, $this->gastosJustificacionPct);
     }
 
     protected function addDeductibleSubaccount(): void

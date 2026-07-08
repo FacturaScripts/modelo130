@@ -35,6 +35,9 @@ use FacturaScripts\Dinamic\Model\Subcuenta130;
  */
 class Modelo130
 {
+    /** Límite anual deducible por gastos de difícil justificación (art. 30.2.4ª LIRPF). */
+    const LIMITE_GASTOS_JUSTIFICACION = 2000.0;
+
     /** @var Partida[] */
     protected static $accountingEntries = [];
 
@@ -69,7 +72,8 @@ class Modelo130
         string $codejercicio,
         string $period,
         bool $applyGastosJustificacion = false,
-        float $todeduct = 20.0
+        float $todeduct = 20.0,
+        float $gastosJustificacionPct = 7.0
     ): array {
         static::$exercise = new Ejercicio();
         if (false === static::$exercise->load($codejercicio)) {
@@ -88,7 +92,7 @@ class Modelo130
         static::loadAsientos();
         static::loadIncomeAsientos();
 
-        $results = static::loadResults($applyGastosJustificacion, $todeduct);
+        $results = static::loadResults($applyGastosJustificacion, $todeduct, $gastosJustificacionPct);
 
         return array_merge([
             'exercise' => static::$exercise,
@@ -100,6 +104,7 @@ class Modelo130
             'incomeEntries' => static::$incomeEntries,
             'applyGastosJustificacion' => $applyGastosJustificacion,
             'todeduct' => $todeduct,
+            'gastosJustificacionPct' => $gastosJustificacionPct,
         ], $results);
     }
 
@@ -287,7 +292,23 @@ class Modelo130
         static::$customerInvoices = (new FacturaCliente())->all($whereFtrasClientes, $order, 0, 0);
     }
 
-    protected static function loadResults(bool $applyGastosJustificacion, float $todeduct): array
+    /**
+     * Calcula la deducción por gastos de difícil justificación aplicando el
+     * porcentaje indicado sobre la base y topándola al límite anual (2.000 €).
+     */
+    public static function calcGastosJustificacion(float $taxbase, bool $apply, float $gastosJustificacionPct = 7.0): float
+    {
+        if (false === $apply || $taxbase <= 0) {
+            return 0.0;
+        }
+
+        $importe = round($taxbase * ($gastosJustificacionPct / 100), 2);
+
+        // la deducción no puede superar el límite anual (2.000 €)
+        return min($importe, static::LIMITE_GASTOS_JUSTIFICACION);
+    }
+
+    protected static function loadResults(bool $applyGastosJustificacion, float $todeduct, float $gastosJustificacionPct = 7.0): array
     {
         $taxbaseIngresos = 0.0;
         $taxbaseRetenciones = 0.0;
@@ -331,10 +352,7 @@ class Modelo130
 
         $taxbase = round($taxbaseIngresos - $taxbaseGastos, 2);
 
-        $gastosJustificacion = 0.0;
-        if ($applyGastosJustificacion && $taxbase > 0) {
-            $gastosJustificacion = round($taxbase * 0.05, 2);
-        }
+        $gastosJustificacion = static::calcGastosJustificacion($taxbase, $applyGastosJustificacion, $gastosJustificacionPct);
 
         $afterdeduct = round((($taxbase - $gastosJustificacion) * $todeduct) / 100, 2);
 

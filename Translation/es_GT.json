@@ -1,10 +1,10 @@
 {
     "acc-concept-irpf-130": "Regularización de IRPF %period%",
     "accounting-created-130": "Se ha creado el asiento en el ejercicio %codejercicio% con el concepto: %concepto%",
-    "after-deduct": "sobre casilla 04",
+    "after-deduct": "sobre casilla 03",
     "deductible-subaccounts": "Cuentas deducibles",
     "exists-accounting-130": "Ya existe un asiento en el ejercicio %codejercicio% con el concepto: %concepto%",
-    "gastos-justificacion": "Gastos de difícil justificación (5%)",
+    "gastos-justificacion": "Gastos de difícil justificación (7%)",
     "gastos-justificacion-limit": "Atención: el importe supera el límite anual de 2.000 €",
     "income-subaccounts": "Cuentas de ingresos",
     "model-130": "Modelo 130",

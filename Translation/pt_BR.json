@@ -5,7 +5,7 @@
     "deductible-subaccounts": "Contas dedutíveis",
     "exists-accounting-130": "Já existe um lançamento no exercício %codejercicio% com o conceito: %concepto%",
     "gastos-justificacion": "Gastos de difícil justificação (5%)",
-    "gastos-justificacion-limit": "Atenção: o valor supera o limite anual de 2.000 €",
+    "gastos-justificacion-limit": "Atenção: o valor ultrapassa o limite anual de 2.000 €",
     "income-subaccounts": "Contas de receitas",
     "model-130": "Modelo 130",
     "model-130-desc": "É calculado somando e acumulando cada trimestre, por exemplo, se visualizarmos o 3º trimestre veremos a soma dos trimestres 1, 2 e 3.",
