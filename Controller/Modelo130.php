@@ -21,12 +21,15 @@ namespace FacturaScripts\Plugins\Modelo130\Controller;
 
 use FacturaScripts\Core\Base\Controller;
 use FacturaScripts\Core\DataSrc\Ejercicios;
+use FacturaScripts\Core\Response;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Model\Ejercicio;
+use FacturaScripts\Dinamic\Model\Empresa;
 use FacturaScripts\Dinamic\Model\FormaPago;
 use FacturaScripts\Dinamic\Model\Subcuenta130;
 use FacturaScripts\Dinamic\Lib\Modelo130 as DinModelo130;
+use FacturaScripts\Dinamic\Lib\Modelo130Export as DinModelo130Export;
 
 /**
  * Description of Modelo130
@@ -171,6 +174,56 @@ class Modelo130 extends Controller
         $this->gastosJustificacionPct = (float)$this->request->request->get('gastosJustificacionPct', 7.0);
 
         $this->result = DinModelo130::generate($this->codejercicio, $this->period, $this->applyGastosJustificacion, $this->todeduct, $this->gastosJustificacionPct);
+
+        if ($action === 'download') {
+            $this->downloadFile($response);
+        }
+    }
+
+    protected function downloadFile(Response $response): void
+    {
+        if (empty($this->result)) {
+            Tools::log()->warning('no-data');
+            return;
+        }
+
+        $empresa = new Empresa();
+        if (false === $empresa->load($this->result['exercise']->idempresa)) {
+            Tools::log()->error('company-not-found');
+            return;
+        }
+
+        // validamos los datos mínimos para no generar un fichero corrupto
+        $nif = DinModelo130Export::formatNif($empresa->cifnif ?? '');
+        if (strlen($nif) !== 9) {
+            Tools::log()->error('aeat-file-invalid-nif');
+            return;
+        }
+
+        if (empty(trim($empresa->nombre ?? ''))) {
+            Tools::log()->error('aeat-file-missing-company-name');
+            return;
+        }
+
+        $year = date('Y', strtotime($this->result['exercise']->fechainicio));
+        if (strlen($year) !== 4) {
+            Tools::log()->error('aeat-file-invalid-exercise');
+            return;
+        }
+
+        $content = DinModelo130Export::generate($this->result, $empresa, $this->period, $year);
+        if (strlen($content) !== DinModelo130Export::FILE_LENGTH) {
+            Tools::log()->error('aeat-file-invalid-length');
+            return;
+        }
+
+        $filename = 'modelo130_' . $year . '_' . DinModelo130Export::getPeriodNumber($this->period) . '.txt';
+
+        $response->headers->set('Content-Type', 'text/plain; charset=ISO-8859-1');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
+        $response->setContent(mb_convert_encoding($content, 'ISO-8859-1', 'UTF-8'));
+        $response->send();
+        exit;
     }
 
     protected function addDeductibleSubaccount(): void
