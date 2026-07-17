@@ -321,6 +321,16 @@ class Modelo130
         return round(($baseDeducible * $todeduct) / 100, 2);
     }
 
+    /**
+     * Calcula el resultado final del modelo (casilla 07) restando retenciones e
+     * ingresos de trimestres anteriores. Si el resultado es negativo, la casilla 
+     * no puede ser negativa
+     */
+    public static function calcResult(float $afterdeduct, float $taxbaseRetenciones, float $positivosTrimestres): float
+    {
+        return max(0.0, round($afterdeduct - $taxbaseRetenciones - $positivosTrimestres, 2));
+    }
+
     protected static function loadResults(bool $applyGastosJustificacion, float $todeduct, float $gastosJustificacionPct = 7.0): array
     {
         $taxbaseIngresos = 0.0;
@@ -369,10 +379,7 @@ class Modelo130
 
         $afterdeduct = static::calcAfterDeduct($taxbase, $gastosJustificacion, $todeduct);
 
-        $result = round($afterdeduct - $taxbaseRetenciones - $positivosTrimestres, 2);
-        if ($result < 0) {
-            $result = 0.0;
-        }
+        $result = static::calcResult($afterdeduct, $taxbaseRetenciones, $positivosTrimestres);
 
         return [
             'taxbaseIngresos' => $taxbaseIngresos,
