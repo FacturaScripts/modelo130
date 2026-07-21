@@ -114,6 +114,7 @@ class Modelo130 extends Controller
     {
         $data = parent::getPageData();
         $data['menu'] = 'reports';
+        $data['submenu'] = 'tax-models';
         $data['title'] = 'model-130';
         $data['icon'] = 'fa-solid fa-book';
         return $data;
