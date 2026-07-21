@@ -1,5 +1,11 @@
 {
     "acc-concept-irpf-130": "IRPF regularization %period%",
+    "aeat-file-invalid-exercise": "Cannot generate the AEAT file: the selected fiscal year is not valid.",
+    "aeat-file-invalid-length": "Cannot generate the AEAT file: the generated file does not have the expected length.",
+    "aeat-file-invalid-nif": "Cannot generate the AEAT file: the company tax ID is empty or not valid.",
+    "aeat-file-missing-company-name": "Cannot generate the AEAT file: the company name is empty.",
+    "company-not-found": "Company not found",
+    "download-aeat-file": "Download AEAT file",
     "accounting-created-130": "An accounting entry has been created in fiscal year %codejercicio% with the concept: %concepto%",
     "after-deduct": "about box 04",
     "deductible-subaccounts": "Deductible Accounts",

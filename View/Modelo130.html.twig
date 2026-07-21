@@ -146,6 +146,12 @@ return false;
 							<i class="fa-solid fa-eye me-1"></i>
 							{{ trans('preview') }}
 						</button>
+						{% if fsc.result is not empty %}
+							<button type="submit" name="action" value="download" class="btn btn-outline-secondary">
+								<i class="fa-solid fa-download me-1"></i>
+								{{ trans('download-aeat-file') }}
+							</button>
+						{% endif %}
 					</div>
 				</div>
 			</div>

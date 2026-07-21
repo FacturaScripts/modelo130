@@ -1,5 +1,11 @@
 {
     "acc-concept-irpf-130": "Regularización de IRPF %period%",
+    "aeat-file-invalid-exercise": "No se puede generar el fichero AEAT: el ejercicio seleccionado no es válido.",
+    "aeat-file-invalid-length": "No se puede generar el fichero AEAT: el fichero generado no tiene la longitud esperada.",
+    "aeat-file-invalid-nif": "No se puede generar el fichero AEAT: el NIF de la empresa está vacío o no es válido.",
+    "aeat-file-missing-company-name": "No se puede generar el fichero AEAT: el nombre de la empresa está vacío.",
+    "company-not-found": "Empresa no encontrada",
+    "download-aeat-file": "Descargar fichero AEAT",
     "accounting-created-130": "Se ha creado el asiento en el ejercicio %codejercicio% con el concepto: %concepto%",
     "after-deduct": "sobre casilla 03",
     "deductible-subaccounts": "Cuentas deducibles",
