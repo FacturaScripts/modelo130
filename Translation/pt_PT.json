@@ -1,12 +1,20 @@
 {
     "acc-concept-irpf-130": "Regularização do IRPF %period%",
     "accounting-created-130": "Foi criado o lançamento no exercício %codejercicio% com o conceito: %concepto%",
+    "aeat-file-invalid-exercise": "Não é possível gerar o ficheiro AEAT: o exercício selecionado não é válido.",
+    "aeat-file-invalid-length": "Não é possível gerar o ficheiro AEAT: o ficheiro gerado não tem o comprimento esperado.",
+    "aeat-file-invalid-nif": "Não é possível gerar o ficheiro AEAT: o NIF da empresa está vazio ou é inválido.",
+    "aeat-file-missing-company-name": "Não é possível gerar o ficheiro AEAT: o nome da empresa está vazio.",
     "after-deduct": "sobre a caixa 04",
+    "company-not-found": "Empresa não encontrada",
     "deductible-subaccounts": "Contas dedutíveis",
+    "download-aeat-file": "Descarregar ficheiro AEAT",
     "exists-accounting-130": "Já existe um lançamento no exercício %codejercicio% com o conceito: %concepto%",
+    "expense": "Despesa dedutível",
     "gastos-justificacion": "Despesas de difícil justificação",
     "gastos-justificacion-limit": "Atenção: o montante ultrapassa o limite anual de 2.000 €",
     "gastos-justificacion-pct": "% Gastos de difícil justificação",
+    "income": "Receita tributável",
     "income-subaccounts": "Contas de receitas",
     "model-130": "Modelo 130",
     "model-130-desc": "É calculado somando e acumulando cada trimestre, por exemplo, se visualizarmos o 3º trimestre veremos a soma dos trimestres 1, 2 e 3.",
@@ -15,10 +23,8 @@
     "net-total": "Rendimento líquido",
     "pct-to-deduct": "% a deduzir",
     "previous-model": "Receitas de trimestres anteriores",
+    "previous-payment": "Pagamento por conta anterior",
     "tax-expenses": "Despesas dedutíveis",
     "tax-incomes": "Impostos sobre rendimentos",
-    "tax-negative-info": "Se der perdas (negativo) = 0",
-    "income": "Receita tributável",
-    "expense": "Despesa dedutível",
-    "previous-payment": "Pagamento por conta anterior"
+    "tax-negative-info": "Se der perdas (negativo) = 0"
 }

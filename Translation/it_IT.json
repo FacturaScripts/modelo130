@@ -1,12 +1,20 @@
 {
     "acc-concept-irpf-130": "Regolarizzazione IRPF %period%",
     "accounting-created-130": "È stata creata la registrazione nell'esercizio %codejercicio% con la causale: %concepto%",
+    "aeat-file-invalid-exercise": "Impossibile generare il file AEAT: l'esercizio selezionato non è valido.",
+    "aeat-file-invalid-length": "Impossibile generare il file AEAT: il file generato non ha la lunghezza prevista.",
+    "aeat-file-invalid-nif": "Impossibile generare il file AEAT: il codice fiscale dell'azienda è mancante o non valido.",
+    "aeat-file-missing-company-name": "Impossibile generare il file AEAT: il nome dell'azienda è vuoto.",
     "after-deduct": "sulla casella 04",
+    "company-not-found": "Azienda non trovata",
     "deductible-subaccounts": "Conti deducibili",
+    "download-aeat-file": "Scarica file AEAT",
     "exists-accounting-130": "Esiste già una registrazione nell'esercizio %codejercicio% con la causale: %concepto%",
+    "expense": "Spesa deducibile",
     "gastos-justificacion": "Spese di difficile giustificazione",
     "gastos-justificacion-limit": "Attenzione: l'importo supera il limite annuo di 2.000 €",
     "gastos-justificacion-pct": "% Spese di difficile giustificazione",
+    "income": "Reddito imponibile",
     "income-subaccounts": "Conti dei ricavi",
     "model-130": "Modello 130",
     "model-130-desc": "Si calcola sommando e accumulando ogni trimestre, ad esempio, se visualizziamo il 3° trimestre vedremo la somma dei trimestri 1, 2 e 3.",
@@ -15,10 +23,8 @@
     "net-total": "Totale netto",
     "pct-to-deduct": "% da dedurre",
     "previous-model": "Modelli precedenti",
+    "previous-payment": "Acconto precedente",
     "tax-expenses": "Spese fiscali deducibili",
     "tax-incomes": "Ricavi fiscali",
-    "tax-negative-info": "Se genera perdite (negative) = 0",
-    "income": "Reddito imponibile",
-    "expense": "Spesa deducibile",
-    "previous-payment": "Acconto precedente"
+    "tax-negative-info": "Se genera perdite (negative) = 0"
 }
