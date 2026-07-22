@@ -24,6 +24,7 @@ use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Model\Asiento;
 use FacturaScripts\Dinamic\Model\Ejercicio;
 use FacturaScripts\Dinamic\Model\FormaPago;
+use FacturaScripts\Dinamic\Model\Partida;
 use FacturaScripts\Plugins\Modelo130\Lib\Modelo130;
 use FacturaScripts\Test\Traits\DefaultSettingsTrait;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
@@ -70,10 +71,9 @@ final class Modelo130Test extends TestCase
             'exercise',
             'period',
             'idempresa',
-            'customerInvoices',
-            'supplierInvoices',
+            'sales',
+            'purchases',
             'accountingEntries',
-            'incomeEntries',
             'applyGastosJustificacion',
             'todeduct',
             'gastosJustificacionPct',
@@ -94,6 +94,9 @@ final class Modelo130Test extends TestCase
         // verificar tipos concretos de las claves principales
         $this->assertInstanceOf(Ejercicio::class, $resultado['exercise'], 'exercise debe ser una instancia de Ejercicio');
         $this->assertSame('T1', $resultado['period'], 'El periodo debe ser T1');
+        $this->assertIsArray($resultado['sales'], 'sales debe ser un array');
+        $this->assertIsArray($resultado['purchases'], 'purchases debe ser un array');
+        $this->assertIsArray($resultado['accountingEntries'], 'accountingEntries debe ser un array');
 
         // comprobar que el ejercicio cargado es el correcto
         $this->assertSame($codejercicio, $resultado['exercise']->codejercicio, 'El ejercicio debe coincidir con el solicitado');
@@ -140,6 +143,17 @@ final class Modelo130Test extends TestCase
 
         $this->assertTrue($encontrado, 'El asiento debe existir en la base de datos tras generateEntries()');
         $this->assertEquals($importe, $asiento->importe, 'El importe del asiento debe ser 100.0');
+
+        // comprobar que el asiento contiene las dos partidas esperadas
+        $partidas = (new Partida())->all([
+            Where::eq('idasiento', $asiento->idasiento),
+        ], ['orden' => 'ASC']);
+
+        $this->assertCount(2, $partidas, 'El asiento debe contener dos partidas');
+        $this->assertSame('4730000000', $partidas[0]->codsubcuenta);
+        $this->assertEquals($importe, $partidas[0]->debe);
+        $this->assertEquals(0.0, (float)$partidas[0]->haber);
+        $this->assertEquals($importe, $partidas[1]->haber);
 
         // una segunda llamada con los mismos parámetros debe devolver false (ya existe)
         $duplicado = Modelo130::generateEntries($idempresa, $codejercicio, $periodo, $fecha, $importe, $paymentMethodId);
