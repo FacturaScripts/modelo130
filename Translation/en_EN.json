@@ -23,5 +23,8 @@
     "previous-model": "Previous quarters income",
     "tax-expenses": "Deductible expenses",
     "tax-incomes": "Computable income",
-    "tax-negative-info": "If it gives losses (negative) = 0"
+    "tax-negative-info": "If it gives losses (negative) = 0",
+    "income": "Taxable income",
+    "expense": "Deductible expense",
+    "previous-payment": "Previous payment"
 }

@@ -17,5 +17,8 @@
     "previous-model": "Modelli precedenti",
     "tax-expenses": "Spese fiscali deducibili",
     "tax-incomes": "Ricavi fiscali",
-    "tax-negative-info": "Se genera perdite (negative) = 0"
+    "tax-negative-info": "Se genera perdite (negative) = 0",
+    "income": "Reddito imponibile",
+    "expense": "Spesa deducibile",
+    "previous-payment": "Acconto precedente"
 }

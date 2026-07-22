@@ -17,5 +17,8 @@
     "previous-model": "Receitas de trimestres anteriores",
     "tax-expenses": "Despesas dedutíveis",
     "tax-incomes": "Impostos sobre rendimentos",
-    "tax-negative-info": "Se der perdas (negativo) = 0"
+    "tax-negative-info": "Se der perdas (negativo) = 0",
+    "income": "Receita tributável",
+    "expense": "Despesa dedutível",
+    "previous-payment": "Pagamento por conta anterior"
 }

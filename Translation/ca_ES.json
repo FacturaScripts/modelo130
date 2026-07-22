@@ -17,5 +17,8 @@
     "previous-model": "Ingressos trimestres anteriors",
     "tax-expenses": "Despeses deduïbles",
     "tax-incomes": "Ingressos computables",
-    "tax-negative-info": "Si dóna pèrdues (negatiu) = 0"
+    "tax-negative-info": "Si dóna pèrdues (negatiu) = 0",
+    "income": "Ingrés computable",
+    "expense": "Despesa deduïble",
+    "previous-payment": "Pagament fraccionat anterior"
 }

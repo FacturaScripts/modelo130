@@ -17,5 +17,8 @@
     "previous-model": "Revenu du trimestre précédent",
     "tax-expenses": "Dépenses déductibles",
     "tax-incomes": "Revenu éligible",
-    "tax-negative-info": "Si déficitaire (négatif) = 0"
+    "tax-negative-info": "Si déficitaire (négatif) = 0",
+    "income": "Revenu imposable",
+    "expense": "Dépense déductible",
+    "previous-payment": "Paiement fractionné précédent"
 }

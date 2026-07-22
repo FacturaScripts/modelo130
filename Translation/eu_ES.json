@@ -17,5 +17,8 @@
     "previous-model": "Aurreko hiruhilekoetako sarrerak",
     "tax-expenses": "Gastu kengarriak",
     "tax-incomes": "Errenta konputagarria",
-    "tax-negative-info": "Galerak ematen baditu (negatiboak) = 0"
+    "tax-negative-info": "Galerak ematen baditu (negatiboak) = 0",
+    "income": "Sarrera zenbagarria",
+    "expense": "Gastu kengarria",
+    "previous-payment": "Aurreko ordainketa zatikatua"
 }

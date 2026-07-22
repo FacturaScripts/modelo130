@@ -17,5 +17,8 @@
     "previous-model": "Einkünfte aus vorherigen Quartalen",
     "tax-expenses": "Absetzbare Ausgaben",
     "tax-incomes": "Steuerbare Einkommen",
-    "tax-negative-info": "Wenn Verluste (negativ) = 0 sind"
+    "tax-negative-info": "Wenn Verluste (negativ) = 0 sind",
+    "income": "Steuerpflichtige Einnahme",
+    "expense": "Abzugsfähige Ausgabe",
+    "previous-payment": "Vorherige Vorauszahlung"
 }

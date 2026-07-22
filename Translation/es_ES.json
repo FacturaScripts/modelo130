@@ -23,5 +23,8 @@
     "previous-model": "Ingresos trimestres anteriores",
     "tax-expenses": "Gastos deducibles",
     "tax-incomes": "Ingresos computables",
-    "tax-negative-info": "Si da pérdidas (negativo) = 0"
+    "tax-negative-info": "Si da pérdidas (negativo) = 0",
+    "income": "Ingreso computable",
+    "expense": "Gasto deducible",
+    "previous-payment": "Pago fraccionado anterior"
 }
