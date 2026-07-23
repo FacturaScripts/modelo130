@@ -350,10 +350,10 @@
                         <tr>
                             <th>{{ trans('accounting-entry') }}</th>
                             <th>{{ trans('subaccount') }}</th>
+                            <th>{{ trans('date') }}</th>
                             <th>{{ trans('concept') }}</th>
                             <th>{{ trans('type') }}</th>
                             <th class="text-end">{{ trans('total') }}</th>
-                            <th class="text-end">{{ trans('date') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -365,10 +365,10 @@
                                     <a href="{{ item.entry.url() }}">{{ item.entry.numero }}</a>
                                 </td>
                                 <td>{{ item.partida.codsubcuenta }}</td>
+                                <td>{{ item.entry.fecha }}</td>
                                 <td>{{ item.partida.concepto | raw }}</td>
                                 <td>{{ trans(item.type) }}</td>
                                 <td class="text-end">{{ money(item.amount) }}</td>
-                                <td class="text-end">{{ item.entry.fecha }}</td>
                             </tr>
                         {% else %}
                             <tr class="table-warning">
@@ -379,7 +379,7 @@
 {# 
                     <tfoot>
                         <tr>
-                            <th colspan="4" class="text-end">{{ trans('totals') }}</th>
+                            <th colspan="5" class="text-end">{{ trans('totals') }}</th>
                             <th class="text-end">{{ money(accountingTotal) }}</th>
                             <th></th>
                         </tr>
