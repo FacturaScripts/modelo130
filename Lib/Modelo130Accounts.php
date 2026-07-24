@@ -54,7 +54,7 @@ final class Modelo130Accounts
             '64' => 'Gastos de personal',
             '65' => 'Otros gastos de gestión',
             '66' => 'Gastos financieros',
-            '67' => 'Pérdidas procedentes de activos y gastos excepcionales',
+            '67' => 'Pérdidas procedentes de activos no corrientes y gastos excepcionales',
             '68' => 'Dotaciones para amortizaciones',
             '69' => 'Pérdidas por deterioro y otras dotaciones',
         ];
@@ -83,16 +83,14 @@ final class Modelo130Accounts
     public static function incomes(): array
     {
         return [
-            '70' => 'Ventas de mercaderías, producción propia y prestación de servicios',
+            '70' => 'Ventas de mercaderías, de producción propia, de servicios, etc.',
             '71' => 'Variación de existencias',
-            '72' => 'Trabajos realizados para la empresa',
-            '73' => 'Subvenciones, donaciones y legados',
-            '74' => 'Subvenciones, donaciones y legados a la explotación',
+            '73' => 'Trabajos realizados para la empresa',
+            '74' => 'Subvenciones, donaciones y legados',
             '75' => 'Otros ingresos de gestión',
             '76' => 'Ingresos financieros',
-            '77' => 'Beneficios procedentes de activos e ingresos excepcionales',
-            '78' => 'Excesos y aplicaciones de provisiones',
-            '79' => 'Excesos y aplicaciones de provisiones y deterioros',
+            '77' => 'Beneficios procedentes de activos no corrientes e ingresos excepcionales',
+            '79' => 'Excesos y aplicaciones de provisiones y de pérdidas por deterioro',
         ];
     }
 
