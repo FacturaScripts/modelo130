@@ -34,28 +34,28 @@ class Subcuenta130 extends ModelClass
     const TIPO_DEDUCIBLE = 'deducible';
     const TIPO_INGRESO = 'ingreso';
 
-    /** @var string */
+    /** @var string código de la subcuenta contable asociada */
     public $codsubcuenta;
 
-    /** @var string */
+    /** @var string fecha de creación del registro */
     public $creation_date;
 
-    /** @var int */
+    /** @var int clave primaria */
     public $id;
 
-    /** @var string */
+    /** @var string nick del usuario que realizó la última modificación */
     public $last_nick;
 
-    /** @var string */
+    /** @var string fecha de la última modificación del registro */
     public $last_update;
 
-    /** @var string */
+    /** @var string nombre descriptivo de la subcuenta */
     public $name;
 
-    /** @var string */
+    /** @var string nick del usuario que creó el registro */
     public $nick;
 
-    /** @var string */
+    /** @var string tipo de subcuenta: deducible o ingreso */
     public $tipo = self::TIPO_DEDUCIBLE;
 
     public function clear(): void
