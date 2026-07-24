@@ -23,11 +23,9 @@ use FacturaScripts\Core\Base\Controller;
 use FacturaScripts\Core\DataSrc\Ejercicios;
 use FacturaScripts\Core\Response;
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Model\Ejercicio;
 use FacturaScripts\Dinamic\Model\Empresa;
 use FacturaScripts\Dinamic\Model\FormaPago;
-use FacturaScripts\Dinamic\Model\Subcuenta130;
 use FacturaScripts\Dinamic\Lib\Modelo130 as DinModelo130;
 use FacturaScripts\Dinamic\Lib\Modelo130Export as DinModelo130Export;
 
@@ -41,9 +39,6 @@ use FacturaScripts\Dinamic\Lib\Modelo130Export as DinModelo130Export;
  */
 class Modelo130 extends Controller
 {
-    /** @var string */
-    public $activeTab = '';
-
     /** bool */
     public $applyGastosJustificacion = false;
 
@@ -52,12 +47,6 @@ class Modelo130 extends Controller
 
     /** @var string */
     public $codejercicio;
-
-    /** @var Subcuenta130 */
-    public $deductibleSubaccount;
-
-    /** @var Subcuenta130 */
-    public $incomeSubaccount;
 
     /** @var string */
     public $period = 'T1';
@@ -84,13 +73,8 @@ class Modelo130 extends Controller
                 $list[] = $exercise;
             }
         }
-        return $list;
-    }
 
-    public function getDeductibleSubaccounts(): array
-    {
-        $where = [Where::eq('tipo', Subcuenta130::TIPO_DEDUCIBLE)];
-        return (new Subcuenta130())->all($where, ['codsubcuenta' => 'ASC'], 0, 0);
+        return $list;
     }
 
     /**
@@ -102,12 +86,6 @@ class Modelo130 extends Controller
         $exercise = new Ejercicio();
         $exercise->load($this->codejercicio);
         return $exercise;
-    }
-
-    public function getIncomeSubaccounts(): array
-    {
-        $where = [Where::eq('tipo', Subcuenta130::TIPO_INGRESO)];
-        return (new Subcuenta130())->all($where, ['codsubcuenta' => 'ASC'], 0, 0);
     }
 
     public function getPageData(): array
@@ -138,31 +116,9 @@ class Modelo130 extends Controller
     public function privateCore(&$response, $user, $permissions)
     {
         parent::privateCore($response, $user, $permissions);
-        $this->deductibleSubaccount = new Subcuenta130();
-        $this->incomeSubaccount = new Subcuenta130();
 
         $action = $this->request->request->get('action', $this->request->input('action'));
         switch ($action) {
-            case 'autocomplete-subaccount':
-                $this->autocompleteSubaccount();
-                return;
-
-            case 'add-deductible-subaccount':
-                $this->addDeductibleSubaccount();
-                return;
-
-            case 'delete-deductible-subaccount':
-                $this->deleteDeductibleSubaccount();
-                return;
-
-            case 'add-income-subaccount':
-                $this->addIncomeSubaccount();
-                return;
-
-            case 'delete-income-subaccount':
-                $this->deleteIncomeSubaccount();
-                return;
-
             case 'gen-accounting':
                 $this->createAccountingEntry();
                 return;
@@ -170,11 +126,23 @@ class Modelo130 extends Controller
 
         $this->codejercicio = $this->request->request->get('codejercicio', '');
         $this->period = $this->request->request->get('period', $this->period);
-        $this->applyGastosJustificacion = (bool)$this->request->request->get('applyGastosJustificacion', false);
+        $this->applyGastosJustificacion = (bool)$this->request->request->get(
+            'applyGastosJustificacion',
+            false
+        );
         $this->todeduct = (float)$this->request->request->get('todeduct', 20.0);
-        $this->gastosJustificacionPct = (float)$this->request->request->get('gastosJustificacionPct', 7.0);
+        $this->gastosJustificacionPct = (float)$this->request->request->get(
+            'gastosJustificacionPct',
+            7.0
+        );
 
-        $this->result = DinModelo130::generate($this->codejercicio, $this->period, $this->applyGastosJustificacion, $this->todeduct, $this->gastosJustificacionPct);
+        $this->result = DinModelo130::generate(
+            $this->codejercicio,
+            $this->period,
+            $this->applyGastosJustificacion,
+            $this->todeduct,
+            $this->gastosJustificacionPct
+        );
 
         if ($action === 'download') {
             $this->downloadFile($response);
@@ -212,78 +180,40 @@ class Modelo130 extends Controller
             return;
         }
 
-        $content = DinModelo130Export::generate($this->result, $empresa, $this->period, $year);
+        $content = DinModelo130Export::generate(
+            $this->result,
+            $empresa,
+            $this->period,
+            $year
+        );
+
         if (strlen($content) !== DinModelo130Export::FILE_LENGTH) {
             Tools::log()->error('aeat-file-invalid-length');
             return;
         }
 
-        $filename = 'modelo130_' . $year . '_' . DinModelo130Export::getPeriodNumber($this->period) . '.txt';
+        $filename = 'modelo130_'
+            . $year
+            . '_'
+            . DinModelo130Export::getPeriodNumber($this->period)
+            . '.txt';
 
-        $response->headers->set('Content-Type', 'text/plain; charset=ISO-8859-1');
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
-        $response->setContent(mb_convert_encoding($content, 'ISO-8859-1', 'UTF-8'));
+        $response->headers->set(
+            'Content-Type',
+            'text/plain; charset=ISO-8859-1'
+        );
+
+        $response->headers->set(
+            'Content-Disposition',
+            'attachment; filename="' . $filename . '"'
+        );
+
+        $response->setContent(
+            mb_convert_encoding($content, 'ISO-8859-1', 'UTF-8')
+        );
+
         $response->send();
         exit;
-    }
-
-    protected function addDeductibleSubaccount(): void
-    {
-        $this->activeTab = 'deductible-subaccount';
-
-        if (false === $this->validateFormToken()) {
-            return;
-        }
-
-        $subaccount130 = new Subcuenta130();
-        $subaccount130->codsubcuenta = $this->request->request->get('codsubcuenta');
-        if (false === $subaccount130->save()) {
-            Tools::log()->error('record-save-error');
-            return;
-        }
-
-        Tools::log()->notice('record-updated-correctly');
-    }
-
-    protected function addIncomeSubaccount(): void
-    {
-        $this->activeTab = 'income-subaccount';
-
-        if (false === $this->validateFormToken()) {
-            return;
-        }
-
-        $subaccount = new Subcuenta130();
-        $subaccount->codsubcuenta = $this->request->request->get('codsubcuenta');
-        $subaccount->tipo = Subcuenta130::TIPO_INGRESO;
-        if (false === $subaccount->save()) {
-            Tools::log()->error('record-save-error');
-            return;
-        }
-
-        Tools::log()->notice('record-updated-correctly');
-    }
-
-    protected function autocompleteSubaccount(): void
-    {
-        $this->setTemplate(false);
-
-        $list = [];
-        $term = $this->request->get('term');
-        $sql = 'SELECT DISTINCT codsubcuenta, descripcion FROM subcuentas WHERE codsubcuenta LIKE "' . $term . '%";';
-
-        foreach ($this->dataBase->select($sql) as $value) {
-            $list[] = [
-                'key' => Tools::fixHtml($value['codsubcuenta']),
-                'value' => Tools::fixHtml($value['descripcion'])
-            ];
-        }
-
-        if (empty($list)) {
-            $list[] = ['key' => null, 'value' => Tools::lang()->trans('no-data')];
-        }
-
-        $this->response->setContent(json_encode($list));
     }
 
     protected function createAccountingEntry(): void
@@ -299,52 +229,17 @@ class Modelo130 extends Controller
         $amount = (float)$this->request->request->get('amount');
         $paymentMethodId = (int)$this->request->request->get('paymentMethod');
 
-        if (DinModelo130::generateEntries($idempresa, $codejercicio, $period, $date, $amount, $paymentMethodId)) {
+        if (
+            DinModelo130::generateEntries(
+                $idempresa,
+                $codejercicio,
+                $period,
+                $date,
+                $amount,
+                $paymentMethodId
+            )
+        ) {
             Tools::log()->notice('record-updated-correctly');
         }
-    }
-
-    protected function deleteDeductibleSubaccount(): void
-    {
-        $this->activeTab = 'deductible-subaccount';
-
-        if (false === $this->validateFormToken()) {
-            return;
-        }
-
-        $subaccount130 = new Subcuenta130();
-        if (false === $subaccount130->load($this->request->request->get('id'))) {
-            Tools::log()->error('record-not-found');
-            return;
-        }
-
-        if (false === $subaccount130->delete()) {
-            Tools::log()->error('record-deleted-error');
-            return;
-        }
-
-        Tools::log()->notice('record-deleted-correctly');
-    }
-
-    protected function deleteIncomeSubaccount(): void
-    {
-        $this->activeTab = 'income-subaccount';
-
-        if (false === $this->validateFormToken()) {
-            return;
-        }
-
-        $subaccount = new Subcuenta130();
-        if (false === $subaccount->load($this->request->request->get('id'))) {
-            Tools::log()->error('record-not-found');
-            return;
-        }
-
-        if (false === $subaccount->delete()) {
-            Tools::log()->error('record-deleted-error');
-            return;
-        }
-
-        Tools::log()->notice('record-deleted-correctly');
     }
 }
