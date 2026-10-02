@@ -137,6 +137,63 @@ final class Modelo130AccountingTest extends TestCase
     }
 
     /**
+     * Los importes de facturas en divisa se convierten a euros usando la tasa
+     * guardada en la propia factura, tanto en ingresos como en gastos.
+     */
+    public function testForeignCurrencyInvoicesUseEuroAmounts(): void
+    {
+        $before = $this->calculate();
+
+        $customerInvoice = $this->getRandomCustomerInvoice($this->date('T1'));
+        $customerRate = 0.8653;
+        $this->assertTrue($this->database()->exec(
+            'UPDATE facturascli SET tasaconv = '
+            . $this->database()->var2str($customerRate)
+            . ' WHERE idfactura = '
+            . $this->database()->var2str($customerInvoice->idfactura) . ';'
+        ));
+        $customerEntry = $this->replaceInvoiceEntry($customerInvoice, 'facturascli', [
+            [self::ACCOUNT_INCOME, 0.0, 2442.86],
+            [self::ACCOUNT_CUSTOMERS, 2442.86, 0.0],
+        ]);
+
+        $supplierInvoice = $this->getRandomSupplierInvoice($this->date('T1'));
+        $supplierRate = 0.8653;
+        $this->assertTrue($this->database()->exec(
+            'UPDATE facturasprov SET tasaconv = '
+            . $this->database()->var2str($supplierRate)
+            . ' WHERE idfactura = '
+            . $this->database()->var2str($supplierInvoice->idfactura) . ';'
+        ));
+        $supplierEntry = $this->replaceInvoiceEntry($supplierInvoice, 'facturasprov', [
+            [self::ACCOUNT_EXPENSE, 865.30, 0.0],
+            [self::ACCOUNT_SUPPLIERS, 0.0, 865.30],
+        ]);
+
+        $after = $this->calculate();
+
+        $this->assertSame(
+            2823.14,
+            $this->delta($before, $after, 'taxbaseIngresos')
+        );
+        $this->assertSame(
+            1000.0,
+            $this->delta($before, $after, 'taxbaseGastos')
+        );
+
+        $salesRow = $this->findRow($after['sales'], $customerEntry->idasiento);
+        $this->assertNotNull($salesRow);
+        $this->assertSame(2823.14, (float)$salesRow['baseimponible']);
+
+        $purchaseRow = $this->findRow($after['purchases'], $supplierEntry->idasiento);
+        $this->assertNotNull($purchaseRow);
+        $this->assertSame(1000.0, (float)$purchaseRow['baseimponible']);
+
+        $this->removeInvoice($customerInvoice, $customerEntry);
+        $this->removeInvoice($supplierInvoice, $supplierEntry);
+    }
+
+    /**
      * Una factura de proveedor contabilizada en una cuenta de gasto suma su
      * base en la casilla 02 y aparece en la pestaña de compras.
      */
