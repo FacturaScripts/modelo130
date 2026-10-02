@@ -733,6 +733,24 @@ class Modelo130
     
             $customerInvoice = $customerInvoices[$idasiento] ?? null;
             $supplierInvoice = $supplierInvoices[$idasiento] ?? null;
+
+            if ($customerInvoice) {
+                $group['income'] = static::convertAmountToEuros(
+                    $group['income'],
+                    $customerInvoice
+                );
+                $group['retention'] = static::convertAmountToEuros(
+                    $group['retention'],
+                    $customerInvoice
+                );
+            }
+
+            if ($supplierInvoice) {
+                $group['expense'] = static::convertAmountToEuros(
+                    $group['expense'],
+                    $supplierInvoice
+                );
+            }
     
             static::$taxbaseIncomes += $group['income'];
             static::$taxbaseExpenses += $group['expense'];
@@ -989,6 +1007,26 @@ class Modelo130
         }
 
         return $result;
+    }
+
+    /**
+     * Convierte a euros un importe contabilizado en la divisa de la factura.
+     *
+     * @param FacturaCliente|FacturaProveedor $invoice
+     */
+    protected static function convertAmountToEuros(
+        float $amount,
+        $invoice
+    ): float {
+        $exchangeRate = (float)$invoice->tasaconv;
+        if ($exchangeRate <= 0) {
+            Tools::log()->error('conversion-rate-not-0');
+            throw new \UnexpectedValueException(
+                'The invoice conversion rate must be greater than zero: ' . $invoice->codigo
+            );
+        }
+
+        return round($amount / $exchangeRate, 2);
     }
 
     protected static function loadResults(

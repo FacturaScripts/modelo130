@@ -39,6 +39,11 @@ de los totales guardados en las facturas. Las facturas solo se usan para
 mostrar a qué documento corresponde cada asiento en las pestañas Ventas y
 Compras, y para distinguir una retención de un pago fraccionado.
 
+En facturas en una divisa distinta del euro, los ingresos, gastos y
+retenciones de sus asientos se convierten a euros con la tasa guardada en la
+factura (`importe / tasaconv`). Los asientos sin factura asociada se mantienen
+tal como están contabilizados.
+
 - **Casilla 01, ingresos computables**: saldo acreedor de las cuentas de
   ingreso configuradas (por defecto 70, 71, 73, 74, 75, 76, 778, 793 y 794).
 - **Casilla 02, gastos deducibles**: saldo deudor de las cuentas de gasto
